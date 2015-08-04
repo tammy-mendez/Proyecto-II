@@ -2,25 +2,23 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
-    <Component class="renderizar.RolListRenderizar" name="rolListRenderizar1">
-    </Component>
-    <Component class="javax.persistence.EntityManager" name="proyectoPUEntityManager">
+    <Component class="javax.persistence.EntityManager" name="EntityManager">
       <Properties>
         <Property name="persistenceUnit" type="java.lang.String" value="proyectoPU"/>
       </Properties>
     </Component>
-    <Component class="javax.persistence.Query" name="rolQuery">
+    <Component class="javax.persistence.Query" name="Query">
       <Properties>
         <Property name="query" type="java.lang.String" value="SELECT r FROM Rol r"/>
         <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
-          <ComponentRef name="proyectoPUEntityManager"/>
+          <ComponentRef name="EntityManager"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="java.util.List" name="rolList">
+    <Component class="java.util.List" name="List">
       <Properties>
         <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="rolQuery"/>
+          <ComponentRef name="Query"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -48,6 +46,73 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.persistence.Query" name="rolQuery">
+      <Properties>
+        <Property name="query" type="java.lang.String" value="SELECT r FROM Rol r"/>
+        <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
+          <ComponentRef name="EntityManager"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="java.util.List" name="rolList">
+      <Properties>
+        <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
+          <ComponentRef name="rolQuery"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;bean.Rol&gt;"/>
+      </AuxValues>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTable" name="jTable2">
+          <Properties>
+            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+              <Table columnCount="4" rowCount="4">
+                <Column editable="true" title="Title 1" type="java.lang.Object"/>
+                <Column editable="true" title="Title 2" type="java.lang.Object"/>
+                <Column editable="true" title="Title 3" type="java.lang.Object"/>
+                <Column editable="true" title="Title 4" type="java.lang.Object"/>
+              </Table>
+            </Property>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="renderizar.RolListRenderizar" name="rolListRenderizar1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="rolListRenderizar1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.persistence.Query" name="empleadoQuery">
+      <Properties>
+        <Property name="query" type="java.lang.String" value="SELECT e FROM Empleado e"/>
+        <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
+          <ComponentRef name="EntityManager"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="java.util.List" name="empleadoList">
+      <Properties>
+        <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
+          <ComponentRef name="empleadoQuery"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;bean.Empleado&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="renderizar.EmpleadoListRenderizar" name="empleadoListRenderizar1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="empleadoListRenderizar1"/>
+      </Properties>
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -72,142 +137,156 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="lbl_passw" max="32767" attributes="0"/>
-                              <Component id="lbl_codempl" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="lbl_rol" alignment="0" min="-2" pref="48" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="list_rol" alignment="0" pref="160" max="32767" attributes="0"/>
-                          <Component id="tf_passw" alignment="0" max="32767" attributes="0"/>
-                          <Component id="tf_codempl" alignment="0" max="32767" attributes="0"/>
-                      </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
+                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" min="-2" pref="13" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="130" max="-2" attributes="0"/>
+                      <Component id="btn_guardar" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
+                      <Component id="btn_cancelar" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="232" max="32767" attributes="0"/>
+              <EmptySpace pref="79" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lbl_codempl" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tf_codempl" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_guardar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_cancelar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lbl_passw" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="tf_passw" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lbl_rol" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="list_rol" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" min="-2" pref="8" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="84" max="32767" attributes="0"/>
+              <EmptySpace pref="35" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="lbl_codempl">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Codigo Empleado:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="tf_codempl">
-    </Component>
-    <Component class="javax.swing.JLabel" name="lbl_passw">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Password:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="tf_passw">
-    </Component>
-    <Component class="javax.swing.JLabel" name="lbl_rol">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Rol:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="list_rol">
-      <Properties>
-        <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.ComponentChooserEditor">
-          <ComponentRef name="rolListRenderizar1"/>
-        </Property>
-      </Properties>
-      <BindingProperties>
-        <BindingProperty name="elements" source="rolList" target="list_rol" targetPath="elements" updateStrategy="0" immediately="false"/>
-        <BindingProperty name="selectedItem" source="mastreTable" sourcePath="${selectedElement.idRol}" target="list_rol" targetPath="selectedItem" updateStrategy="0" immediately="false"/>
-      </BindingProperties>
-    </Component>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
-      <AuxValues>
-        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-      </AuxValues>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-      <SubComponents>
-        <Component class="javax.swing.JTable" name="mastreTable">
-          <Properties>
-            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-              <TableColumnModel selectionModel="0">
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
-                  <Editor/>
-                  <Renderer/>
-                </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                  <Title/>
-                  <Editor/>
-                  <Renderer/>
-                </Column>
-              </TableColumnModel>
-            </Property>
-            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-            </Property>
-          </Properties>
-          <BindingProperties>
-            <BindingProperty name="elements" source="rolList" target="mastreTable" targetPath="elements" updateStrategy="0" immediately="true">
-              <Subbinding sourcePath="${idRol}">
-                <BindingParameter name="NAME" value="Id Rol"/>
-                <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="Integer.class"/>
-              </Subbinding>
-              <Subbinding sourcePath="${idRol.nombre}">
-                <BindingParameter name="NAME" value="Nombre"/>
-              </Subbinding>
-            </BindingProperty>
-          </BindingProperties>
-        </Component>
-      </SubComponents>
-    </Container>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btn_guardar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Guardar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_guardarActionPerformed"/>
       </Events>
+    </Component>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="cc" green="cc" red="cc" type="rgb"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Component id="lbl_rol" min="-2" pref="48" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                          <Component id="list_rol" min="-2" pref="176" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lbl_passw" min="-2" pref="86" max="-2" attributes="0"/>
+                              <Component id="lbl_codempl" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="list_empleado" pref="98" max="32767" attributes="0"/>
+                              <Component id="tf_passw" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace pref="85" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lbl_codempl" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="list_empleado" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="30" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lbl_passw" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tf_passw" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="list_rol" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_rol" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JComboBox" name="list_rol">
+          <Properties>
+            <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="rolListRenderizar1"/>
+            </Property>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="elements" source="rolList" target="list_rol" targetPath="elements" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="list_rolActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbl_passw">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Password:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbl_codempl">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Codigo Empleado:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbl_rol">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Rol:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="tf_passw">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tf_passwFocusLost"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="list_empleado">
+          <Properties>
+            <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="empleadoListRenderizar1"/>
+            </Property>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="elements" source="empleadoList" target="list_empleado" targetPath="elements" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JButton" name="btn_cancelar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cancelar"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

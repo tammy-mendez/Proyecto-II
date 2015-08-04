@@ -59,6 +59,7 @@ public class MenuAdminSist extends javax.swing.JFrame {
         mItem_eliminarR = new javax.swing.JMenuItem();
         mItem_buscarR = new javax.swing.JMenuItem();
         menu_usuario = new javax.swing.JMenu();
+        mitem_regis_usuario = new javax.swing.JMenuItem();
         menu_auditoria = new javax.swing.JMenu();
         menu_salir = new javax.swing.JMenu();
 
@@ -121,6 +122,15 @@ public class MenuAdminSist extends javax.swing.JFrame {
 
         menu_usuario.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         menu_usuario.setText("Administrar Usuario");
+
+        mitem_regis_usuario.setText("Registrar Usuario");
+        mitem_regis_usuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitem_regis_usuarioActionPerformed(evt);
+            }
+        });
+        menu_usuario.add(mitem_regis_usuario);
+
         jMenuBar1.add(menu_usuario);
 
         menu_auditoria.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -232,6 +242,13 @@ public class MenuAdminSist extends javax.swing.JFrame {
         VerAuditoriaSistema.main(args);
     }//GEN-LAST:event_menu_auditoriaMouseClicked
 
+    private void mitem_regis_usuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitem_regis_usuarioActionPerformed
+        // TODO add your handling code here:
+        String args[]=new String[1];
+        args[0]="Registrar usuario";
+        UsuarioCreate.main(args);
+    }//GEN-LAST:event_mitem_regis_usuarioActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -263,6 +280,7 @@ public class MenuAdminSist extends javax.swing.JFrame {
     private javax.swing.JMenu menu_rol;
     private javax.swing.JMenu menu_salir;
     private javax.swing.JMenu menu_usuario;
+    private javax.swing.JMenuItem mitem_regis_usuario;
     // End of variables declaration//GEN-END:variables
 
 }

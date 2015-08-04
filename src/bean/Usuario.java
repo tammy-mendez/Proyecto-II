@@ -11,12 +11,12 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.beans.PropertyChangeSupport;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 /**
@@ -30,9 +30,14 @@ import javax.persistence.Transient;
     @NamedQuery(name = "Usuario.findByCodigoEmpleado", query = "SELECT u FROM Usuario u WHERE u.codigoEmpleado = :codigoEmpleado"),
     @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password")})
 public class Usuario implements Serializable {
+    
+   /* @JoinColumn(name = "codigoEmpleado", referencedColumnName = "codigoEmpleado")
+    @OneToOne(optional = false)
+    private Empleado empleado;*/
     @Transient
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @Column(name = "codigoEmpleado")
@@ -40,10 +45,7 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @Column(name = "password")
     private String password;
-    @JoinColumn(name = "idRol", referencedColumnName ="idRol" )
-    @ManyToOne
-    private Rol idRol;
-
+    
     public Usuario() {
     }
 
@@ -71,16 +73,6 @@ public class Usuario implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    public Rol getIdRol() { 
-        return idRol;
-    }
-    public void setIdRol(Rol codRol)
-    { 
-         Rol oldIdRol = this.idRol; 
-         this.idRol = codRol; 
-         changeSupport.firePropertyChange("idRol", oldIdRol, idRol); 
-    }
 
     @Override
     public int hashCode() {
@@ -106,6 +98,15 @@ public class Usuario implements Serializable {
     public String toString() {
         return "bean.Usuario[ codigoEmpleado=" + codigoEmpleado + " ]";
     }
+
+
+  /*  public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }*/
     
     
 }

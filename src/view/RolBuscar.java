@@ -168,6 +168,7 @@ public class RolBuscar extends javax.swing.JFrame {
 
     private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
         // TODO add your handling code here:
+       // TODO add your handling code here:
          if (tf_valor.getText().length()==0){
             JOptionPane.showMessageDialog(null,"Ingrese algún valor para efectuar la búsqueda", "Advertencia",JOptionPane.ERROR_MESSAGE);
             return;
@@ -187,7 +188,7 @@ public class RolBuscar extends javax.swing.JFrame {
             list.addAll(r);
         }
         else{
-            query = entityManager.createNamedQuery( "Rol.findByNombre");
+           /* query = entityManager.createNamedQuery( "Rol.findByNombre");
             query.setParameter("nombre",tf_valor.getText());
             List<Rol> r = query.getResultList();
              if (r.size()==0){
@@ -197,6 +198,18 @@ public class RolBuscar extends javax.swing.JFrame {
             }
             list.clear();
             list.addAll(r);
+             */
+             query = entityManager.createNativeQuery( "SELECT * FROM rol WHERE nombre LIKE "
+                    +"'%"+tf_valor.getText()+"%'", Rol.class);
+            List<Rol> r = query.getResultList();
+             if (r.isEmpty()){
+                 JOptionPane.showMessageDialog(null, "Nombre inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                 tf_valor.setText(null);
+                  return;
+            }
+            list.clear();
+            list.addAll(r);
+
         }      
     }
       

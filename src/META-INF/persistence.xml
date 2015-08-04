@@ -6,7 +6,8 @@
     <class>bean.AuditoriaSistema</class>
     <class>bean.Empleado</class>
     <class>bean.Usuario</class>
-    <class>bean.RolUsuario</class>
+    <class>bean.Cargo</class>
+    <class>bean.UsuarioRol</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hotel db?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="user"/>

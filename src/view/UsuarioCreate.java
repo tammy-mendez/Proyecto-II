@@ -6,10 +6,14 @@
 
 package view;
 
+import bean.Empleado;
+import bean.Rol;
 import bean.Usuario;
+import bean.UsuarioRol;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,6 +21,10 @@ import javax.swing.JOptionPane;
  * @author Jorge
  */
 public class UsuarioCreate extends javax.swing.JFrame {
+   private char[] letras={'a','e','i','o','u','b','c','d','f','g'};
+   private int numero;
+   private String cadena="";
+   
 
     /**
      * Creates new form UsuarioCreate
@@ -35,21 +43,28 @@ public class UsuarioCreate extends javax.swing.JFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        rolListRenderizar1 = new renderizar.RolListRenderizar();
-        proyectoPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
-        rolQuery = java.beans.Beans.isDesignTime() ? null : proyectoPUEntityManager.createQuery("SELECT r FROM Rol r");
-        rolList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : rolQuery.getResultList();
+        EntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
+        Query = java.beans.Beans.isDesignTime() ? null : EntityManager.createQuery("SELECT r FROM Rol r");
+        List = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : Query.getResultList();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        lbl_codempl = new javax.swing.JLabel();
-        tf_codempl = new javax.swing.JTextField();
-        lbl_passw = new javax.swing.JLabel();
-        tf_passw = new javax.swing.JTextField();
-        lbl_rol = new javax.swing.JLabel();
-        list_rol = new javax.swing.JComboBox();
+        rolQuery = java.beans.Beans.isDesignTime() ? null : EntityManager.createQuery("SELECT r FROM Rol r");
+        rolList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : rolQuery.getResultList();
         jScrollPane2 = new javax.swing.JScrollPane();
-        mastreTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        jTable2 = new javax.swing.JTable();
+        rolListRenderizar1 = new renderizar.RolListRenderizar();
+        empleadoQuery = java.beans.Beans.isDesignTime() ? null : EntityManager.createQuery("SELECT e FROM Empleado e");
+        empleadoList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : empleadoQuery.getResultList();
+        empleadoListRenderizar1 = new renderizar.EmpleadoListRenderizar();
+        btn_guardar = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        list_rol = new javax.swing.JComboBox();
+        lbl_passw = new javax.swing.JLabel();
+        lbl_codempl = new javax.swing.JLabel();
+        lbl_rol = new javax.swing.JLabel();
+        tf_passw = new javax.swing.JPasswordField();
+        list_empleado = new javax.swing.JComboBox();
+        btn_cancelar = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -64,84 +79,132 @@ public class UsuarioCreate extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
+
+        rolListRenderizar1.setText("rolListRenderizar1");
+
+        empleadoListRenderizar1.setText("empleadoListRenderizar1");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lbl_codempl.setText("Codigo Empleado:");
+        btn_guardar.setText("Guardar");
+        btn_guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_guardarActionPerformed(evt);
+            }
+        });
 
-        lbl_passw.setText("Password:");
-
-        lbl_rol.setText("Rol:");
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
         list_rol.setRenderer(rolListRenderizar1);
 
         org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, rolList, list_rol);
         bindingGroup.addBinding(jComboBoxBinding);
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, mastreTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.idRol}"), list_rol, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, new javax.swing.JTable(), org.jdesktop.beansbinding.ELProperty.create("${selectedElement.nombre}"), list_rol, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
         bindingGroup.addBinding(binding);
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, rolList, mastreTable);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${idRol}"));
-        columnBinding.setColumnName("Id Rol");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${idRol.nombre}"));
-        columnBinding.setColumnName("Nombre");
-        bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
-        jScrollPane2.setViewportView(mastreTable);
-
-        jButton1.setText("Guardar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        list_rol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                list_rolActionPerformed(evt);
             }
         });
+
+        lbl_passw.setText("Password:");
+
+        lbl_codempl.setText("Codigo Empleado:");
+
+        lbl_rol.setText("Rol:");
+
+        tf_passw.setEditable(false);
+        tf_passw.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tf_passwFocusLost(evt);
+            }
+        });
+
+        list_empleado.setRenderer(empleadoListRenderizar1);
+
+        jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, empleadoList, list_empleado);
+        bindingGroup.addBinding(jComboBoxBinding);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(42, 42, 42)
+                        .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_passw, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_codempl))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(list_empleado, 0, 98, Short.MAX_VALUE)
+                            .addComponent(tf_passw))))
+                .addContainerGap(85, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_codempl)
+                    .addComponent(list_empleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_passw)
+                    .addComponent(tf_passw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_rol))
+                .addGap(45, 45, 45))
+        );
+
+        btn_cancelar.setText("Cancelar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lbl_passw, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lbl_codempl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(lbl_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(list_rol, 0, 160, Short.MAX_VALUE)
-                            .addComponent(tf_passw)
-                            .addComponent(tf_codempl)))
+                        .addGap(67, 67, 67)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(14, 14, 14)))
-                .addContainerGap(232, Short.MAX_VALUE))
+                        .addGap(130, 130, 130)
+                        .addComponent(btn_guardar)
+                        .addGap(53, 53, 53)
+                        .addComponent(btn_cancelar)))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(58, 58, 58)
+                .addGap(26, 26, 26)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_codempl)
-                    .addComponent(tf_codempl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_passw)
-                    .addComponent(tf_passw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_rol)
-                    .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(84, Short.MAX_VALUE))
+                    .addComponent(btn_guardar)
+                    .addComponent(btn_cancelar))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -149,20 +212,46 @@ public class UsuarioCreate extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
         // TODO add your handling code here:
+        
+               
              EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
              EntityManager em=fact.createEntityManager();
              em.getTransaction().begin();
              Usuario u=new Usuario();
-             u.setCodigoEmpleado(Integer.parseInt(tf_codempl.getText()));
+             Empleado e=new Empleado();
+             e=(Empleado) list_empleado.getSelectedItem();
+             u.setCodigoEmpleado(e.getCodigoEmpleado());
              u.setPassword(tf_passw.getText());
-             u.setIdRol(null);
+             Rol r= new Rol();
+             r=(Rol) list_rol.getSelectedItem();
+            
+             UsuarioRol ur= new UsuarioRol();
+             ur.setIdRol(r.getIdRol());
+             ur.setCodigoEmpleado(u.getCodigoEmpleado());
              em.persist(u);
+             em.persist(ur);
              em.getTransaction().commit();
              em.close();
               JOptionPane.showMessageDialog(null,"Creación exitosa", "Confirmación",JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btn_guardarActionPerformed
+
+    private void list_rolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list_rolActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_list_rolActionPerformed
+
+    private void tf_passwFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_passwFocusLost
+        // TODO add your handling code here:
+        for(int i=0;i<3;i++){
+            numero=(int)(Math.random()*9+1);
+            cadena=cadena+""+numero+""+letras[numero];
+        }
+        
+        tf_passw.setText(cadena);
+        System.out.print(cadena);
+        
+    }//GEN-LAST:event_tf_passwFocusLost
 
     /**
      * @param args the command line arguments
@@ -194,27 +283,38 @@ public class UsuarioCreate extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new UsuarioCreate().setVisible(true);
+                JFrame frame=new UsuarioCreate();
+                frame.setVisible(true);
+                frame.setTitle("Registrar Usuario");
+                frame.setLocationRelativeTo(null);
+                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.persistence.EntityManager EntityManager;
+    private java.util.List<bean.Rol> List;
+    private javax.persistence.Query Query;
+    private javax.swing.JButton btn_cancelar;
+    private javax.swing.JButton btn_guardar;
+    private java.util.List<bean.Empleado> empleadoList;
+    private renderizar.EmpleadoListRenderizar empleadoListRenderizar1;
+    private javax.persistence.Query empleadoQuery;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JLabel lbl_codempl;
     private javax.swing.JLabel lbl_passw;
     private javax.swing.JLabel lbl_rol;
+    private javax.swing.JComboBox list_empleado;
     private javax.swing.JComboBox list_rol;
-    private javax.swing.JTable mastreTable;
-    private javax.persistence.EntityManager proyectoPUEntityManager;
     private java.util.List<bean.Rol> rolList;
     private renderizar.RolListRenderizar rolListRenderizar1;
     private javax.persistence.Query rolQuery;
-    private javax.swing.JTextField tf_codempl;
-    private javax.swing.JTextField tf_passw;
+    private javax.swing.JPasswordField tf_passw;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

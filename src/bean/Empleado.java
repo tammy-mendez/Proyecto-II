@@ -6,10 +6,13 @@
 
 package bean;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,9 +23,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  *
@@ -41,6 +46,13 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Empleado.findByTelefono", query = "SELECT e FROM Empleado e WHERE e.telefono = :telefono"),
     @NamedQuery(name = "Empleado.findByFechaNacimiento", query = "SELECT e FROM Empleado e WHERE e.fechaNacimiento = :fechaNacimiento")})
 public class Empleado implements Serializable {
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+    @JoinColumn(name = "codigoCargo", referencedColumnName = "codigoCargo")
+    @ManyToOne(optional = false)
+    private Cargo codigoCargo;
+  /*  @OneToOne(cascade = CascadeType.ALL, mappedBy = "empleado")
+    private Usuario usuario;*/
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,7 +110,9 @@ public class Empleado implements Serializable {
     }
 
     public void setCodigoEmpleado(Integer codigoEmpleado) {
+        Integer oldCodigoEmpleado = this.codigoEmpleado;
         this.codigoEmpleado = codigoEmpleado;
+        changeSupport.firePropertyChange("codigoEmpleado", oldCodigoEmpleado, codigoEmpleado);
     }
 
     public String getNombre() {
@@ -106,7 +120,9 @@ public class Empleado implements Serializable {
     }
 
     public void setNombre(String nombre) {
+        String oldNombre = this.nombre;
         this.nombre = nombre;
+        changeSupport.firePropertyChange("nombre", oldNombre, nombre);
     }
 
     public String getApellido() {
@@ -114,7 +130,9 @@ public class Empleado implements Serializable {
     }
 
     public void setApellido(String apellido) {
+        String oldApellido = this.apellido;
         this.apellido = apellido;
+        changeSupport.firePropertyChange("apellido", oldApellido, apellido);
     }
 
     public String getCedula() {
@@ -122,7 +140,9 @@ public class Empleado implements Serializable {
     }
 
     public void setCedula(String cedula) {
+        String oldCedula = this.cedula;
         this.cedula = cedula;
+        changeSupport.firePropertyChange("cedula", oldCedula, cedula);
     }
 
     public String getEmail() {
@@ -130,7 +150,9 @@ public class Empleado implements Serializable {
     }
 
     public void setEmail(String email) {
+        String oldEmail = this.email;
         this.email = email;
+        changeSupport.firePropertyChange("email", oldEmail, email);
     }
 
     public String getDireccion() {
@@ -138,7 +160,9 @@ public class Empleado implements Serializable {
     }
 
     public void setDireccion(String direccion) {
+        String oldDireccion = this.direccion;
         this.direccion = direccion;
+        changeSupport.firePropertyChange("direccion", oldDireccion, direccion);
     }
 
     public int getTelefono() {
@@ -146,7 +170,9 @@ public class Empleado implements Serializable {
     }
 
     public void setTelefono(int telefono) {
+        int oldTelefono = this.telefono;
         this.telefono = telefono;
+        changeSupport.firePropertyChange("telefono", oldTelefono, telefono);
     }
 
     public Date getFechaNacimiento() {
@@ -154,7 +180,9 @@ public class Empleado implements Serializable {
     }
 
     public void setFechaNacimiento(Date fechaNacimiento) {
+        Date oldFechaNacimiento = this.fechaNacimiento;
         this.fechaNacimiento = fechaNacimiento;
+        changeSupport.firePropertyChange("fechaNacimiento", oldFechaNacimiento, fechaNacimiento);
     }
 
     public Collection<Empleado> getEmpleadoCollection() {
@@ -170,7 +198,9 @@ public class Empleado implements Serializable {
     }
 
     public void setCodigoJefe(Empleado codigoJefe) {
+        Empleado oldCodigoJefe = this.codigoJefe;
         this.codigoJefe = codigoJefe;
+        changeSupport.firePropertyChange("codigoJefe", oldCodigoJefe, codigoJefe);
     }
 
     @Override
@@ -196,6 +226,32 @@ public class Empleado implements Serializable {
     @Override
     public String toString() {
         return "bean.Empleado[ codigoEmpleado=" + codigoEmpleado + " ]";
+    }
+
+    public Cargo getCodigoCargo() {
+        return codigoCargo;
+    }
+
+    public void setCodigoCargo(Cargo codigoCargo) {
+        Cargo oldCodigoCargo = this.codigoCargo;
+        this.codigoCargo = codigoCargo;
+        changeSupport.firePropertyChange("codigoCargo", oldCodigoCargo, codigoCargo);
+    }
+
+  /*  public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }*/
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }
