@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 public class RolCreate extends javax.swing.JFrame {
     private char ch;
     private int limite=45;
+    private int resp;
     /** Creates new form RolCreate */
     public RolCreate() {
         initComponents();
@@ -60,7 +61,9 @@ public class RolCreate extends javax.swing.JFrame {
         setTitle("Crear Rol");
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
+        lbl_nombre.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         lbl_nombre.setText("Nombre:");
 
         tf_nombre.addActionListener(new java.awt.event.ActionListener() {
@@ -83,7 +86,7 @@ public class RolCreate extends javax.swing.JFrame {
                 .addComponent(lbl_nombre)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -96,7 +99,9 @@ public class RolCreate extends javax.swing.JFrame {
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
+        btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/guardar.png"))); // NOI18N
         btn_guardar.setText("Guardar");
         btn_guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -104,6 +109,7 @@ public class RolCreate extends javax.swing.JFrame {
             }
         });
 
+        btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir.png"))); // NOI18N
         btn_cancelar.setText("Cancelar");
         btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,9 +133,9 @@ public class RolCreate extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_cancelar)
-                    .addComponent(btn_guardar))
-                .addContainerGap())
+                    .addComponent(btn_guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(11, 11, 11))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -137,13 +143,13 @@ public class RolCreate extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(101, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(65, 65, 65)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(92, 92, 92))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,7 +158,7 @@ public class RolCreate extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(78, 78, 78)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         pack();
@@ -164,12 +170,13 @@ public class RolCreate extends javax.swing.JFrame {
 
     private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
         // TODO add your handling code here:
-        if (tf_nombre.getText().length()==0){
+        resp=  JOptionPane.showConfirmDialog(null,"Desea Registrar un nuevo rol?", "Confirmar Creación",JOptionPane.YES_NO_OPTION );
+         if (resp==JOptionPane.YES_OPTION){
+             if (tf_nombre.getText().length()==0){
             JOptionPane.showMessageDialog(null,"Ingrese algun valor para el campo nombre", "Advertencia",JOptionPane.ERROR_MESSAGE);
             return;
-        }
- else{
-            try {
+            }else{
+                 try {
                 EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
                 EntityManager em=fact.createEntityManager();
                 em.getTransaction().begin();
@@ -194,8 +201,10 @@ public class RolCreate extends javax.swing.JFrame {
             } catch (ParseException ex) {
                 Logger.getLogger(RolCreate.class.getName()).log(Level.SEVERE, null, ex);
             }
-
- }
+             }
+        }else{
+                this.setVisible(false);
+        }  
     }//GEN-LAST:event_btn_guardarActionPerformed
    
     private void tf_nombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_nombreKeyTyped

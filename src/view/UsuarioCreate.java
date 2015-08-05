@@ -6,11 +6,18 @@
 
 package view;
 
+import bean.AuditoriaSistema;
 import bean.Correo;
 import bean.Empleado;
 import bean.Rol;
 import bean.Usuario;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -27,7 +34,8 @@ public class UsuarioCreate extends javax.swing.JFrame {
    private String cadena="";
    private String receptor;
    private String password;// contrasenha del usuario para su acceso al sistema
-    private String datos[]=new String[5];
+   private String datos[]=new String[5];
+   private int resp;
    
 
     /**
@@ -101,6 +109,7 @@ public class UsuarioCreate extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/guardar.png"))); // NOI18N
         btn_guardar.setText("Guardar");
         btn_guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,6 +118,7 @@ public class UsuarioCreate extends javax.swing.JFrame {
         });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
         list_rol.setRenderer(rolListRenderizar1);
 
@@ -121,10 +131,13 @@ public class UsuarioCreate extends javax.swing.JFrame {
             }
         });
 
+        lbl_passw.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         lbl_passw.setText("Password:");
 
+        lbl_codempl.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         lbl_codempl.setText("Codigo Empleado:");
 
+        lbl_rol.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         lbl_rol.setText("Rol:");
 
         tf_passw.setEditable(false);
@@ -147,17 +160,18 @@ public class UsuarioCreate extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
                         .addComponent(lbl_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42)
+                        .addGap(33, 33, 33)
                         .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_passw, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_codempl))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(list_empleado, 0, 98, Short.MAX_VALUE)
-                            .addComponent(tf_passw))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(list_empleado, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tf_passw, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(85, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -178,7 +192,13 @@ public class UsuarioCreate extends javax.swing.JFrame {
                 .addGap(45, 45, 45))
         );
 
+        btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir.png"))); // NOI18N
         btn_cancelar.setText("Cancelar");
+        btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -194,7 +214,7 @@ public class UsuarioCreate extends javax.swing.JFrame {
                         .addComponent(btn_guardar)
                         .addGap(53, 53, 53)
                         .addComponent(btn_cancelar)))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,7 +225,7 @@ public class UsuarioCreate extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_guardar)
                     .addComponent(btn_cancelar))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -215,13 +235,14 @@ public class UsuarioCreate extends javax.swing.JFrame {
 
     private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
         // TODO add your handling code here:
-        
-               
+        resp=  JOptionPane.showConfirmDialog(null,"Desea Registrar un nuevo usuario?", "Confirmar Creación",JOptionPane.YES_NO_OPTION );
+        if (resp==JOptionPane.YES_OPTION){
              EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
              EntityManager em=fact.createEntityManager();
              em.getTransaction().begin();
              Usuario u=new Usuario();
              Empleado e=new Empleado();
+             //obtenemos el codigo del empleado seleccionado  en la lista
              e=(Empleado) list_empleado.getSelectedItem();
              //verificamos si el empleado ya no tiene una cuenta creada
              Query=EntityManager.createNamedQuery("Usuario.findByCodigoEmpleado");
@@ -231,32 +252,45 @@ public class UsuarioCreate extends javax.swing.JFrame {
                   JOptionPane.showMessageDialog(null,"El empleado ya tiene una cuenta creada","Error",JOptionPane.ERROR_MESSAGE);
                   return;
              }else{
-                u.setCodigoEmpleado(e.getCodigoEmpleado());
-                u.setPassword(tf_passw.getText());
-                Rol r= new Rol();
-                r=(Rol) list_rol.getSelectedItem();
-                u.setIdRol(r.getIdRol());
-                em.persist(u);
-                em.getTransaction().commit();
-                em.close();
-                //perparamos los datos para el envio del correo electrónico
-                datos[0]=e.getEmail();
-                datos[1]="Creación de cuenta";
-                datos[2]="Su código de usuario es:"+" "+"'"+e.getCodigoEmpleado()+"'" +" "+
-                        "y su contraseña de acceso es:"+" "+"'"+u.getPassword()+"'";
-                //enviamos el corrreo
-                 Correo c=new Correo();
-               if(c.enviarCorreo(datos)){
-                   JOptionPane.showMessageDialog(null,"Creación Exitosa, sus datos fueron enviados a su email", "Aviso",JOptionPane.INFORMATION_MESSAGE);
-                   this.setVisible(false);
-               }else{
-                    JOptionPane.showMessageDialog(null,"Creación exitosa,sus datos no puedieron ser enviados; verifique su dirrecion de email", "Error",JOptionPane.ERROR_MESSAGE);
-               }
-                
-                 
-             }
-             
-             
+                 try {
+                     u.setCodigoEmpleado(e.getCodigoEmpleado());
+                     u.setPassword(tf_passw.getText());
+                     Rol r= new Rol();
+                     r=(Rol) list_rol.getSelectedItem();
+                     u.setIdRol(r.getIdRol());
+                     em.persist(u);
+                     //registramos los datos necesarios para la auditoria
+                     AuditoriaSistema as=new AuditoriaSistema();
+                     as.setAccion("Creación");
+                     as.setTabla("Usuario");
+                     //trabajamos con la fecha
+                     Date fecha=new Date();
+                     DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                     as.setFechaHora(formato.parse(formato.format(fecha)));
+                     as.setUsuario(LoginView.nombreUsuario);
+                     em.persist(as);
+                     em.getTransaction().commit();
+                     em.close();
+                     //perparamos los datos para el envio del correo electrónico
+                     datos[0]=e.getEmail();
+                     datos[1]="Creación de cuenta";
+                     datos[2]="Su código de usuario es:"+" "+"'"+e.getCodigoEmpleado()+"'" +" "+
+                             "y su contraseña de acceso es:"+" "+"'"+u.getPassword()+"'";
+                     //enviamos el corrreo
+                     Correo c=new Correo();
+                     if(c.enviarCorreo(datos)){
+                         JOptionPane.showMessageDialog(null,"Creación Exitosa, sus datos fueron enviados a su email", "Aviso",JOptionPane.INFORMATION_MESSAGE);
+                         this.setVisible(false);
+                     }else{
+                         JOptionPane.showMessageDialog(null,"Creación exitosa,sus datos no puedieron ser enviados; verifique su dirrecion de email", "Error",JOptionPane.ERROR_MESSAGE);
+                     }
+                 } catch (ParseException ex) {
+                     Logger.getLogger(UsuarioCreate.class.getName()).log(Level.SEVERE, null, ex);
+                     }
+                }    
+             }else{
+                    this.setVisible(false);
+             }      
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void list_rolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list_rolActionPerformed
@@ -274,6 +308,11 @@ public class UsuarioCreate extends javax.swing.JFrame {
         System.out.print(cadena);
         
     }//GEN-LAST:event_tf_passwFocusLost
+
+    private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+    }//GEN-LAST:event_btn_cancelarActionPerformed
 
     /**
      * @param args the command line arguments

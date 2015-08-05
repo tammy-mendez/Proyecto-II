@@ -12,6 +12,7 @@
 package view;
 
 import bean.AuditoriaSistema;
+import bean.Correo;
 import bean.Empleado;
 import bean.Usuario;
 import java.text.DateFormat;
@@ -37,6 +38,7 @@ public class CambiarPasswordView extends javax.swing.JFrame {
     private int codEmpl;
     private int cantidad=0;
     private String nombre;
+    private String datos[]=new String[5];
 
     /** Creates new form CambiarPasswordView */
     public CambiarPasswordView() {
@@ -73,6 +75,7 @@ public class CambiarPasswordView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cambiar Contraseña");
 
+        btn_cambiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/refrescar.png"))); // NOI18N
         btn_cambiar.setText("Cambiar");
         btn_cambiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -80,6 +83,7 @@ public class CambiarPasswordView extends javax.swing.JFrame {
             }
         });
 
+        btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir.png"))); // NOI18N
         btn_cancelar.setText("Cancelar");
         btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,6 +92,7 @@ public class CambiarPasswordView extends javax.swing.JFrame {
         });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
         tf_codempl.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -95,9 +100,11 @@ public class CambiarPasswordView extends javax.swing.JFrame {
             }
         });
 
+        lbl_actual.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         lbl_actual.setText("Contraseña Actual:");
 
-        lbl_codempl.setText("Codigo Usuario");
+        lbl_codempl.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_codempl.setText("Codigo Usuario:");
 
         tf_actual.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -140,6 +147,7 @@ public class CambiarPasswordView extends javax.swing.JFrame {
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
         tf_nueva.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -153,8 +161,10 @@ public class CambiarPasswordView extends javax.swing.JFrame {
             }
         });
 
+        lbl_nueva.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         lbl_nueva.setText("Nueva contraseña:");
 
+        lbl_nueva2.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         lbl_nueva2.setText("Vuelva a escribir la contraseña:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -163,16 +173,16 @@ public class CambiarPasswordView extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(lbl_nueva)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tf_nueva, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addComponent(lbl_nueva2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tf_nueva2, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,18 +191,18 @@ public class CambiarPasswordView extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_nueva)
                     .addComponent(tf_nueva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(33, 33, 33)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_nueva2)
                     .addComponent(tf_nueva2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Candara", 1, 22)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 153, 255));
         jLabel1.setText("Proporcione su Código y Contraseña");
 
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Candara", 1, 22)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 153, 255));
         jLabel2.setText("Escriba su nueva Contraseña");
         jLabel2.setAutoscrolls(true);
@@ -204,22 +214,22 @@ public class CambiarPasswordView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(164, 164, 164)
+                        .addGap(147, 147, 147)
                         .addComponent(btn_cambiar)
-                        .addGap(121, 121, 121)
+                        .addGap(102, 102, 102)
                         .addComponent(btn_cancelar))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(92, 92, 92)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(146, 146, 146)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(112, 112, 112)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(102, Short.MAX_VALUE))
+                        .addGap(111, 111, 111)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,8 +241,8 @@ public class CambiarPasswordView extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(48, 48, 48)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_cambiar)
                     .addComponent(btn_cancelar))
@@ -273,7 +283,7 @@ public class CambiarPasswordView extends javax.swing.JFrame {
                 usu.setCodigoEmpleado(u.get(0).getCodigoEmpleado());
                 usu.setPassword(tf_nueva.getText());
                 entityManager.merge(usu);
-                JOptionPane.showMessageDialog(null,"Modificación Exitosa", "Aviso",JOptionPane.INFORMATION_MESSAGE);
+               
                 //registramos los datos necesarios para la auditoria
                 query=entityManager.createNamedQuery("Empleado.findByCodigoEmpleado");
                 query.setParameter("codigoEmpleado", usu.getCodigoEmpleado());
@@ -294,12 +304,25 @@ public class CambiarPasswordView extends javax.swing.JFrame {
                 as.setUsuario(nombre);
                 entityManager.persist(as);
                 entityManager.getTransaction().commit();
-                entityManager.close();
-                this.setVisible(false);
-                String args[]=new String[1];
-                args[0]="Ingreso al Sistema";
-                LoginView.main(args);
-               
+                query=entityManager.createNamedQuery("Empleado.findByCodigoEmpleado");
+                query.setParameter("codigoEmpleado", usu.getCodigoEmpleado());
+                List<Empleado> em=query.getResultList();
+                 entityManager.close();
+                 datos[0]=em.get(0).getEmail();
+                 datos[1]="Modificación de Contraseña";
+                 datos[2]="Su nueva contraseña de acceso al sistema es:"+" "+"'"+usu.getPassword()+"'";
+                 Correo c=new Correo();
+                     if(c.enviarCorreo(datos)){
+                         JOptionPane.showMessageDialog(null,"Modificacion Exitosa, su nueva contraseña fue enviada a su email", "Aviso",JOptionPane.INFORMATION_MESSAGE);
+
+                         this.setVisible(false);
+                         String args[]=new String[1];
+                         args[0]="Ingreso al Sistema";
+                         LoginView.main(args);
+                         
+                     }else{
+                         JOptionPane.showMessageDialog(null,"Modificación Exitosa,su nueva contraseñano pudo ser enviada; verifique su dirrecion de email", "Error",JOptionPane.ERROR_MESSAGE);
+                     }       
         }
         else{
             JOptionPane.showMessageDialog(null,"Las Contraseñas no coiciden", "Error",JOptionPane.ERROR_MESSAGE);
