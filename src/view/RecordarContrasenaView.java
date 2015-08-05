@@ -30,7 +30,7 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
     private String contrasenha="HMSYSTEM123";//contrasenha de acceso al servidor de correo
     private String receptor;
     private String password;// contrasenha del usuario para su acceso al sistema
-    private String datos[]=new String[4];
+    private String datos[]=new String[3];
 
     /** Creates new form RecordarContrasenaView */
     public RecordarContrasenaView() {
@@ -185,10 +185,9 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
             }else{
                 receptor=e.get(0).getEmail();//obtenemos el email del usuario
                 password=u.get(0).getPassword();
-                datos[0]=emisor;
-                datos[1]=contrasenha;
-                datos[2]=receptor;
-                datos[3]=password;
+                datos[0]=receptor;//email de quien recibe el mensaje
+                datos[1]="Recordatorio de contraseña";//tema del mensaje
+                datos[2]="Su contraseña de acceso al sistema es:"+" "+"'"+password+"'"; //cuerpo del mensaje
                 Correo c=new Correo();
                if(c.enviarCorreo(datos)){
                    JOptionPane.showMessageDialog(null,"Su contrasenha fue enviada exitosamente a su email", "Aviso",JOptionPane.INFORMATION_MESSAGE);

@@ -6,10 +6,11 @@
 
 package view;
 
+import bean.Correo;
 import bean.Empleado;
 import bean.Rol;
 import bean.Usuario;
-import bean.UsuarioRol;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -24,6 +25,9 @@ public class UsuarioCreate extends javax.swing.JFrame {
    private char[] letras={'a','e','i','o','u','b','c','d','f','g'};
    private int numero;
    private String cadena="";
+   private String receptor;
+   private String password;// contrasenha del usuario para su acceso al sistema
+    private String datos[]=new String[5];
    
 
     /**
@@ -48,14 +52,13 @@ public class UsuarioCreate extends javax.swing.JFrame {
         List = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : Query.getResultList();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        rolQuery = java.beans.Beans.isDesignTime() ? null : EntityManager.createQuery("SELECT r FROM Rol r");
-        rolList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : rolQuery.getResultList();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         rolListRenderizar1 = new renderizar.RolListRenderizar();
         empleadoQuery = java.beans.Beans.isDesignTime() ? null : EntityManager.createQuery("SELECT e FROM Empleado e");
-        empleadoList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : empleadoQuery.getResultList();
+        empleadoList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(empleadoQuery.getResultList());
         empleadoListRenderizar1 = new renderizar.EmpleadoListRenderizar();
+        entityManager1 = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         btn_guardar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         list_rol = new javax.swing.JComboBox();
@@ -109,10 +112,8 @@ public class UsuarioCreate extends javax.swing.JFrame {
 
         list_rol.setRenderer(rolListRenderizar1);
 
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, rolList, list_rol);
+        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, List, list_rol);
         bindingGroup.addBinding(jComboBoxBinding);
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, new javax.swing.JTable(), org.jdesktop.beansbinding.ELProperty.create("${selectedElement.nombre}"), list_rol, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
-        bindingGroup.addBinding(binding);
 
         list_rol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -222,19 +223,40 @@ public class UsuarioCreate extends javax.swing.JFrame {
              Usuario u=new Usuario();
              Empleado e=new Empleado();
              e=(Empleado) list_empleado.getSelectedItem();
-             u.setCodigoEmpleado(e.getCodigoEmpleado());
-             u.setPassword(tf_passw.getText());
-             Rol r= new Rol();
-             r=(Rol) list_rol.getSelectedItem();
-            
-             UsuarioRol ur= new UsuarioRol();
-             ur.setIdRol(r.getIdRol());
-             ur.setCodigoEmpleado(u.getCodigoEmpleado());
-             em.persist(u);
-             em.persist(ur);
-             em.getTransaction().commit();
-             em.close();
-              JOptionPane.showMessageDialog(null,"Creación exitosa", "Confirmación",JOptionPane.INFORMATION_MESSAGE);
+             //verificamos si el empleado ya no tiene una cuenta creada
+             Query=EntityManager.createNamedQuery("Usuario.findByCodigoEmpleado");
+             Query.setParameter("codigoEmpleado", e.getCodigoEmpleado());
+             List<Usuario> usu=Query.getResultList();
+             if(usu.size()!=0){
+                  JOptionPane.showMessageDialog(null,"El empleado ya tiene una cuenta creada","Error",JOptionPane.ERROR_MESSAGE);
+                  return;
+             }else{
+                u.setCodigoEmpleado(e.getCodigoEmpleado());
+                u.setPassword(tf_passw.getText());
+                Rol r= new Rol();
+                r=(Rol) list_rol.getSelectedItem();
+                u.setIdRol(r.getIdRol());
+                em.persist(u);
+                em.getTransaction().commit();
+                em.close();
+                //perparamos los datos para el envio del correo electrónico
+                datos[0]=e.getEmail();
+                datos[1]="Creación de cuenta";
+                datos[2]="Su código de usuario es:"+" "+"'"+e.getCodigoEmpleado()+"'" +" "+
+                        "y su contraseña de acceso es:"+" "+"'"+u.getPassword()+"'";
+                //enviamos el corrreo
+                 Correo c=new Correo();
+               if(c.enviarCorreo(datos)){
+                   JOptionPane.showMessageDialog(null,"Creación Exitosa, sus datos fueron enviados a su email", "Aviso",JOptionPane.INFORMATION_MESSAGE);
+                   this.setVisible(false);
+               }else{
+                    JOptionPane.showMessageDialog(null,"Creación exitosa,sus datos no puedieron ser enviados; verifique su dirrecion de email", "Error",JOptionPane.ERROR_MESSAGE);
+               }
+                
+                 
+             }
+             
+             
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void list_rolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list_rolActionPerformed
@@ -301,6 +323,7 @@ public class UsuarioCreate extends javax.swing.JFrame {
     private java.util.List<bean.Empleado> empleadoList;
     private renderizar.EmpleadoListRenderizar empleadoListRenderizar1;
     private javax.persistence.Query empleadoQuery;
+    private javax.persistence.EntityManager entityManager1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -311,9 +334,7 @@ public class UsuarioCreate extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_rol;
     private javax.swing.JComboBox list_empleado;
     private javax.swing.JComboBox list_rol;
-    private java.util.List<bean.Rol> rolList;
     private renderizar.RolListRenderizar rolListRenderizar1;
-    private javax.persistence.Query rolQuery;
     private javax.swing.JPasswordField tf_passw;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
