@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="19fb27fb-9c65-434d-bab9-261657fb6907">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0FFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="5e08e056-463f-4d98-9d7d-80a2ffdcdfa9"/>
+	<parameter name="NumFactura" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{NumFactura}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Saldo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[$P{Saldo}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     cliente.`nombre` AS cliente_nombre,
+     cliente.`apellido` AS cliente_apellido,
+     cliente.`direccion` AS cliente_direccion,
+     cliente.`telefono` AS cliente_telefono,
+     factura_cobro.`numFactura` AS factura_cobro_numFactura,
+     factura_cobro.`fechaEmision` AS factura_cobro_fechaEmision,
+     factura_cobro.`rucCliente` AS factura_cobro_rucCliente,
+     factura_cobro.`concepto` AS factura_cobro_concepto,
+     factura_cobro.`total` AS factura_cobro_total,
+     factura_cobro.`tipoFactura` AS factura_cobro_tipoFactura,
+     factura_cobro.`codigoReserva` AS factura_cobro_codigoReserva,
+     reserva.`numHabitacion` AS reserva_numHabitacion,
+     categ_habitacion.`nombre` AS categ_habitacion_nombre,
+     categ_habitacion.`costoxnoche` AS categ_habitacion_costoxnoche,
+     reserva.`checkIn` AS reserva_checkIn,
+     reserva.`checkOut` AS reserva_checkOut,
+     reserva.`montoTotal` AS reserva_montoTotal,
+     reserva.`codigoReserva` AS reserva_codigoReserva
+FROM
+     `reserva` reserva INNER JOIN `factura_cobro` factura_cobro ON reserva.`codigoReserva` = factura_cobro.`codigoReserva`
+     INNER JOIN `cliente` cliente ON reserva.`codigoCliente` = cliente.`codigoCliente`
+     INNER JOIN `habitacion` habitacion ON reserva.`numHabitacion` = habitacion.`numero`
+     INNER JOIN `categ_habitacion` categ_habitacion ON habitacion.`codigoCategoria` = categ_habitacion.`codigoCategoria`
+WHERE
+     factura_cobro.`numFactura` = $P{NumFactura}]]>
+	</queryString>
+	<field name="cliente_nombre" class="java.lang.String"/>
+	<field name="cliente_apellido" class="java.lang.String"/>
+	<field name="cliente_direccion" class="java.lang.String"/>
+	<field name="cliente_telefono" class="java.lang.Integer"/>
+	<field name="factura_cobro_numFactura" class="java.lang.Integer"/>
+	<field name="factura_cobro_fechaEmision" class="java.lang.String"/>
+	<field name="factura_cobro_rucCliente" class="java.lang.String"/>
+	<field name="factura_cobro_concepto" class="java.lang.String"/>
+	<field name="factura_cobro_total" class="java.lang.Integer"/>
+	<field name="factura_cobro_tipoFactura" class="java.lang.String"/>
+	<field name="factura_cobro_codigoReserva" class="java.lang.Integer"/>
+	<field name="reserva_numHabitacion" class="java.lang.Integer"/>
+	<field name="categ_habitacion_nombre" class="java.lang.String"/>
+	<field name="categ_habitacion_costoxnoche" class="java.lang.Integer"/>
+	<field name="reserva_checkIn" class="java.sql.Date"/>
+	<field name="reserva_checkOut" class="java.sql.Date"/>
+	<field name="reserva_montoTotal" class="java.lang.Integer"/>
+	<field name="reserva_codigoReserva" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="265" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement uuid="dc10e758-12e2-49e1-892f-ceb6aa415c3c" x="0" y="0" width="431" height="136"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="5a5d2446-56d1-40bf-af00-c4f3923376d6" x="133" y="1" width="198" height="42" forecolor="#FF3300"/>
+				<textElement>
+					<font fontName="MV Boli" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9b39bc99-1cf2-4861-8b39-2438d200bb0e" x="156" y="99" width="175" height="17" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[www.hotelsantamaria.com.py]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fb8e92a-de08-45b5-ab75-546da7648e58" x="94" y="43" width="325" height="40" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Santa Teresa casi Panchito Lopez. Barrio Santa Maria                  	           	  Asunción, Paraguay.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9febaf6-60da-4a9c-a3e0-6c704853de37" x="176" y="83" width="129" height="16" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Teléfono: 021-68398 ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ce208697-76b2-4638-8b91-ae0357664cf0" x="197" y="116" width="68" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONTI S.A]]></text>
+			</staticText>
+			<rectangle radius="10">
+				<reportElement uuid="942ff36f-3ce2-4aa4-a747-ff3c15bf70b3" x="453" y="0" width="299" height="136"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="f337d2a8-66a2-447e-910c-ff6ada4106db" x="492" y="0" width="241" height="24"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIMBRADO N° 10828118]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d0cb6149-6247-4c98-86b1-0e47ea50d8f3" x="492" y="24" width="167" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Inicio de Vigencia: 26/06/2015]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cdf2024b-b85a-43e2-8c86-6d7aac6357c9" x="492" y="44" width="167" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Fin de Vigencia: 30/06/2015]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d3863260-ab60-448c-a582-f1b8aa8d465a" x="551" y="64" width="123" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUC: 80051478-5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5ed38dc8-2d77-4bb4-a57d-ad965b5302b1" x="469" y="86" width="124" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FACTURA N°]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8e1b74db-0c04-4f9a-8af6-e4b7b8ba2aac" x="595" y="86" width="129" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura_cobro_numFactura}]]></textFieldExpression>
+			</textField>
+			<rectangle radius="10">
+				<reportElement uuid="bef9ff95-5fef-42b5-a349-897c5d168d4a" x="0" y="146" width="752" height="119"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="48a92295-a428-40bc-87e4-2f2080818138" x="20" y="153" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Fecha Emisión:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9251478f-9a0d-4fd1-bf2e-88a84d983f7e" x="120" y="153" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura_cobro_fechaEmision}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="84ca1ceb-b0b1-4ee2-be1e-c6f28cf30cc7" x="20" y="181" width="169" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Nombre o Razón social:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="605045c9-c7ce-4fae-9da0-580c0bf90538" x="189" y="181" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a0c09fef-d875-44c1-a610-efcf6a2796d1" x="289" y="181" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_apellido}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="828c6d3d-ed58-402e-94ee-fafb6799b86f" x="23" y="211" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9a698da8-0e4b-4d54-994b-a32f1791b7db" x="120" y="211" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_direccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c42c8dc0-ee19-4ba7-bb63-fadc990725d4" x="431" y="211" width="152" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Condición de venta:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="d29aee2f-e1f4-4584-a29c-4bf96fb65b5f" x="583" y="211" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura_cobro_tipoFactura}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d059bd24-a13c-4662-829d-a6f98c5c2b12" x="430" y="153" width="62" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[RUC:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="31362eca-6847-4ed0-b34a-15674ec84e7e" x="495" y="153" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura_cobro_rucCliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ffad5c2c-6d9f-44d2-bd1c-f3104d7bae49" x="430" y="181" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Teléfono:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="15ca5213-fc81-419e-a739-89a5cc2cbaa8" x="532" y="181" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_telefono}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement uuid="de04eef6-188c-4cb9-baf5-99a4ed69013b" x="23" y="24" width="50" height="84"/>
+				<imageExpression><![CDATA["C:\\Proyecto-II\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="18428772-49b4-4a26-bb43-61293e9d64db" x="197" y="242" width="108" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{categ_habitacion_nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ed6c93bb-8549-4da1-91e9-aaef49779d8b" x="132" y="242" width="65" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Categoría:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="67f1d5da-b7ef-4f56-b55f-74111c1496c7" x="315" y="242" width="74" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Habitación:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f8c3eed2-cade-4656-996b-0833bd4907c1" x="389" y="242" width="46" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserva_numHabitacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d17f19d1-10c4-4357-8c11-4d72c7f3a265" x="440" y="242" width="65" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Entrada:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d17f19d1-10c4-4357-8c11-4d72c7f3a265" x="611" y="242" width="48" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Salida:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="1f711b8a-74d2-4458-b4c4-e8ffe7e14e2f" x="505" y="242" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{reserva_checkIn}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="cb8d5340-093e-4e91-a4ad-7c83d46940a2" x="659" y="242" width="85" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{reserva_checkOut}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c2ea4b62-cb87-4ed9-adfb-48b08655d202" x="10" y="242" width="73" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Reserva N°:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="43623086-1c51-4717-bd1f-cb1be1d76d5c" x="83" y="242" width="33" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserva_codigoReserva}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="45" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement uuid="6c95ebf6-53fd-4203-9abe-643fdb4e7f22" x="0" y="0" width="752" height="40"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="aa5ced55-9ea1-4799-bea8-eeba723022bd" x="23" y="20" width="100" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Código Prod/Ser]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b54ae30-ef79-4298-954d-a06f61cad566" x="146" y="20" width="87" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a56085f3-fdbe-4176-850d-cbc8fa9a105a" x="551" y="20" width="44" height="20"/>
+				<textElement/>
+				<text><![CDATA[Exentas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3e4add15-76e3-4c8d-9ffc-8d40c8134ba2" x="632" y="20" width="27" height="20"/>
+				<textElement/>
+				<text><![CDATA[5%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="673b5ca8-b71b-494d-a466-c07058556013" x="693" y="20" width="40" height="20"/>
+				<textElement/>
+				<text><![CDATA[10%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c778cb89-85af-432b-b82b-5e11e9743be6" x="289" y="20" width="100" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="787ec124-7a97-4cbd-ac4f-8a1d0e6eaa45" x="445" y="20" width="80" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Costo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="771eeb9c-6695-40c4-b26f-0018514252e1" x="605" y="0" width="100" height="20"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Valor de Venta]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="6174d90b-67d9-48d9-97bc-abaff9396e6a" x="20" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{factura_cobro_codigoReserva}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5b1f1673-1a77-4fe8-85a3-afb841788de5" x="289" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{factura_cobro_concepto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5bb9e2aa-581d-44ec-850a-a90bdf9d5784" x="652" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{factura_cobro_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e805fc7b-b1a2-4a2a-9769-dcb69095cefd" x="452" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{reserva_montoTotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="58" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement uuid="84a239d5-79d7-4186-92e0-829fc2735d2a" x="0" y="8" width="752" height="42"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="da7fbae6-7c0d-469a-8d0c-0793b3f5da5d" x="265" y="8" width="136" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL A PAGAR Gs:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7238f27d-561f-4cf1-99db-66bead5c445d" x="43" y="18" width="90" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[I.V.A 10%:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="4e66c75e-5886-432c-82ba-00dbc703cf70" x="395" y="8" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura_cobro_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9b096cce-482d-44f7-abe3-c256d410243b" x="123" y="18" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura_cobro_total}*(0.1)]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dc64b3a5-34cf-41ef-a653-da9364f2412b" x="525" y="8" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Gs:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f4f178bf-e7c0-4ef7-bc29-1895a89b31ca" x="595" y="8" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Saldo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

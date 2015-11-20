@@ -67,7 +67,6 @@ public class UsuarioCreate extends javax.swing.JFrame {
         empleadoList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(empleadoQuery.getResultList());
         empleadoListRenderizar1 = new renderizar.EmpleadoListRenderizar();
         entityManager1 = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
-        btn_guardar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         list_rol = new javax.swing.JComboBox();
         lbl_passw = new javax.swing.JLabel();
@@ -75,7 +74,11 @@ public class UsuarioCreate extends javax.swing.JFrame {
         lbl_rol = new javax.swing.JLabel();
         tf_passw = new javax.swing.JPasswordField();
         list_empleado = new javax.swing.JComboBox();
+        jPanel2 = new javax.swing.JPanel();
         btn_cancelar = new javax.swing.JButton();
+        btn_guardar = new javax.swing.JButton();
+        panel_crearUsuario = new javax.swing.JPanel();
+        lbl_registrarUsuario = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -109,16 +112,9 @@ public class UsuarioCreate extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/guardar.png"))); // NOI18N
-        btn_guardar.setText("Guardar");
-        btn_guardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_guardarActionPerformed(evt);
-            }
-        });
-
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel1.setForeground(new java.awt.Color(204, 204, 255));
 
         list_rol.setRenderer(rolListRenderizar1);
 
@@ -131,13 +127,13 @@ public class UsuarioCreate extends javax.swing.JFrame {
             }
         });
 
-        lbl_passw.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_passw.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
         lbl_passw.setText("Password:");
 
-        lbl_codempl.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_codempl.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
         lbl_codempl.setText("Codigo Empleado:");
 
-        lbl_rol.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_rol.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
         lbl_rol.setText("Rol:");
 
         tf_passw.setEditable(false);
@@ -157,22 +153,21 @@ public class UsuarioCreate extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(42, 42, 42)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(lbl_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_codempl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_passw, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_codempl))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(list_empleado, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tf_passw, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(85, Short.MAX_VALUE))
+                            .addComponent(lbl_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_passw, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(42, 42, 42)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tf_passw, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(list_empleado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,18 +176,21 @@ public class UsuarioCreate extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_codempl)
                     .addComponent(list_empleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_passw)
-                    .addComponent(tf_passw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
+                    .addComponent(tf_passw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_passw))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_rol))
-                .addGap(45, 45, 45))
+                    .addComponent(lbl_rol)
+                    .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36))
         );
 
-        btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir.png"))); // NOI18N
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/delete.png"))); // NOI18N
         btn_cancelar.setText("Cancelar");
         btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -200,32 +198,83 @@ public class UsuarioCreate extends javax.swing.JFrame {
             }
         });
 
+        btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/guardar.png"))); // NOI18N
+        btn_guardar.setText("Guardar");
+        btn_guardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_guardarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(btn_guardar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addComponent(btn_cancelar)
+                .addGap(22, 22, 22))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_cancelar)
+                    .addComponent(btn_guardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        panel_crearUsuario.setBackground(new java.awt.Color(0, 153, 255));
+        panel_crearUsuario.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        lbl_registrarUsuario.setFont(new java.awt.Font("Corbel", 1, 30)); // NOI18N
+        lbl_registrarUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_registrarUsuario.setText("Crear Usuario");
+
+        javax.swing.GroupLayout panel_crearUsuarioLayout = new javax.swing.GroupLayout(panel_crearUsuario);
+        panel_crearUsuario.setLayout(panel_crearUsuarioLayout);
+        panel_crearUsuarioLayout.setHorizontalGroup(
+            panel_crearUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_crearUsuarioLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_registrarUsuario)
+                .addGap(116, 116, 116))
+        );
+        panel_crearUsuarioLayout.setVerticalGroup(
+            panel_crearUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_crearUsuarioLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_registrarUsuario)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(130, 130, 130)
-                        .addComponent(btn_guardar)
-                        .addGap(53, 53, 53)
-                        .addComponent(btn_cancelar)))
-                .addContainerGap(75, Short.MAX_VALUE))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(72, 72, 72))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panel_crearUsuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addGap(23, 23, 23)
+                .addComponent(panel_crearUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_guardar)
-                    .addComponent(btn_cancelar))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         bindingGroup.bind();
@@ -235,12 +284,12 @@ public class UsuarioCreate extends javax.swing.JFrame {
 
     private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
         // TODO add your handling code here:
+        
         resp=  JOptionPane.showConfirmDialog(null,"Desea Registrar un nuevo usuario?", "Confirmar Creación",JOptionPane.YES_NO_OPTION );
         if (resp==JOptionPane.YES_OPTION){
              EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
              EntityManager em=fact.createEntityManager();
              em.getTransaction().begin();
-             Usuario u=new Usuario();
              Empleado e=new Empleado();
              //obtenemos el codigo del empleado seleccionado  en la lista
              e=(Empleado) list_empleado.getSelectedItem();
@@ -252,45 +301,45 @@ public class UsuarioCreate extends javax.swing.JFrame {
                   JOptionPane.showMessageDialog(null,"El empleado ya tiene una cuenta creada","Error",JOptionPane.ERROR_MESSAGE);
                   return;
              }else{
-                 try {
-                     u.setCodigoEmpleado(e.getCodigoEmpleado());
-                     u.setPassword(tf_passw.getText());
-                     Rol r= new Rol();
-                     r=(Rol) list_rol.getSelectedItem();
-                     u.setIdRol(r.getIdRol());
-                     em.persist(u);
-                     //registramos los datos necesarios para la auditoria
-                     AuditoriaSistema as=new AuditoriaSistema();
-                     as.setAccion("Creación");
-                     as.setTabla("Usuario");
-                     //trabajamos con la fecha
-                     Date fecha=new Date();
-                     DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                     as.setFechaHora(formato.parse(formato.format(fecha)));
-                     as.setUsuario(LoginView.nombreUsuario);
-                     em.persist(as);
-                     em.getTransaction().commit();
-                     em.close();
-                     //perparamos los datos para el envio del correo electrónico
-                     datos[0]=e.getEmail();
-                     datos[1]="Creación de cuenta";
-                     datos[2]="Su código de usuario es:"+" "+"'"+e.getCodigoEmpleado()+"'" +" "+
-                             "y su contraseña de acceso es:"+" "+"'"+u.getPassword()+"'";
-                     //enviamos el corrreo
-                     Correo c=new Correo();
-                     if(c.enviarCorreo(datos)){
-                         JOptionPane.showMessageDialog(null,"Creación Exitosa, sus datos fueron enviados a su email", "Aviso",JOptionPane.INFORMATION_MESSAGE);
-                         this.setVisible(false);
-                     }else{
-                         JOptionPane.showMessageDialog(null,"Creación exitosa,sus datos no puedieron ser enviados; verifique su dirrecion de email", "Error",JOptionPane.ERROR_MESSAGE);
-                     }
-                 } catch (ParseException ex) {
-                     Logger.getLogger(UsuarioCreate.class.getName()).log(Level.SEVERE, null, ex);
-                     }
-                }    
+                 Usuario u=new Usuario();
+                 u.setCodigoEmpleado(e.getCodigoEmpleado());
+                 u.setPassword(tf_passw.getText());
+                 Rol r= new Rol();
+                 r=(Rol) list_rol.getSelectedItem();
+                 u.setIdRol(r);
+                 em.persist(u);
+                 em.flush();
+                 //registramos los datos de la auditoria
+                 AuditoriaSistema as=new AuditoriaSistema();
+                 as.setAccion("Creación");
+                 as.setTabla("Usuario");
+                 as.setAntes(u.toString());
+                 as.setDespues("No hay cambios");
+                 //trabajmos con la fecha
+                 Date fecha=new Date();
+                 DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                 as.setFechaHora((formato.format(fecha)));
+                 as.setUsuario(LoginView.nombreUsuario);
+                 em.persist(as);
+                 em.getTransaction().commit();
+                 em.close();
+                 datos[0]=e.getEmail();
+                 datos[1]="Creación de cuenta";
+                 datos[2]="Su código de usuario es:"+" "+"'"+e.getCodigoEmpleado()+"'" +" "+
+                         "y su contraseña de acceso es:"+" "+"'"+u.getPassword()+"'";
+                 Correo c=new Correo();
+                 if(c.enviarCorreo(datos)){
+                     JOptionPane.showMessageDialog(null,"Creación Exitosa, sus datos fueron enviados a su email", "Aviso",JOptionPane.INFORMATION_MESSAGE);
+                     this.setVisible(false);
+                 }else{
+                     JOptionPane.showMessageDialog(null,"Creación exitosa,sus datos no puedieron ser enviados; verifique su dirrecion de email", "Error",JOptionPane.ERROR_MESSAGE);
+                     this.setVisible(false);
+                    }
+               }    
              }else{
                     this.setVisible(false);
              }      
+
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void list_rolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list_rolActionPerformed
@@ -317,7 +366,7 @@ public class UsuarioCreate extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(final String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -348,7 +397,7 @@ public class UsuarioCreate extends javax.swing.JFrame {
                 frame.setVisible(true);
                 frame.setTitle("Registrar Usuario");
                 frame.setLocationRelativeTo(null);
-                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
         });
     }
@@ -364,15 +413,18 @@ public class UsuarioCreate extends javax.swing.JFrame {
     private javax.persistence.Query empleadoQuery;
     private javax.persistence.EntityManager entityManager1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JLabel lbl_codempl;
     private javax.swing.JLabel lbl_passw;
+    private javax.swing.JLabel lbl_registrarUsuario;
     private javax.swing.JLabel lbl_rol;
     private javax.swing.JComboBox list_empleado;
     private javax.swing.JComboBox list_rol;
+    private javax.swing.JPanel panel_crearUsuario;
     private renderizar.RolListRenderizar rolListRenderizar1;
     private javax.swing.JPasswordField tf_passw;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;

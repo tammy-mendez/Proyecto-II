@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="311" pageHeight="445" columnWidth="271" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fb4a0f8f-2f0b-4faf-b0d2-456d2409f530">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codigoCategoria" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaDesde" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaHasta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CantDias" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Proyecto-II\\src\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     habitacion.`numero` AS habitacion_numero,
+     habitacion.`codigoCategoria` AS habitacion_codigoCategoria
+FROM
+     `habitacion` habitacion
+WHERE
+ habitacion.`codigoCategoria`=$P{codigoCategoria}]]>
+	</queryString>
+	<field name="habitacion_numero" class="java.lang.Integer"/>
+	<field name="habitacion_codigoCategoria" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="db21c995-9949-4e1d-9d5f-9ab7224d74e5" x="0" y="2" width="271" height="20" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="d21ca129-99ce-40bf-bb22-9997fc2b2634" x="15" y="0" width="129" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número de Habitación]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement uuid="1eda01f6-937d-42eb-821b-17741d7ae915" x="0" y="1" width="38" height="18"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{habitacion_numero}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="0c132873-3101-44f2-9c10-f0f50837de9c" x="38" y="1" width="24" height="18"/>
+				<subreportParameter name="FechaHasta">
+					<subreportParameterExpression><![CDATA[$P{fechaHasta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="Habitacion">
+					<subreportParameterExpression><![CDATA[$F{habitacion_numero}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CantDias">
+					<subreportParameterExpression><![CDATA[$P{CantDias}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FechaDesde">
+					<subreportParameterExpression><![CDATA[$P{fechaDesde}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cantidad.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

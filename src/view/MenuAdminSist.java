@@ -60,6 +60,9 @@ public class MenuAdminSist extends javax.swing.JFrame {
         mItem_buscarR = new javax.swing.JMenuItem();
         menu_usuario = new javax.swing.JMenu();
         mitem_regis_usuario = new javax.swing.JMenuItem();
+        mitem_editarusuario = new javax.swing.JMenuItem();
+        mitem_eliminarusuario = new javax.swing.JMenuItem();
+        miItem_buscarUsuario = new javax.swing.JMenuItem();
         menu_auditoria = new javax.swing.JMenu();
         menu_salir = new javax.swing.JMenu();
 
@@ -78,11 +81,14 @@ public class MenuAdminSist extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Menu Administrador del Sistema");
 
-        jMenuBar1.setBackground(new java.awt.Color(211, 219, 227));
+        jMenuBar1.setBackground(new java.awt.Color(0, 153, 255));
         jMenuBar1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jMenuBar1.setForeground(new java.awt.Color(0, 153, 255));
 
-        menu_rol.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        menu_rol.setBackground(new java.awt.Color(204, 204, 204));
+        menu_rol.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         menu_rol.setText("Administrar Rol");
+        menu_rol.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         menu_rol.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         menu_rol.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
 
@@ -124,8 +130,9 @@ public class MenuAdminSist extends javax.swing.JFrame {
 
         jMenuBar1.add(menu_rol);
 
-        menu_usuario.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        menu_usuario.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         menu_usuario.setText("Administrar Usuario");
+        menu_usuario.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
 
         mitem_regis_usuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/icon-student.png"))); // NOI18N
         mitem_regis_usuario.setText("Registrar Usuario");
@@ -136,10 +143,36 @@ public class MenuAdminSist extends javax.swing.JFrame {
         });
         menu_usuario.add(mitem_regis_usuario);
 
+        mitem_editarusuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/editarusuario.png"))); // NOI18N
+        mitem_editarusuario.setText("Editar Usuario");
+        mitem_editarusuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitem_editarusuarioActionPerformed(evt);
+            }
+        });
+        menu_usuario.add(mitem_editarusuario);
+
+        mitem_eliminarusuario.setText("Eliminar Usuario");
+        mitem_eliminarusuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mitem_eliminarusuarioActionPerformed(evt);
+            }
+        });
+        menu_usuario.add(mitem_eliminarusuario);
+
+        miItem_buscarUsuario.setText("Buscar Usuario");
+        miItem_buscarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miItem_buscarUsuarioActionPerformed(evt);
+            }
+        });
+        menu_usuario.add(miItem_buscarUsuario);
+
         jMenuBar1.add(menu_usuario);
 
-        menu_auditoria.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        menu_auditoria.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         menu_auditoria.setText("Ver Auditoría de Sistema");
+        menu_auditoria.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         menu_auditoria.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 menu_auditoriaMouseClicked(evt);
@@ -152,11 +185,17 @@ public class MenuAdminSist extends javax.swing.JFrame {
         });
         jMenuBar1.add(menu_auditoria);
 
-        menu_salir.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        menu_salir.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         menu_salir.setText("Salir");
+        menu_salir.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         menu_salir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 menu_salirMouseClicked(evt);
+            }
+        });
+        menu_salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_salirActionPerformed(evt);
             }
         });
         jMenuBar1.add(menu_salir);
@@ -171,7 +210,7 @@ public class MenuAdminSist extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 286, Short.MAX_VALUE)
+            .addGap(0, 290, Short.MAX_VALUE)
         );
 
         pack();
@@ -209,7 +248,7 @@ public class MenuAdminSist extends javax.swing.JFrame {
     }//GEN-LAST:event_mItem_editarRActionPerformed
 
     private void menu_salirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_salirMouseClicked
-        try {
+
             // TODO add your handling code here:
             EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
             EntityManager ema= fact.createEntityManager();
@@ -220,19 +259,16 @@ public class MenuAdminSist extends javax.swing.JFrame {
             as.setTabla("Ninguna");
             //trabajamos con la fecha
             Date fecha=new Date();
-            DateFormat formato=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            as.setFechaHora(formato.parse(formato.format(fecha)));
+            DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            as.setFechaHora(formato.format(fecha));
             as.setUsuario(LoginView.nombreUsuario);
             ema.persist(as);
             ema.getTransaction().commit();
             ema.close();
-            this.setVisible(false);
+            this.dispose();
             String args[]=new String[1];
             args[0]="Ingreso al sistema";
             LoginView.main(args);
-        } catch (ParseException ex) {
-            Logger.getLogger(MenuAdminSist.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }//GEN-LAST:event_menu_salirMouseClicked
 
     private void menu_auditoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_auditoriaActionPerformed
@@ -253,6 +289,35 @@ public class MenuAdminSist extends javax.swing.JFrame {
         args[0]="Registrar usuario";
         UsuarioCreate.main(args);
     }//GEN-LAST:event_mitem_regis_usuarioActionPerformed
+
+    private void miItem_buscarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miItem_buscarUsuarioActionPerformed
+        // TODO add your handling code here:
+        opcion = 3;
+        String args[]=new String[1];
+        args[0]="Buscar usuario";
+        UsuarioBuscar.main(args);
+    }//GEN-LAST:event_miItem_buscarUsuarioActionPerformed
+
+    private void mitem_editarusuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitem_editarusuarioActionPerformed
+        // TODO add your handling code here:
+        opcion = 1;
+        String args[]=new String[1];
+        args[0]="Editar usuario";
+        UsuarioBuscar.main(args);
+    }//GEN-LAST:event_mitem_editarusuarioActionPerformed
+
+    private void mitem_eliminarusuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitem_eliminarusuarioActionPerformed
+        // TODO add your handling code here:
+                // TODO add your handling code here:
+        opcion = 2;
+        String args[]=new String[1];
+        args[0]="Eliminar usuario";
+        UsuarioBuscar.main(args);
+    }//GEN-LAST:event_mitem_eliminarusuarioActionPerformed
+
+    private void menu_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_salirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menu_salirActionPerformed
 
     /**
     * @param args the command line arguments
@@ -285,6 +350,9 @@ public class MenuAdminSist extends javax.swing.JFrame {
     private javax.swing.JMenu menu_rol;
     private javax.swing.JMenu menu_salir;
     private javax.swing.JMenu menu_usuario;
+    private javax.swing.JMenuItem miItem_buscarUsuario;
+    private javax.swing.JMenuItem mitem_editarusuario;
+    private javax.swing.JMenuItem mitem_eliminarusuario;
     private javax.swing.JMenuItem mitem_regis_usuario;
     // End of variables declaration//GEN-END:variables
 

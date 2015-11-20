@@ -16,6 +16,9 @@ import java.util.Date;
  */
 public class ObtenerFechaHora {
     public static void main ( String args[] ) {
+       String valor="Hola";
+       String valor2="Chau";
+       System.out.println(valor+"\n"+valor2);
 
   Date fecha1 = new Date ();
   DateFormat formato=new SimpleDateFormat("dd-MM-yyyyy" );

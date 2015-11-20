@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4204c101-720f-4e27-81c9-8cc139aa19e2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="6ebd4ea0-af7b-466c-a59f-aa963fbb454f"/>
+	<parameter name="CodigoOrden" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     tabla_orden_compra.`codigo_orden` AS tabla_orden_compra_codigo_orden,
+     tabla_orden_compra.`codigo_proveedor` AS tabla_orden_compra_codigo_proveedor,
+     tabla_orden_compra.`codigo_articulo` AS tabla_orden_compra_codigo_articulo,
+     tabla_orden_compra.`cantidadPedida` AS tabla_orden_compra_cantidadPedida,
+     tabla_orden_compra.`fecha` AS tabla_orden_compra_fecha,
+     articulo.`codigoArticulo` AS articulo_codigoArticulo,
+     articulo.`nombre` AS articulo_nombre,
+     articulo.`cantidadStock` AS articulo_cantidadStock,
+     articulo.`cantidadMinima` AS articulo_cantidadMinima,
+     articulo.`cantidadMaxima` AS articulo_cantidadMaxima,
+     articulo.`codigoProveedor` AS articulo_codigoProveedor,
+     articulo.`costo` AS articulo_costo,
+     articulo.`cod_categoria` AS articulo_cod_categoria,
+     proveedor.`codigoProveedor` AS proveedor_codigoProveedor,
+     proveedor.`tipo` AS proveedor_tipo,
+     proveedor.`razonSocial` AS proveedor_razonSocial,
+     proveedor.`ruc` AS proveedor_ruc,
+     proveedor.`cedula` AS proveedor_cedula,
+     proveedor.`email` AS proveedor_email,
+     proveedor.`direccion` AS proveedor_direccion,
+     proveedor.`telefono` AS proveedor_telefono,
+     proveedor.`codigoCategoria` AS proveedor_codigoCategoria
+FROM
+     `articulo` articulo INNER JOIN `tabla_orden_compra` tabla_orden_compra ON articulo.`codigoArticulo` = tabla_orden_compra.`codigo_articulo`
+     INNER JOIN `proveedor` proveedor ON tabla_orden_compra.`codigo_proveedor` = proveedor.`codigoProveedor`
+where tabla_orden_compra.`codigo_orden` =$P{CodigoOrden}]]>
+	</queryString>
+	<field name="tabla_orden_compra_codigo_orden" class="java.lang.Integer"/>
+	<field name="tabla_orden_compra_codigo_proveedor" class="java.lang.Integer"/>
+	<field name="tabla_orden_compra_codigo_articulo" class="java.lang.Integer"/>
+	<field name="tabla_orden_compra_cantidadPedida" class="java.lang.Integer"/>
+	<field name="tabla_orden_compra_fecha" class="java.lang.String"/>
+	<field name="articulo_codigoArticulo" class="java.lang.Integer"/>
+	<field name="articulo_nombre" class="java.lang.String"/>
+	<field name="articulo_cantidadStock" class="java.lang.Integer"/>
+	<field name="articulo_cantidadMinima" class="java.lang.Integer"/>
+	<field name="articulo_cantidadMaxima" class="java.lang.Integer"/>
+	<field name="articulo_codigoProveedor" class="java.lang.Integer"/>
+	<field name="articulo_costo" class="java.lang.Integer"/>
+	<field name="articulo_cod_categoria" class="java.lang.Integer"/>
+	<field name="proveedor_codigoProveedor" class="java.lang.Integer"/>
+	<field name="proveedor_tipo" class="java.lang.String"/>
+	<field name="proveedor_razonSocial" class="java.lang.String"/>
+	<field name="proveedor_ruc" class="java.lang.String"/>
+	<field name="proveedor_cedula" class="java.lang.String"/>
+	<field name="proveedor_email" class="java.lang.String"/>
+	<field name="proveedor_direccion" class="java.lang.String"/>
+	<field name="proveedor_telefono" class="java.lang.Integer"/>
+	<field name="proveedor_codigoCategoria" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="174" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="15dc1016-0a0a-4ea6-81bb-6e61c170ef8a" x="151" y="0" width="195" height="37" forecolor="#FF0000"/>
+				<textElement>
+					<font fontName="MV Boli" size="20"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fb8e92a-de08-45b5-ab75-546da7648e58" x="370" y="0" width="185" height="20" forecolor="#999999"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Santa Teresa casi Panchito Lopez. Barrio Santa Maria.                         	  Asunción, Paraguay.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9febaf6-60da-4a9c-a3e0-6c704853de37" x="414" y="20" width="83" height="17" forecolor="#999999"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Teléfono: 021-68398 ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9b39bc99-1cf2-4861-8b39-2438d200bb0e" x="399" y="37" width="117" height="10" forecolor="#999999"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[www.hotelsantamaria.com.py]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="151" y="64" width="162" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Orden De Compra]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="76616b77-e804-4f9d-bc2d-b47d8fa63433" x="15" y="0" width="82" height="84"/>
+				<imageExpression><![CDATA["C:\\Users\\pc\\Documents\\facultad\\8vo semestre\\proyecto\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="f8fb97c6-cc51-43b0-8c14-984b73e9f74e" x="455" y="64" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{tabla_orden_compra_codigo_orden}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="377" y="64" width="78" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nº Orden:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="39ca3aa5-4277-4f42-9c11-a97b7af0f212" x="177" y="142" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{proveedor_razonSocial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="15" y="122" width="162" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Fecha/Hora:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f8e1ed22-8fed-45e1-b96b-c6298e15ff62" x="177" y="122" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{tabla_orden_compra_fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="15" y="142" width="162" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Proveedor:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="121" splitType="Stretch">
+			<textField>
+				<reportElement uuid="bf129386-b367-4937-b3a1-a0db75e3fb0a" x="0" y="36" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{articulo_nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="0" y="16" width="97" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Articulo]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="1e78fac5-a648-4138-b7aa-0759de859bfc" x="140" y="36" width="97" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{tabla_orden_compra_cantidadPedida}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="140" y="16" width="97" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="5f4d70c3-c834-4edc-b7df-62618d094d8d" x="0" y="7" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="9ee5d978-2aa5-44ca-94c1-d42836344747" x="270" y="36" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{articulo_costo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="270" y="16" width="97" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Costo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="173" y="81" width="97" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9ee5d978-2aa5-44ca-94c1-d42836344747" x="277" y="81" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{articulo_costo} *$F{tabla_orden_compra_cantidadPedida}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

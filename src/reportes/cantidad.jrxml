@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="288" pageHeight="445" columnWidth="248" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e27588b6-85bb-49a9-bfe2-325f523c9ec3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FechaDesde" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaHasta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Habitacion" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CantDias" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select r.codigoReserva,r.checkOut,r.checkIn,r.numHabitacion,
+IF(r.checkIn<$P{FechaDesde},datediff(r.checkOut,$P{FechaDesde}),
+IF(r.checkOut>$P{FechaHasta},datediff($P{FechaHasta},r.checkIn),
+datediff(r.checkOut,r.checkIn)))
+as dif  from reserva r
+where ((r.checkIn>=$P{FechaDesde} and r.checkIn<=$P{FechaHasta}) or (r.checkOut>=$P{FechaDesde} and r.checkOut<=$P{FechaHasta}) )
+and r.numHabitacion=$P{Habitacion}]]>
+	</queryString>
+	<field name="codigoReserva" class="java.lang.Integer"/>
+	<field name="checkOut" class="java.sql.Date"/>
+	<field name="checkIn" class="java.sql.Date"/>
+	<field name="numHabitacion" class="java.lang.Integer"/>
+	<field name="dif" class="java.lang.Long"/>
+	<variable name="dif_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{dif}]]></variableExpression>
+	</variable>
+	<variable name="dif_2" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{dif}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c82a8e70-8449-4b4b-a455-13520d3c5b24" x="0" y="2" width="53" height="20"/>
+				<textElement/>
+				<text><![CDATA[checkIn]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7204b77a-4f88-43b2-9f37-45c59e03f04b" x="64" y="2" width="52" height="20"/>
+				<textElement/>
+				<text><![CDATA[checkOut]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eb114c49-59ff-4645-99e7-a095ac54a25b" x="130" y="2" width="21" height="20"/>
+				<textElement/>
+				<text><![CDATA[Días]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1c28b1cd-5950-41a6-9fc6-fc5d3b0133e3" x="0" y="0" width="53" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{checkIn}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e11f8efc-8550-4d66-b976-f954e4e59af4" x="64" y="0" width="52" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{checkOut}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="af992e44-3332-419f-bc2e-3c2272a6ebe2" x="130" y="0" width="21" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{dif}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="4a8f22c6-6b6d-4cec-b97f-8b7b432d83bc" x="0" y="22" width="130" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DÍAS NO OCUPADOS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="913bbad9-ff60-41d5-a9fc-1c2cf6817126" x="64" y="2" width="87" height="20"/>
+				<textElement/>
+				<text><![CDATA[Días Ocupados:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f3141684-185c-41da-b70c-4b28254c4c2c" x="130" y="22" width="118" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CantDias}-$V{dif_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="aa1e20d4-9de4-4aac-9d64-feac15f9af17" x="148" y="2" width="82" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{dif_2}.intValue()]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14145e1b-36e4-4acf-87ff-59d3e2dc8bc7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="114"/>
+	<parameter name="NumeroFactura" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select i.fecha, i.codOC,i.nroFactura, i.codInformeRecepcion,
+a.nombre, dc.cantidadPedida, p.razonSocial, a.codigoArticulo, dc.cantidadRecibida
+   from detalle_orden_compra dc 
+join orden_compra oc 
+on dc.cod_orden=oc.cod_orden
+join informerecepcion i
+on i.codOC=oc.cod_orden
+join articulo a
+on a.codigoArticulo=dc.cod_articulo
+join proveedor p
+on p.codigoProveedor=dc.cod_proveedor
+join factura_pago fp
+on fp.num_factura=i.nroFactura
+where i.nroFactura= $P{NumeroFactura}]]>
+	</queryString>
+	<field name="fecha" class="java.lang.String"/>
+	<field name="codOC" class="java.lang.Integer"/>
+	<field name="nroFactura" class="java.lang.Integer"/>
+	<field name="codInformeRecepcion" class="java.lang.Integer"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="cantidadPedida" class="java.lang.Integer"/>
+	<field name="razonSocial" class="java.lang.String"/>
+	<field name="codigoArticulo" class="java.lang.Integer"/>
+	<field name="cantidadRecibida" class="java.lang.Integer"/>
+	<variable name="variable1" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="213" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="15dc1016-0a0a-4ea6-81bb-6e61c170ef8a" x="161" y="10" width="195" height="37" forecolor="#FF0000"/>
+				<textElement>
+					<font fontName="MV Boli" size="20"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="76616b77-e804-4f9d-bc2d-b47d8fa63433" x="25" y="10" width="82" height="84"/>
+				<imageExpression><![CDATA["C:\\Users\\pc\\Documents\\facultad\\8vo semestre\\proyecto\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="6fb8e92a-de08-45b5-ab75-546da7648e58" x="380" y="10" width="185" height="20" forecolor="#999999"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Santa Teresa casi Panchito Lopez. Barrio Santa Maria.                         	  Asunción, Paraguay.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9febaf6-60da-4a9c-a3e0-6c704853de37" x="424" y="30" width="83" height="14" forecolor="#999999"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Teléfono: 021-68398 ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9b39bc99-1cf2-4861-8b39-2438d200bb0e" x="409" y="47" width="117" height="10" forecolor="#999999"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[www.hotelsantamaria.com.py]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="175" y="57" width="234" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[INFORME DE RECEPCION ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="261" y="142" width="78" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nº Factura:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="0" y="142" width="162" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nº Orden Compra :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="410" y="69" width="29" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nº :]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8d502d49-137d-4f94-af6b-2b3cb4543b1b" x="161" y="122" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8a3ffe1d-97ad-40b1-a03f-d06683b8f09d" x="161" y="142" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{codOC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e504d6c6-92bc-4011-9e36-1ddb1e1774fc" x="339" y="142" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nroFactura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="92a5e87d-e95c-4a32-8758-caae1bb8d55b" x="161" y="162" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{razonSocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a3185e2f-fb86-47f3-9422-1b49bdba05ee" x="439" y="69" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{codInformeRecepcion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="-1" y="-91" width="162" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="-1" y="-51" width="162" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Proveedor:]]></text>
+			</staticText>
+			<elementGroup/>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="0" y="0" width="107" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Codigo Articulo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="107" y="0" width="162" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="207" y="0" width="100" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Cantidad Pedida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="324" y="1" width="162" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Cantidad Recibida]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement uuid="cabc586a-0472-4d78-8388-23945f0e3c6a" x="107" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7a7f38f3-c6e6-4c57-93fc-a1cd08f34943" x="207" y="2" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cantidadPedida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fe44a823-f2db-4f0a-8dba-e58560e47efe" x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{codigoArticulo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d5885011-0a5b-4155-8195-124ed598d80c" x="324" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cantidadRecibida}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

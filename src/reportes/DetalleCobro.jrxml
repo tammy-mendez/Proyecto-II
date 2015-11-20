@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="560" pageHeight="600" columnWidth="520" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7a5f8fb0-cfb8-43e5-8c3d-68a285137d8a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="formaPago" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     banco.`idBanco` AS banco_idBanco,
+     banco.`nombre` AS banco_nombre,
+     banco.`tipo_entidad` AS banco_tipo_entidad,
+     detalle_cobro.`idDetalle` AS detalle_cobro_idDetalle,
+     detalle_cobro.`forma` AS detalle_cobro_forma,
+     detalle_cobro.`numero_ch_tarj` AS detalle_cobro_numero_ch_tarj,
+     factura_cobro.`numFactura` AS factura_cobro_numFactura,
+     factura_cobro.`fechaEmision` AS factura_cobro_fechaEmision,
+     factura_cobro.`rucCliente` AS factura_cobro_rucCliente,
+     factura_cobro.`concepto` AS factura_cobro_concepto,
+     factura_cobro.`total` AS factura_cobro_total,
+     factura_cobro.`tipoFactura` AS factura_cobro_tipoFactura,
+     factura_cobro.`codigoReserva` AS factura_cobro_codigoReserva
+FROM
+     `banco` banco  RIGHT OUTER JOIN `detalle_cobro` detalle_cobro ON banco.`idBanco` = detalle_cobro.`id_banco`
+     INNER JOIN `factura_cobro` factura_cobro ON detalle_cobro.`idDetalle` = factura_cobro.`forma_pago`
+WHERE STR_TO_DATE(factura_cobro.`fechaEmision` , '%d/%m/%Y %H :%i :%s')
+BETWEEN STR_TO_DATE($P{fecha}, '%d/%m/%Y %H :%i :%s')
+AND STR_TO_DATE($P{fechaFin}, '%d/%m/%Y %H :%i :%s') 
+and  detalle_cobro.`forma`=$P{formaPago}
+order by  banco.`nombre`]]>
+	</queryString>
+	<field name="banco_idBanco" class="java.lang.Integer"/>
+	<field name="banco_nombre" class="java.lang.String"/>
+	<field name="banco_tipo_entidad" class="java.lang.String"/>
+	<field name="detalle_cobro_idDetalle" class="java.lang.Integer"/>
+	<field name="detalle_cobro_forma" class="java.lang.String"/>
+	<field name="detalle_cobro_numero_ch_tarj" class="java.lang.String"/>
+	<field name="factura_cobro_numFactura" class="java.lang.Integer"/>
+	<field name="factura_cobro_fechaEmision" class="java.lang.String"/>
+	<field name="factura_cobro_rucCliente" class="java.lang.String"/>
+	<field name="factura_cobro_concepto" class="java.lang.String"/>
+	<field name="factura_cobro_total" class="java.lang.Integer"/>
+	<field name="factura_cobro_tipoFactura" class="java.lang.String"/>
+	<field name="factura_cobro_codigoReserva" class="java.lang.Integer"/>
+	<variable name="total" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{factura_cobro_total}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="89465892-673c-4178-88c3-fac77f405d91" x="0" y="0" width="519" height="20" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="bd46a166-cc31-4647-af24-2202594a609f" x="12" y="0" width="50" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Factura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="496ffbfe-604b-4d40-8e44-9fb6e7d137ca" x="62" y="0" width="63" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Entidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0312c63d-904e-4bc5-a10a-949181065d85" x="175" y="1" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cheque/Tarjeta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e2caf218-ade9-4637-b3db-e066b149f9d1" x="293" y="1" width="51" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reserva]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="44c835c9-d3b9-4849-950e-c18ab94f3c34" x="351" y="1" width="61" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ruc Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8fc6303f-4343-43f0-ae8f-784c6d2f4885" x="459" y="0" width="41" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement uuid="d524a753-7ff5-4945-948a-0980f95a2755" x="12" y="4" width="50" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{factura_cobro_numFactura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="634eb0d9-0249-4848-ade3-f321916bcb18" x="62" y="4" width="100" height="20">
+					<printWhenExpression><![CDATA[$F{banco_nombre}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{banco_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f198dd0f-86ce-43d5-90c8-0ce62855909e" x="162" y="4" width="131" height="20">
+					<printWhenExpression><![CDATA[$F{detalle_cobro_numero_ch_tarj}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalle_cobro_numero_ch_tarj}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="62c0f2c3-1def-4db0-8d93-bfe0144a4148" x="293" y="4" width="51" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{factura_cobro_codigoReserva}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bfff7ef8-48da-4ba1-84db-b88c935ea67e" x="351" y="4" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{factura_cobro_rucCliente}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="2d59a482-da92-4150-ac79-9ddee648a3ca" x="459" y="4" width="60" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{factura_cobro_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="5ab80690-4d10-47ad-8e4b-347291e6c7fb" x="175" y="5" width="67" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL Gs:]]></text>
+			</staticText>
+			<textField pattern="#,##0">
+				<reportElement uuid="786afb34-e6bc-41de-8428-5f8a154b46f5" x="244" y="5" width="100" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e27588b6-85bb-49a9-bfe2-325f523c9ec3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="Cantidad" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select (r.checkOut-r.checkIn) as dif,r.checkOut,r.checkIn, r.numHabitacion from reserva r
+where ((r.checkIn>='2015-08-01' and r.checkIn<='2015-08-09') or (r.checkOut>='2015-08-01' and r.checkOut<='2015-08-09') )
+and r.numHabitacion=12]]>
+	</queryString>
+	<field name="dif" class="java.lang.Double"/>
+	<field name="checkOut" class="java.sql.Date"/>
+	<field name="checkIn" class="java.sql.Date"/>
+	<field name="numHabitacion" class="java.lang.Integer"/>
+	<variable name="dif_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{dif}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="50d854af-06fb-473f-bcf4-e6664344812c" x="36" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[numHabitacion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c82a8e70-8449-4b4b-a455-13520d3c5b24" x="169" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[checkIn]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7204b77a-4f88-43b2-9f37-45c59e03f04b" x="284" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[checkOut]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eb114c49-59ff-4645-99e7-a095ac54a25b" x="412" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[dif]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement uuid="d4c3bbdd-0330-4c87-b921-00a3e1fb5a67" x="36" y="2" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{numHabitacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1c28b1cd-5950-41a6-9fc6-fc5d3b0133e3" x="169" y="2" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{checkIn}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e11f8efc-8550-4d66-b976-f954e4e59af4" x="284" y="2" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{checkOut}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="af992e44-3332-419f-bc2e-3c2272a6ebe2" x="412" y="2" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{dif}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement uuid="d2b78d70-8bcb-4798-b552-8b22504df89f" x="412" y="2" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{dif_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e6d95885-e4af-4ea3-88cc-eb26fb2ac1bc" x="251" y="22" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{Cantidad}-$V{dif_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

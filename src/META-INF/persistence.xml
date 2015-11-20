@@ -7,10 +7,36 @@
     <class>bean.Empleado</class>
     <class>bean.Usuario</class>
     <class>bean.Cargo</class>
-   
+    <class>bean.Cliente</class>
+    <class>view.Reserva</class>
+    <class>bean.CategHabitacion</class>
+    <class>bean.Habitacion</class>
+    <class>bean.ProductoServicio</class>
+    <class>bean.CategoriaProdSer</class>
+    <class>bean.ConsumoProSer</class>
+    <class>bean.FacturaPago</class>
+    <class>bean.Ordendecompra</class>
+    <class>bean.DetalleFacturacompra</class>
+    <class>bean.TablaOrdenCompra</class>
+    <class>bean.Proveedor</class>
+    <class>bean.Informerecepcion</class>
+    <class>bean.CategoriaArticulo</class>
+    <class>bean.Articulo</class>
+    <class>bean.MovimientoStock</class>
+    <class>bean.Caja</class>
+    <class>bean.Banco</class>
+    <class>bean.CuentaBancaria</class>
+    <class>bean.ExtraccionDeposito</class>
+    <class>bean.Pago</class>
+    <class>bean.OrdenCompra</class>
+    <class>bean.DetalleOrdenCompra</class>
+    <class>bean.DetalleCobro</class>
+    <class>bean.FacturaCobro</class>
+    <class>bean.Reserva</class>
+    <class>bean.DetallePago</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hotel db?zeroDateTimeBehavior=convertToNull"/>
-      <property name="javax.persistence.jdbc.password" value="user"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hotel db"/>
+      <property name="javax.persistence.jdbc.password" value="1234"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
     </properties>

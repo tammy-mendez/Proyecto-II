@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="46c102f5-953b-4cd8-b70c-04d33943b26b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CodigoReserva" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     reserva.`codigoReserva` AS reserva_codigoReserva,
+     reserva.`checkIn` AS reserva_checkIn,
+     reserva.`checkOut` AS reserva_checkOut,
+     reserva.`cantPersonas` AS reserva_cantPersonas,
+     reserva.`montoTotal` AS reserva_montoTotal,
+     reserva.`montoAbonado` AS reserva_montoAbonado,
+     reserva.`numHabitacion` AS reserva_numHabitacion,
+     cliente.`codigoCliente` AS cliente_codigoCliente,
+     cliente.`cedula` AS cliente_cedula,
+     cliente.`nombre` AS cliente_nombre,
+     cliente.`apellido` AS cliente_apellido,
+     cliente.`direccion` AS cliente_direccion,
+     cliente.`telefono` AS cliente_telefono,
+     categ_habitacion.`nombre` AS categ_habitacion_nombre,
+     consumo_pro_ser.`total` AS consumo_pro_ser_total
+FROM
+     `habitacion` habitacion INNER JOIN `reserva` reserva ON habitacion.`numero` = reserva.`numHabitacion`
+     INNER JOIN `cliente` cliente ON reserva.`codigoCliente` = cliente.`codigoCliente`
+     INNER JOIN `consumo_pro_ser` consumo_pro_ser ON reserva.`codigoReserva` = consumo_pro_ser.`codigoReserva`
+     INNER JOIN `categ_habitacion` categ_habitacion ON habitacion.`codigoCategoria` = categ_habitacion.`codigoCategoria`
+WHERE
+	reserva.`codigoReserva`=$P{CodigoReserva}]]>
+	</queryString>
+	<field name="reserva_codigoReserva" class="java.lang.Integer"/>
+	<field name="reserva_checkIn" class="java.sql.Date"/>
+	<field name="reserva_checkOut" class="java.sql.Date"/>
+	<field name="reserva_cantPersonas" class="java.lang.Integer"/>
+	<field name="reserva_montoTotal" class="java.lang.Integer"/>
+	<field name="reserva_montoAbonado" class="java.lang.Integer"/>
+	<field name="reserva_numHabitacion" class="java.lang.Integer"/>
+	<field name="cliente_codigoCliente" class="java.lang.Integer"/>
+	<field name="cliente_cedula" class="java.lang.String"/>
+	<field name="cliente_nombre" class="java.lang.String"/>
+	<field name="cliente_apellido" class="java.lang.String"/>
+	<field name="cliente_direccion" class="java.lang.String"/>
+	<field name="cliente_telefono" class="java.lang.Integer"/>
+	<field name="categ_habitacion_nombre" class="java.lang.String"/>
+	<field name="consumo_pro_ser_total" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="120" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="6fb8e92a-de08-45b5-ab75-546da7648e58" x="152" y="33" width="254" height="26" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="9" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Santa Teresa casi Panchito Lopez. Barrio Santa Maria                  	           	  Asunción, Paraguay.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9febaf6-60da-4a9c-a3e0-6c704853de37" x="226" y="59" width="102" height="16" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="9" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Teléfono: 021-68398 ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b4ddf2b7-d269-43cb-a602-fb08f7981a8a" x="165" y="0" width="241" height="33" forecolor="#FF0000"/>
+				<textElement>
+					<font fontName="MV Boli" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2d6179d9-d5eb-480a-bd1d-b562855ceac7" x="200" y="92" width="167" height="28" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="16" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Contrato de Reserva]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9b39bc99-1cf2-4861-8b39-2438d200bb0e" x="200" y="75" width="144" height="17" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="9" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[www.hotelsantamaria.com.py]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="7ed2ba91-e271-4ed1-ac26-f3bc0b5f3b2b" x="38" y="18" width="50" height="84"/>
+				<imageExpression><![CDATA["C:\\Proyecto-II\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="270" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="c8b089e7-f15e-4c62-b870-b8d54d18dd75" x="0" y="115" width="572" height="20" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ea31747a-51d6-49c7-acbd-07c6ef36937f" x="0" y="0" width="572" height="20" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="0fe19a99-bfc0-4912-94db-3360670fec6b" x="252" y="0" width="64" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b794cf06-1e1c-49dc-9d19-5bb025aac4a7" x="25" y="30" width="63" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombres:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cfe5eadf-c34d-4c12-a471-aee2e9a5077b" x="25" y="64" width="63" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellidos:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="c81830f4-4467-44b4-954e-386d1e7c1fdb" x="88" y="30" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e3c66114-78b6-4fad-960a-d6b2c86cf87b" x="88" y="64" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_apellido}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="7b84ef1d-604d-4795-815a-578f15dff7f8" x="25" y="94" width="47" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cédula:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="677532e6-fb2c-48aa-bff8-7c56a3685bd3" x="72" y="94" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_cedula}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a55298c0-28aa-4703-86af-e2e29d25e533" x="344" y="30" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código Cliente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="00f4e83b-6ee9-4c4b-ac5f-1eb7af96a40d" x="345" y="64" width="61" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="256d6262-0a1f-42a6-b3c6-a79e631f094d" x="344" y="94" width="62" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Teléfono:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="c2e02e11-ede8-4f84-9983-5e54dee5a221" x="404" y="64" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e655b6b5-bcce-43bd-9490-7cf423be8a06" x="444" y="30" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_codigoCliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="3438f56f-546e-442e-a79e-b86b06b8d43a" x="252" y="114" width="64" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reserva]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2ca6d1a4-de3a-42ea-a001-ae78eecff4d3" x="25" y="134" width="122" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número de Reserva:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="1c034ed1-9ec5-4a79-b353-ff74184d1c49" x="147" y="134" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserva_codigoReserva}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="5db2b512-ebd8-4d8c-a2d3-2ed613875ddf" x="25" y="167" width="58" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Check In:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="80aa53f3-db21-4f1a-9932-41e84f629433" x="25" y="204" width="71" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Check Out:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="708d18b2-3ec9-4c03-93c3-b0614e238293" x="83" y="167" width="138" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserva_checkIn}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="91d8a7de-8f9d-4ae7-8c5a-a68356b74b93" x="88" y="204" width="125" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserva_checkOut}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="6adcf1af-ab0c-421f-93ed-f9480784200c" x="344" y="134" width="62" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Categoría:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="a7da0ecd-322f-4f5c-8cd7-e9b4ce2b5796" x="404" y="134" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{categ_habitacion_nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="deb56b09-434a-4610-9e3b-f056f2de2971" x="344" y="167" width="76" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Habitación:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="cdcbfadd-414b-4128-a233-de46d28d612d" x="420" y="167" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserva_numHabitacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="34284882-117c-4ecc-9fa4-5c30379a5d33" x="344" y="204" width="92" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto Total Gs:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="b3a3e816-9faa-4f5b-9955-ea025093ddb3" x="436" y="204" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserva_montoTotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="23fb8323-e9cd-4d42-a8ec-8971d60fe2b3" x="25" y="240" width="112" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MontoAbonado Gs:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="366581f2-c8ee-44a5-be15-6d10cc831a7d" x="137" y="240" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserva_montoAbonado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="42a33493-bed8-48dc-8a06-28f933a4d080" x="345" y="240" width="62" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Gs:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9d324702-969a-4e91-9fc2-a8f7bbb433d3" x="407" y="240" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consumo_pro_ser_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5f7b6920-c21e-4f5b-842c-9c6c04002edc" x="407" y="94" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente_telefono}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="180" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="c1658551-82e3-4023-996c-800510f86f1f" x="0" y="0" width="572" height="20" forecolor="#CCCCCC" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="20cc9d81-6e2d-4205-88b7-6385f39930e8" x="259" y="0" width="69" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pautas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="aacbc64b-67a7-478e-b992-4b18c3425eb3" x="0" y="20" width="572" height="27"/>
+				<textElement/>
+				<text><![CDATA[1) El Huésped se compromete al culminar su estadía a abonar el saldo por la reserva y otros montos provenientes de consumos  extras y  servicios prestados.               ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="abd50775-f1a8-4a7c-b6fd-82c35742691e" x="0" y="47" width="572" height="26"/>
+				<textElement/>
+				<text><![CDATA[2) El Huésped se compromete a desalojar la habitación en la fecha indicada en este formulario, En caso de no cumplir con lo acordado el hotel tiene derecho a desocupar la habitación y llevar al depósito los objetos del huésped.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fa62355-351b-4ac4-b215-17cc4f87b977" x="0" y="73" width="536" height="20"/>
+				<textElement/>
+				<text><![CDATA[3) El Huésped se compromete a resarcir los daños  por él ocasionados en la habitaciones.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2dbe4338-ce62-4d3e-a273-74fa208fa633" x="0" y="93" width="572" height="19"/>
+				<textElement/>
+				<text><![CDATA[4) El hotel no se hace responsable por la pérdida de objetos de valor dentro de sus instalaciones.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6f2de8f7-70c1-4b7a-aa8c-715b6723c093" x="0" y="112" width="504" height="20"/>
+				<textElement/>
+				<text><![CDATA[ 5) El hotel se reserva el derecho de admisión.]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="e0b5f0bd-7372-439b-b7aa-bbcfe7be12e3" x="188" y="159" width="207" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="52b61be4-1f35-4a4c-949a-3b0e35747c88" x="252" y="160" width="103" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Firma del cliente]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="28" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="bda6b0ac-3408-4bf8-91e5-fb3ece6d415f" x="0" y="8" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="0664df99-c8bb-4fff-9768-1a2b8b317909" x="100" y="8" width="100" height="20"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bce55eac-4a3a-4753-a3ed-5fb32583f030" x="427" y="8" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="ba9293ef-25e4-4484-bb82-5db5774d8886" x="507" y="8" width="40" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -15,6 +15,7 @@ import bean.AuditoriaSistema;
 import bean.Empleado;
 import bean.Usuario;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,8 +35,10 @@ public class LoginView extends javax.swing.JFrame {
     private char ch;
     private int lim=11;
     private int limit=45;
+    
     private int codEmpl;
     public static String nombreUsuario;
+    public static int idUsuario;
 
     /** Creates new form LoginView */
     public LoginView() {
@@ -96,6 +99,9 @@ public class LoginView extends javax.swing.JFrame {
         lbl_password.setText("Password");
 
         tf_password.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tf_passwordKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_passwordKeyTyped(evt);
             }
@@ -180,8 +186,8 @@ public class LoginView extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(130, 130, 130)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -197,15 +203,15 @@ public class LoginView extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(65, 65, 65)
+                .addGap(77, 77, 77)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(64, 64, 64))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(96, 96, 96)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(151, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,7 +222,7 @@ public class LoginView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pack();
@@ -238,37 +244,57 @@ public class LoginView extends javax.swing.JFrame {
                  tf_codempl.setText(null);
                  return;
             }else{
-                if(u.get(0).getPassword().equals(tf_password.getText())){
-                   
-                        //aqui obtenemos el nombre del usuariopara luego almacenarlo en la entidad Auditoria
+                if(u.get(0).getPassword().equals(tf_password.getText())){ 
+                        //si no tiene asigado ningun rol, no puede ingresar
+                         if(" ".equals(u.get(0).getIdRol().getNombre())){
+                             JOptionPane.showMessageDialog(null, "No tiene asignado ningun rol, no puede ingresar al sistema","Error",JOptionPane.ERROR_MESSAGE );
+                             tf_codempl.setText(null);
+                             tf_password.setText(null);
+                             return;
+                        }
+                        //aqui obtenemos el nombre del usuario para luego almacenarlo en la entidad Auditoria
                         query=entityManager.createNamedQuery("Empleado.findByCodigoEmpleado");
                         query.setParameter("codigoEmpleado", codEmpl);
                         List<Empleado> e = query.getResultList();
                         nombreUsuario=e.get(0).getNombre();
+                        //para evitar que cambie su rol por si mismo
+                        idUsuario=e.get(0).getCodigoEmpleado();
                         //registramos los datos necesarios para la auditoria
                         AuditoriaSistema as=new AuditoriaSistema();
                         as.setAccion("Inicio Sesion");
                         as.setTabla("Ninguna");
                         //trabajamos con la fecha
-                  try {
                         Date fecha=new Date();
-                        DateFormat formato=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        as.setFechaHora(formato.parse(formato.format(fecha)));
-                 } catch (ParseException ex) {
-                        Logger.getLogger(LoginView.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                        DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                        as.setFechaHora(formato.format(fecha));
                         as.setUsuario(LoginView.nombreUsuario);
                         entityManager.getTransaction().begin();
                         entityManager.persist(as);
                         entityManager.getTransaction().commit();
                         entityManager.close();
-                        //hacemos visible el menu para el usuario
-                        String args[]=new String[1];
-                        args[0]="Menu Administrador del Sistema";
-                        MenuAdminSist.main(args);
-                        this.setVisible(false);
-                    
-                      
+                        //hacemos visible el menu para el usuario segun el rol que tenga asignado
+/*                        if("administrador del sistema".equals(u.get(0).getIdRol().getNombre())){
+                            String args[]=new String[1];
+                            args[0]="Menu Administrador del Sistema";
+                            MenuAdminSist.main(args);
+                            this.dispose();
+                        }
+                        if("recepcionista".equals(u.get(0).getIdRol().getNombre())){
+                             String args[]=new String[1];
+                            args[0]="Menu Recepcionista";
+                            MenuRecepcionista.main(args);
+                            this.dispose();
+                        }
+                        if("administrador del hotel".equals(u.get(0).getIdRol().getNombre())){
+                             String args[]=new String[1];
+                            args[0]="Menu Administrador del Hotel";
+                            MenuAdminHotel.main(args);
+                            this.dispose();
+                        }*/
+                           String args[]=new String[1];
+                            args[0]="Menu Encargado";
+                            MenuEncargadoDeposito.main(args);
+                            this.dispose();        
                 }else{
                      JOptionPane.showMessageDialog(null,"Contraseña Incorrecta", "Error",JOptionPane.ERROR_MESSAGE);
                      tf_password.setText(null);
@@ -319,6 +345,13 @@ public class LoginView extends javax.swing.JFrame {
         args[0]="Cambiar contraseña";
         CambiarPasswordView.main(args);
     }//GEN-LAST:event_btn_cambiarActionPerformed
+
+    private void tf_passwordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_passwordKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            btn_iniciar.doClick();
+        } 
+    }//GEN-LAST:event_tf_passwordKeyPressed
 
     /**
     * @param args the command line arguments

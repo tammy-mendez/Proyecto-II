@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4bfa81c7-b9bd-4ee9-b537-7de47d64bfa6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Proyecto-II\\src\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     categoria_prod_ser.`codigoCategoria` AS categoria_prod_ser_codigoCategoria,
+     categoria_prod_ser.`nombre` AS categoria_prod_ser_nombre,
+     producto_servicio.`codigoPS` AS producto_servicio_codigoPS,
+     producto_servicio.`nombre` AS producto_servicio_nombre,
+     producto_servicio.`costo` AS producto_servicio_costo
+FROM
+     `categoria_prod_ser` categoria_prod_ser INNER JOIN `producto_servicio` producto_servicio ON categoria_prod_ser.`codigoCategoria` = producto_servicio.`codigoCategoria`
+WHERE producto_servicio.`nombre` not like  '%saldo de reserva%']]>
+	</queryString>
+	<field name="categoria_prod_ser_codigoCategoria" class="java.lang.Integer"/>
+	<field name="categoria_prod_ser_nombre" class="java.lang.String"/>
+	<field name="producto_servicio_codigoPS" class="java.lang.Integer"/>
+	<field name="producto_servicio_nombre" class="java.lang.String"/>
+	<field name="producto_servicio_costo" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="71d38c7b-907b-4809-bbad-f2d60e721f44" x="208" y="0" width="146" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Productos/Servicios]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="48edcef6-3492-4138-964c-c897ac80ed56" x="0" y="0" width="555" height="20" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="8a54ce9e-b610-4c86-a8b2-53986b392e4a" x="12" y="0" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fc0fa11d-5caa-43e6-a2a0-a1f32d789c30" x="142" y="0" width="131" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Categoría]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7a026956-07c8-4b61-b8f7-69f5054a15e2" x="437" y="0" width="80" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Costo Gs.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6bbfbf94-e12d-440f-9e5b-3bec3a7de406" x="288" y="0" width="130" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre Producto/Servicio]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="9b7d1e33-59aa-41b4-9f51-b9e44bd1a70e" x="12" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{categoria_prod_ser_codigoCategoria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e58d8444-ebfd-4b2e-bf68-cb3984457868" x="142" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{categoria_prod_ser_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5d43d253-5a55-467d-91d0-858f41519073" x="437" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{producto_servicio_costo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="090c948e-ae17-408f-9388-7504b959eef3" x="288" y="0" width="100" height="20"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{producto_servicio_nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -223,10 +223,15 @@ public class Empleado implements Serializable {
         return true;
     }
 
+    /*   @Override
+    public String toString() {
+    return "bean.Empleado[ codigoEmpleado=" + codigoEmpleado + " ]";
+    }*/
     @Override
     public String toString() {
-        return "bean.Empleado[ codigoEmpleado=" + codigoEmpleado + " ]";
+        return  "codigoCargo=" + codigoCargo + ", codigoEmpleado=" + codigoEmpleado + ", nombre=" + nombre + ", apellido=" + apellido + ", cedula=" + cedula + ", email=" + email + ", direccion=" + direccion + ", telefono=" + telefono + ", fechaNacimiento=" + fechaNacimiento + ", codigoJefe=" + codigoJefe;
     }
+    
 
     public Cargo getCodigoCargo() {
         return codigoCargo;

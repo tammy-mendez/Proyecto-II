@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="912e93c2-62d6-4092-b4b7-9ee197cc75fa">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codigo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Letras" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     pago.`codigo_pago` AS pago_codigo_pago,
+     pago.`fecha` AS pago_fecha,
+     pago.`cod_proveedor` AS pago_cod_proveedor,
+     pago.`monto_total` AS pago_monto_total,
+     proveedor.`codigoProveedor` AS proveedor_codigoProveedor,
+     proveedor.`tipo` AS proveedor_tipo,
+     proveedor.`razonSocial` AS proveedor_razonSocial,
+     proveedor.`ruc` AS proveedor_ruc,
+     proveedor.`cedula` AS proveedor_cedula,
+     proveedor.`email` AS proveedor_email,
+     proveedor.`direccion` AS proveedor_direccion,
+     proveedor.`telefono` AS proveedor_telefono,
+     proveedor.`codigoCategoria` AS proveedor_codigoCategoria
+FROM
+     `proveedor` proveedor INNER JOIN `pago` pago ON proveedor.`codigoProveedor` = pago.`cod_proveedor`
+where pago.`codigo_pago`=$P{codigo}]]>
+	</queryString>
+	<field name="pago_codigo_pago" class="java.lang.Integer"/>
+	<field name="pago_fecha" class="java.lang.String"/>
+	<field name="pago_cod_proveedor" class="java.lang.Integer"/>
+	<field name="pago_monto_total" class="java.lang.Integer"/>
+	<field name="proveedor_codigoProveedor" class="java.lang.Integer"/>
+	<field name="proveedor_tipo" class="java.lang.String"/>
+	<field name="proveedor_razonSocial" class="java.lang.String"/>
+	<field name="proveedor_ruc" class="java.lang.String"/>
+	<field name="proveedor_cedula" class="java.lang.String"/>
+	<field name="proveedor_email" class="java.lang.String"/>
+	<field name="proveedor_direccion" class="java.lang.String"/>
+	<field name="proveedor_telefono" class="java.lang.Integer"/>
+	<field name="proveedor_codigoCategoria" class="java.lang.Integer"/>
+	<variable name="variable1" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="130" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="15dc1016-0a0a-4ea6-81bb-6e61c170ef8a" x="174" y="0" width="195" height="37" forecolor="#FF0000"/>
+				<textElement>
+					<font fontName="MV Boli" size="20"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="76616b77-e804-4f9d-bc2d-b47d8fa63433" x="35" y="20" width="82" height="84"/>
+				<imageExpression><![CDATA["C:\\Users\\pc\\Documents\\facultad\\8vo semestre\\proyecto\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="11" y="15" width="78" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="77a12d84-578e-42ee-883b-ce1cecb2e277" x="89" y="15" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pago_fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="369" y="15" width="78" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Monto:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="24ffe2dc-658d-40b5-bbc6-b848104ef147" x="447" y="15" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pago_monto_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="1" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="3bdbb05c-4af1-4f69-aae0-9ce0ac5ae65a" x="675" y="152" width="0" height="20"/>
+			</rectangle>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="21" y="25" width="78" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Pago se]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="3f506d95-2d73-4483-9803-cd4d06e97d08" x="117" y="45" width="282" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="21" y="58" width="78" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Guaranies]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="bfd4e3f6-4a7e-4936-9ff0-528e4fdcf91e" x="200" y="25" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{proveedor_razonSocial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="263258f0-3a66-4adc-85b7-ae48df9fc3df" x="117" y="58" width="386" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{Letras}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9d7b44ea-11b8-4cd2-92a4-5158c764f6ff" x="171" y="104" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{Letras}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

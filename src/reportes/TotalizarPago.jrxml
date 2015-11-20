@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7c6284b0-acea-4767-8080-26f2bc2f6204">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FechaInicio" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaFin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     pago.`codigo_pago` AS pago_codigo_pago,
+     pago.`fecha` AS pago_fecha,
+     pago.`cod_proveedor` AS pago_cod_proveedor,
+     pago.`monto_total` AS pago_monto_total,
+     proveedor.`codigoProveedor` AS proveedor_codigoProveedor,
+     proveedor.`tipo` AS proveedor_tipo,
+     proveedor.`razonSocial` AS proveedor_razonSocial,
+     proveedor.`ruc` AS proveedor_ruc,
+     proveedor.`cedula` AS proveedor_cedula,
+     proveedor.`email` AS proveedor_email,
+     proveedor.`direccion` AS proveedor_direccion,
+     proveedor.`telefono` AS proveedor_telefono,
+     proveedor.`codigoCategoria` AS proveedor_codigoCategoria,
+     factura_pago.`num_factura` AS factura_pago_num_factura,
+     factura_pago.`fecha` AS factura_pago_fecha,
+     factura_pago.`orden_compra` AS factura_pago_orden_compra,
+     factura_pago.`estado` AS factura_pago_estado,
+     factura_pago.`monto_total` AS factura_pago_monto_total,
+     factura_pago.`monto_total_iva` AS factura_pago_monto_total_iva,
+     factura_pago.`cod_proveedor` AS factura_pago_cod_proveedor,
+     factura_pago.`fecha_vence` AS factura_pago_fecha_vence
+FROM
+     `proveedor` proveedor INNER JOIN `pago` pago ON proveedor.`codigoProveedor` = pago.`cod_proveedor`
+     INNER JOIN `factura_pago` factura_pago ON proveedor.`codigoProveedor` = factura_pago.`cod_proveedor`]]>
+	</queryString>
+	<field name="pago_codigo_pago" class="java.lang.Integer"/>
+	<field name="pago_fecha" class="java.lang.String"/>
+	<field name="pago_cod_proveedor" class="java.lang.Integer"/>
+	<field name="pago_monto_total" class="java.lang.Integer"/>
+	<field name="proveedor_codigoProveedor" class="java.lang.Integer"/>
+	<field name="proveedor_tipo" class="java.lang.String"/>
+	<field name="proveedor_razonSocial" class="java.lang.String"/>
+	<field name="proveedor_ruc" class="java.lang.String"/>
+	<field name="proveedor_cedula" class="java.lang.String"/>
+	<field name="proveedor_email" class="java.lang.String"/>
+	<field name="proveedor_direccion" class="java.lang.String"/>
+	<field name="proveedor_telefono" class="java.lang.Integer"/>
+	<field name="proveedor_codigoCategoria" class="java.lang.Integer"/>
+	<field name="factura_pago_num_factura" class="java.lang.Integer"/>
+	<field name="factura_pago_fecha" class="java.lang.String"/>
+	<field name="factura_pago_orden_compra" class="java.lang.Integer"/>
+	<field name="factura_pago_estado" class="java.lang.String"/>
+	<field name="factura_pago_monto_total" class="java.lang.Integer"/>
+	<field name="factura_pago_monto_total_iva" class="java.lang.Integer"/>
+	<field name="factura_pago_cod_proveedor" class="java.lang.Integer"/>
+	<field name="factura_pago_fecha_vence" class="java.lang.String"/>
+	<variable name="pago_monto_total_1" class="java.lang.Integer" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{pago_monto_total}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="167" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="15dc1016-0a0a-4ea6-81bb-6e61c170ef8a" x="143" y="12" width="195" height="37" forecolor="#FF0000"/>
+				<textElement>
+					<font fontName="MV Boli" size="20"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="107" y="147" width="100" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="0" y="147" width="107" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nº Pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="207" y="147" width="100" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Monto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="307" y="147" width="100" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Proveedor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fb8e92a-de08-45b5-ab75-546da7648e58" x="370" y="0" width="185" height="20" forecolor="#999999"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Santa Teresa casi Panchito Lopez. Barrio Santa Maria.                         	  Asunción, Paraguay.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9febaf6-60da-4a9c-a3e0-6c704853de37" x="424" y="20" width="83" height="14" forecolor="#999999"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Teléfono: 021-68398 ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9b39bc99-1cf2-4861-8b39-2438d200bb0e" x="407" y="34" width="117" height="10" forecolor="#999999"/>
+				<textElement>
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[www.hotelsantamaria.com.py]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="76616b77-e804-4f9d-bc2d-b47d8fa63433" x="7" y="12" width="82" height="84"/>
+				<imageExpression><![CDATA["C:\\Users\\pc\\Documents\\facultad\\8vo semestre\\proyecto\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="160" y="60" width="162" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[TOTALIZAR PAGOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="155" splitType="Stretch">
+			<textField>
+				<reportElement uuid="2ed8f7b8-1bb2-4ea1-b36b-aa7b451029a8" x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pago_codigo_pago}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9d0bdd1d-5820-40e5-8ced-036fe07fbb44" x="100" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pago_fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="db29c561-f697-4f57-8c52-b8048b95e2af" x="200" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pago_monto_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f6fef6c0-8b27-4f72-bb74-443308ee46f4" x="300" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{proveedor_razonSocial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="167" y="127" width="107" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField evaluationTime="Page">
+				<reportElement uuid="a936c3f7-e3af-4427-a5fd-5e34399a57cd" x="274" y="127" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{pago_monto_total_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="119" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

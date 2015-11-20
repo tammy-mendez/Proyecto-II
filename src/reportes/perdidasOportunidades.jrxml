@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="612" pageHeight="1008" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4d3c6e66-8fa7-46fe-a022-0dd4c949eb54">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FechaDesde" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaHasta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Proyecto-II\\src\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CantDias" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     categ_habitacion.`codigoCategoria` AS categ_habitacion_codigoCategoria,
+     categ_habitacion.`nombre` AS categ_habitacion_nombre
+FROM
+     `categ_habitacion` categ_habitacion]]>
+	</queryString>
+	<field name="categ_habitacion_codigoCategoria" class="java.lang.Integer"/>
+	<field name="categ_habitacion_nombre" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="80" splitType="Stretch">
+			<textField>
+				<reportElement uuid="34b04ad5-e93d-409d-9f1c-385628eb45fb" x="148" y="59" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FechaDesde}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3a16002d-186e-4018-9eb2-9e324e6fb292" x="300" y="59" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FechaHasta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="4c330586-5545-405e-ba19-3d8a0a6ef66a" x="443" y="59" width="91" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad Dias:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8708a957-6029-4cbd-a219-e4388328e01c" x="534" y="59" width="38" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CantDias}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8bc3ccac-9f6e-4b91-a070-a7e7b78521c7" x="121" y="59" width="27" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Del:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a40b4164-8a8f-4106-bc3e-9dab78c46875" x="274" y="59" width="24" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Al:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8e4c1bfb-7d17-48c3-8aca-2bc530a330c4" x="196" y="0" width="191" height="39" forecolor="#FF0000"/>
+				<textElement>
+					<font fontName="MV Boli" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="fbbe0b82-121e-4d60-88c5-42aee3fb9d74" x="39" y="11" width="48" height="68"/>
+				<imageExpression><![CDATA["C:\\Proyecto-II\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="e8a7cd4f-e028-4fc3-b476-7995ab1910b3" x="150" y="39" width="274" height="20" forecolor="#999999"/>
+				<textElement>
+					<font size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Informe de  Pérdidas de  Oportunidades]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="0e700120-80fb-4d5a-8864-bc95816383d9" x="0" y="3" width="572" height="19" forecolor="#333333" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="7bfb9740-2af2-4e16-a1c1-c3620bb59465" x="48" y="3" width="100" height="19" forecolor="#000000"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Código Categoría]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="00b496ed-7848-4135-908e-8814b913f6b5" x="174" y="3" width="100" height="19" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="d24f9b4b-f7ba-40ac-8260-f1ebe97d0b0b" x="39" y="0" width="100" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{categ_habitacion_codigoCategoria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="77528a66-b3bc-4b3f-863d-0915354b93de" x="174" y="0" width="100" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{categ_habitacion_nombre}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="295b24d4-2595-4f25-99a4-c5f18539296a" x="87" y="10" width="39" height="10"/>
+				<subreportParameter name="fechaDesde">
+					<subreportParameterExpression><![CDATA[$P{FechaDesde}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fechaHasta">
+					<subreportParameterExpression><![CDATA[$P{FechaHasta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codigoCategoria">
+					<subreportParameterExpression><![CDATA[$F{categ_habitacion_codigoCategoria}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CantDias">
+					<subreportParameterExpression><![CDATA[$P{CantDias}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "habitaciones.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="2a4d007b-b672-48db-841c-ad7d74c35ff5" x="424" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="1e68f20e-03e6-41ef-aee5-f0cf3ebd5089" x="504" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="63bdfc73-3cb6-4b94-978e-bdb28bc85a7e" x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="78cfb928-b547-4c23-9a4e-afe1651402ae" x="100" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

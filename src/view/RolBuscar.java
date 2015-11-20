@@ -55,6 +55,8 @@ public class RolBuscar extends javax.swing.JFrame {
         list_filtros = new javax.swing.JComboBox();
         btn_buscar = new javax.swing.JButton();
         btn_cancelar = new javax.swing.JButton();
+        panel_BuscarRol = new javax.swing.JPanel();
+        lbl_BuscarRol = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("frameRolBuscar"); // NOI18N
@@ -74,9 +76,12 @@ public class RolBuscar extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(masterTable);
+        if (masterTable.getColumnModel().getColumnCount() > 0) {
+            masterTable.getColumnModel().getColumn(0).setPreferredWidth(20);
+        }
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setForeground(new java.awt.Color(204, 204, 255));
 
         tf_valor.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -100,6 +105,11 @@ public class RolBuscar extends javax.swing.JFrame {
                 btn_buscarActionPerformed(evt);
             }
         });
+        btn_buscar.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                btn_buscarFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -110,11 +120,11 @@ public class RolBuscar extends javax.swing.JFrame {
                 .addComponent(lbl_filtro)
                 .addGap(18, 18, 18)
                 .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(77, 77, 77)
+                .addGap(58, 58, 58)
                 .addComponent(lbl_valor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addComponent(tf_valor, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btn_buscar)
                 .addGap(21, 21, 21))
         );
@@ -131,7 +141,7 @@ public class RolBuscar extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/salir.png"))); // NOI18N
+        btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/delete.png"))); // NOI18N
         btn_cancelar.setText("Cancelar");
         btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,31 +149,61 @@ public class RolBuscar extends javax.swing.JFrame {
             }
         });
 
+        panel_BuscarRol.setBackground(new java.awt.Color(0, 153, 255));
+        panel_BuscarRol.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        lbl_BuscarRol.setFont(new java.awt.Font("Corbel", 1, 30)); // NOI18N
+        lbl_BuscarRol.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_BuscarRol.setText("Buscar Rol");
+
+        javax.swing.GroupLayout panel_BuscarRolLayout = new javax.swing.GroupLayout(panel_BuscarRol);
+        panel_BuscarRol.setLayout(panel_BuscarRolLayout);
+        panel_BuscarRolLayout.setHorizontalGroup(
+            panel_BuscarRolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_BuscarRolLayout.createSequentialGroup()
+                .addGap(216, 216, 216)
+                .addComponent(lbl_BuscarRol)
+                .addContainerGap(237, Short.MAX_VALUE))
+        );
+        panel_BuscarRolLayout.setVerticalGroup(
+            panel_BuscarRolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_BuscarRolLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_BuscarRol)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addContainerGap(35, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_cancelar)
-                .addGap(233, 233, 233))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(260, 260, 260)
+                        .addComponent(btn_cancelar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(panel_BuscarRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(26, 26, 26)
+                .addComponent(panel_BuscarRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addComponent(btn_cancelar)
-                .addGap(21, 21, 21))
+                .addGap(18, 18, 18))
         );
 
         bindingGroup.bind();
@@ -178,7 +218,7 @@ public class RolBuscar extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Ingrese algún valor para efectuar la búsqueda", "Advertencia",JOptionPane.ERROR_MESSAGE);
             return;
         }
- else{
+        else{
          if (list_filtros.getSelectedItem()=="Identificacion"){
             id=Integer.parseInt(tf_valor.getText());
             query = entityManager.createNamedQuery( "Rol.findByIdRol");
@@ -249,7 +289,7 @@ public class RolBuscar extends javax.swing.JFrame {
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
     private void tf_valorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_valorKeyTyped
@@ -270,6 +310,11 @@ public class RolBuscar extends javax.swing.JFrame {
          }
     }//GEN-LAST:event_tf_valorKeyTyped
 
+    private void btn_buscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btn_buscarFocusLost
+        // TODO add your handling code here:
+        tf_valor.setText(null);
+    }//GEN-LAST:event_btn_buscarFocusLost
+
     /**
     * @param args the command line arguments
     */
@@ -280,7 +325,7 @@ public class RolBuscar extends javax.swing.JFrame {
                 frame.pack();
                 frame.setVisible(true);
                 frame.setLocationRelativeTo(null);
-                frame.setTitle(args[0]);
+                frame.setTitle("Buscar Rol");
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
          }
@@ -293,11 +338,13 @@ public class RolBuscar extends javax.swing.JFrame {
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbl_BuscarRol;
     private javax.swing.JLabel lbl_filtro;
     private javax.swing.JLabel lbl_valor;
     private java.util.List<bean.Rol> list;
     private javax.swing.JComboBox list_filtros;
     public javax.swing.JTable masterTable;
+    private javax.swing.JPanel panel_BuscarRol;
     private javax.persistence.Query query;
     private javax.swing.JTextField tf_valor;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;

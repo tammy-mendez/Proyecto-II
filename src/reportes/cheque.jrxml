@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f3c67787-1ffd-4748-b599-fbf4f08e4db9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codigo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Letras" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     pago.`codigo_pago` AS pago_codigo_pago,
+     pago.`fecha` AS pago_fecha,
+     pago.`cod_proveedor` AS pago_cod_proveedor,
+     pago.`monto_total` AS pago_monto_total,
+     proveedor.`codigoProveedor` AS proveedor_codigoProveedor,
+     proveedor.`tipo` AS proveedor_tipo,
+     proveedor.`razonSocial` AS proveedor_razonSocial,
+     proveedor.`ruc` AS proveedor_ruc,
+     proveedor.`cedula` AS proveedor_cedula,
+     proveedor.`email` AS proveedor_email,
+     proveedor.`direccion` AS proveedor_direccion,
+     proveedor.`telefono` AS proveedor_telefono,
+     proveedor.`codigoCategoria` AS proveedor_codigoCategoria,
+     detalle_pago.`iddetalle_pago` AS detalle_pago_iddetalle_pago,
+     detalle_pago.`id_pago` AS detalle_pago_id_pago,
+     detalle_pago.`num_factura` AS detalle_pago_num_factura,
+     detalle_pago.`id_extraccion` AS detalle_pago_id_extraccion,
+     extraccion_deposito.`codigoExtraccionDeposito` AS extraccion_deposito_codigoExtraccionDeposito,
+     extraccion_deposito.`fecha` AS extraccion_deposito_fecha,
+     extraccion_deposito.`monto` AS extraccion_deposito_monto,
+     extraccion_deposito.`idCuentaBancaria` AS extraccion_deposito_idCuentaBancaria,
+     extraccion_deposito.`tipo` AS extraccion_deposito_tipo,
+     cuenta_bancaria.`idCuentaBancaria` AS cuenta_bancaria_idCuentaBancaria,
+     cuenta_bancaria.`tipo_cuenta` AS cuenta_bancaria_tipo_cuenta,
+     cuenta_bancaria.`monto_actual` AS cuenta_bancaria_monto_actual,
+     cuenta_bancaria.`idBanco` AS cuenta_bancaria_idBanco,
+     cuenta_bancaria.`titular` AS cuenta_bancaria_titular,
+     cuenta_bancaria.`tipo_moneda` AS cuenta_bancaria_tipo_moneda,
+     cuenta_bancaria.`numero_cuenta` AS cuenta_bancaria_numero_cuenta,
+     banco.`idbanco` AS banco_idbanco,
+     banco.`nombre` AS banco_nombre,
+     banco.`tipo_entidad` AS banco_tipo_entidad
+FROM
+     `proveedor` proveedor INNER JOIN `pago` pago ON proveedor.`codigoProveedor` = pago.`cod_proveedor`
+     INNER JOIN `detalle_pago` detalle_pago ON pago.`codigo_pago` = detalle_pago.`id_pago`
+     INNER JOIN `extraccion_deposito` extraccion_deposito ON detalle_pago.`id_extraccion` = extraccion_deposito.`codigoExtraccionDeposito`
+     INNER JOIN `cuenta_bancaria` cuenta_bancaria ON extraccion_deposito.`idCuentaBancaria` = cuenta_bancaria.`idCuentaBancaria`
+     INNER JOIN `banco` banco ON cuenta_bancaria.`idBanco` = banco.`idbanco`
+WHERE
+     pago.`codigo_pago` = $P{codigo}
+GROUP BY  pago.`codigo_pago`]]>
+	</queryString>
+	<field name="pago_codigo_pago" class="java.lang.Integer"/>
+	<field name="pago_fecha" class="java.lang.String"/>
+	<field name="pago_cod_proveedor" class="java.lang.Integer"/>
+	<field name="pago_monto_total" class="java.lang.Integer"/>
+	<field name="proveedor_codigoProveedor" class="java.lang.Integer"/>
+	<field name="proveedor_tipo" class="java.lang.String"/>
+	<field name="proveedor_razonSocial" class="java.lang.String"/>
+	<field name="proveedor_ruc" class="java.lang.String"/>
+	<field name="proveedor_cedula" class="java.lang.String"/>
+	<field name="proveedor_email" class="java.lang.String"/>
+	<field name="proveedor_direccion" class="java.lang.String"/>
+	<field name="proveedor_telefono" class="java.lang.Integer"/>
+	<field name="proveedor_codigoCategoria" class="java.lang.Integer"/>
+	<field name="detalle_pago_iddetalle_pago" class="java.lang.Integer"/>
+	<field name="detalle_pago_id_pago" class="java.lang.Integer"/>
+	<field name="detalle_pago_num_factura" class="java.lang.Integer"/>
+	<field name="detalle_pago_id_extraccion" class="java.lang.Integer"/>
+	<field name="extraccion_deposito_codigoExtraccionDeposito" class="java.lang.Integer"/>
+	<field name="extraccion_deposito_fecha" class="java.lang.String"/>
+	<field name="extraccion_deposito_monto" class="java.lang.Integer"/>
+	<field name="extraccion_deposito_idCuentaBancaria" class="java.lang.Integer"/>
+	<field name="extraccion_deposito_tipo" class="java.lang.String"/>
+	<field name="cuenta_bancaria_idCuentaBancaria" class="java.lang.Integer"/>
+	<field name="cuenta_bancaria_tipo_cuenta" class="java.lang.String"/>
+	<field name="cuenta_bancaria_monto_actual" class="java.lang.Integer"/>
+	<field name="cuenta_bancaria_idBanco" class="java.lang.Integer"/>
+	<field name="cuenta_bancaria_titular" class="java.lang.String"/>
+	<field name="cuenta_bancaria_tipo_moneda" class="java.lang.String"/>
+	<field name="cuenta_bancaria_numero_cuenta" class="java.lang.String"/>
+	<field name="banco_idbanco" class="java.lang.Integer"/>
+	<field name="banco_nombre" class="java.lang.String"/>
+	<field name="banco_tipo_entidad" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="15dc1016-0a0a-4ea6-81bb-6e61c170ef8a" x="287" y="12" width="195" height="37" forecolor="#FF0000"/>
+				<textElement>
+					<font fontName="MV Boli" size="20"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="76616b77-e804-4f9d-bc2d-b47d8fa63433" x="44" y="16" width="82" height="63"/>
+				<imageExpression><![CDATA["C:\\Users\\pc\\Documents\\facultad\\8vo semestre\\proyecto\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="126" y="59" width="179" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nro.Cuenta Bancaria:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="2371fcaf-8090-493c-8e5a-6de65f8d0030" x="305" y="59" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cuenta_bancaria_numero_cuenta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0d8c3f33-67b7-4d68-a76b-74517becc893" x="539" y="59" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{banco_nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="469" y="59" width="70" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Banco:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="126" y="16" width="78" height="24" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="469" y="12" width="78" height="24" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Monto:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="2bc17f90-e41b-4405-b0a8-9134f180c470" x="305" y="12" width="100" height="24"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pago_fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9758e479-35ec-47fe-8aed-48d1fa459505" x="547" y="12" width="100" height="24"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pago_monto_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="11" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="158" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="11520797-fd70-4d46-8b83-97e330fcc0ce" x="25" y="17" width="595" height="87"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="48" y="16" width="78" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Pago se]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcebdf39-b7bc-43a1-a79f-ed526202e8b1" x="48" y="53" width="78" height="20" forecolor="#999999"/>
+				<textElement>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Guaranies]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="4b01146c-4341-4ffa-97ed-ba47b691e90a" x="170" y="36" width="394" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="d61c5ed6-1178-4565-a602-0f9f62a95aa5" x="187" y="17" width="327" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{proveedor_razonSocial}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="70c6aee2-4e0c-400c-b80b-5589b82cf3e6" x="158" y="73" width="406" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="01329075-5f2f-43bc-aed8-82c7f55b2ca6" x="187" y="53" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{Letras}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
