@@ -27,10 +27,12 @@ import javax.swing.JOptionPane;
 import view.LoginView;
 import bean.DetalleCobro;
 import bean.FacturaCobro;
+import java.awt.Image;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.ImageIcon;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
@@ -46,7 +48,7 @@ public int montoTarjetaDebito=0;
 public int montoCheque=0;
 public int montoTotal=0;
 //public int montoInicial=0;
-private int resp;
+private int resp,resp1;
 public static int op;
 public static int cuentaBancaria;
     /**
@@ -109,7 +111,7 @@ public static int cuentaBancaria;
         jPanel6 = new javax.swing.JPanel();
         btn_cancelar3 = new javax.swing.JButton();
         btn_guardar3 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btn_informe = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -401,13 +403,20 @@ public static int cuentaBancaria;
 
         btn_guardar3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/guardar.png"))); // NOI18N
         btn_guardar3.setText("Aceptar");
+        btn_guardar3.setEnabled(false);
         btn_guardar3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_guardar3ActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Informe");
+        btn_informe.setText("Informe");
+        btn_informe.setEnabled(false);
+        btn_informe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_informeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -417,7 +426,7 @@ public static int cuentaBancaria;
                 .addGap(34, 34, 34)
                 .addComponent(btn_guardar3)
                 .addGap(36, 36, 36)
-                .addComponent(jButton1)
+                .addComponent(btn_informe)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(btn_cancelar3)
                 .addGap(34, 34, 34))
@@ -430,7 +439,7 @@ public static int cuentaBancaria;
                     .addComponent(btn_cancelar3)
                     .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btn_guardar3)
-                        .addComponent(jButton1)))
+                        .addComponent(btn_informe)))
                 .addContainerGap())
         );
 
@@ -529,8 +538,10 @@ public static int cuentaBancaria;
                     entityManager.getTransaction().commit();
                     entityManager.close();
                     JOptionPane.showMessageDialog(null,"Arqueo Exitoso", "Confirmación",JOptionPane.INFORMATION_MESSAGE);
-     
-                  
+                    resp1=  JOptionPane.showConfirmDialog(null,"Desea imprimir?", "Confirmar Impresión",JOptionPane.YES_NO_OPTION );
+                        if (resp1==JOptionPane.YES_OPTION){
+                            imprimir();
+                        }
             }
             vaciar();
            this.dispose();  
@@ -554,8 +565,8 @@ public static int cuentaBancaria;
 
     private void btn_calcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_calcularActionPerformed
         // TODO add your handling code here:
-        
-     
+        btn_guardar3.setEnabled(true);
+        btn_informe.setEnabled(true);
         String d1 = tf_fechaApertura.getText();
         String d2 = tf_fechaCierre.getText();
      /*   DateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -618,6 +629,10 @@ public static int cuentaBancaria;
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_montoEfectivoActionPerformed
 
+    private void btn_informeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_informeActionPerformed
+        imprimir();
+    }//GEN-LAST:event_btn_informeActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -665,6 +680,7 @@ public static int cuentaBancaria;
     private javax.swing.JButton btn_detalleTarjetaCredito;
     private javax.swing.JButton btn_detalleTarjetaDebito;
     private javax.swing.JButton btn_guardar3;
+    private javax.swing.JButton btn_informe;
     private javax.swing.JLabel cantidadMinimaLabel;
     private javax.swing.JLabel cantidadMinimaLabel2;
     private javax.swing.JLabel cantidadMinimaLabel3;
@@ -676,7 +692,6 @@ public static int cuentaBancaria;
     private javax.persistence.EntityManager entityManager;
     private java.util.List<bean.FacturaCobro> facturaCobroList;
     private javax.persistence.Query facturaCobroQuery;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -928,39 +943,26 @@ public static int cuentaBancaria;
             }
             ema.close();
             return cuentaLocal;
-        }
-    private void imprimirDetalleContado() {
-       facturaCobroQuery = entityManager.createNativeQuery( "SELECT * "+
-          "FROM factura_cobro fc "+
-        //  "JOIN detalle_cobro dc "+
-        //  "on dc.idDetalle=fc.forma_pago "+
-          "WHERE fc.tipoFactura='Contado' "+
-          // "and dc.forma='TarjetaDebito' "+
-          "AND STR_TO_DATE(fechaEmision , '%d/%m/%Y %H :%i :%s') "+
-          "BETWEEN STR_TO_DATE('"+tf_fechaApertura.getText()+"', '%d/%m/%Y %H :%i :%s') "+
-          "AND STR_TO_DATE('"+tf_fechaCierre.getText()+"', '%d/%m/%Y %H :%i :%s') ", FacturaCobro.class);
- 
-          List<FacturaCobro> p=facturaCobroQuery.getResultList();
-                if (p.isEmpty()){
-                     JOptionPane.showMessageDialog(null,"Sin detalle", "Error",JOptionPane.ERROR_MESSAGE);
-                     this.dispose();
-                }
-              else{
-              try
+}
+
+    private void imprimir() {
+         try
         {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/hotel db", "root", "1234");
           //  HashMap par = new HashMap();//no definimos ningún parámetro por eso lo dejamos así
             Map parametros=new HashMap();
-            parametros.put("fecha",tf_fechaApertura.getText() );
-            parametros.put("fechaFin",tf_fechaCierre.getText() );
-            parametros.put("formaPago","Contado" );
-            JasperPrint jp = JasperFillManager.fillReport("C:/proyecto/src/reportes/DetalleCobro.jasper", parametros,con);//el primer parámetro es el camino del archivo, se cambia esta dirección por la dirección del archivo .jasper
+            parametros.put("fecha",ArquearCaja.tf_fechaApertura.getText() );
+            parametros.put("fechaFin",ArquearCaja.tf_fechaCierre.getText() );
+           // parametros.put("formaPago","TarjetaDebito" );
+            JasperPrint jp = JasperFillManager.fillReport("C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/reportes/CobrosDelDia.jasper", parametros,con);//el primer parámetro es el camino del archivo, se cambia esta dirección por la dirección del archivo .jasper
+            //C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/reportes/CobrosDelDia.jasper
+            //C:/proyecto/src
             JasperViewer jv = new JasperViewer(jp,false);
-            jv.setVisible(true);
+            jv.setVisible(true);//C:\Users\pc\Downloads\Proyect-II-master (2)\Proyect-II-master\src\reportes
             jv.setTitle("Detalle Cobro");
-         //    Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
-           //  jv.setIconImage(icon);
+          //   Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+          //   jv.setIconImage(icon);
             jv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         }
         catch(Exception e)
@@ -969,4 +971,5 @@ public static int cuentaBancaria;
         }
          }
     }
-}
+    
+        

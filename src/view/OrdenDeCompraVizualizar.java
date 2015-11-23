@@ -15,6 +15,7 @@ import bean.OrdenCompra;
 import bean.Proveedor;
 import bean.TablaOrdenCompra;
 import java.awt.EventQueue;
+import java.awt.Image;
 import java.beans.Beans;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -556,7 +557,7 @@ public class OrdenDeCompraVizualizar extends javax.swing.JFrame {
             JasperViewer jv = new JasperViewer(jp,false);
             jv.setVisible(true);
             jv.setTitle("Orden de Compra");
-         //    Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+         //    Image icon = new ImageIcon(getClass().getResource("C:\Users\pc\Documents\NetBeansProjects\Proyecto-II\src\imagenes\logo1.png").getImage();
            //  jv.setIconImage(icon);
             jv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         }

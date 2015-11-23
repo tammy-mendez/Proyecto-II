@@ -68,7 +68,6 @@ public class DetallePagoTarjetaCredito extends javax.swing.JDialog {
         tf_total = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         lbl_registrarC = new javax.swing.JLabel();
-        btn_detalle = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -157,13 +156,6 @@ public class DetallePagoTarjetaCredito extends javax.swing.JDialog {
         jDesktopPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(lbl_registrarC, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        btn_detalle.setText("Emitir Detalle");
-        btn_detalle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_detalleActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -174,8 +166,6 @@ public class DetallePagoTarjetaCredito extends javax.swing.JDialog {
                 .addContainerGap(74, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_detalle, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(92, 92, 92)
                 .addComponent(btn_cancelar3)
                 .addGap(183, 183, 183))
         );
@@ -185,9 +175,7 @@ public class DetallePagoTarjetaCredito extends javax.swing.JDialog {
                 .addGap(27, 27, 27)
                 .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btn_cancelar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_detalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btn_cancelar3)
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -202,13 +190,6 @@ public class DetallePagoTarjetaCredito extends javax.swing.JDialog {
         // TODO add your handling code here:{
         this.setVisible(false);
     }//GEN-LAST:event_btn_cancelar3ActionPerformed
-
-    private void btn_detalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_detalleActionPerformed
-        // TODO add your handling code here:
-        imprimir();
-        this.dispose();
-        
-    }//GEN-LAST:event_btn_detalleActionPerformed
 
     /**
      * @param args the command line arguments
@@ -254,7 +235,6 @@ public class DetallePagoTarjetaCredito extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_cancelar3;
-    private javax.swing.JButton btn_detalle;
     private java.util.List<bean.DetalleCobro> detalleCobroList;
     private javax.persistence.Query detalleCobroQuery;
     private javax.persistence.EntityManager entityManager;

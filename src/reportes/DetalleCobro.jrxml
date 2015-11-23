@@ -141,11 +141,13 @@ order by  banco.`nombre`]]>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{factura_cobro_rucCliente}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0">
-				<reportElement uuid="2d59a482-da92-4150-ac79-9ddee648a3ca" x="459" y="4" width="60" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{factura_cobro_total}]]></textFieldExpression>
-			</textField>
+			<elementGroup>
+				<textField pattern="#,##0">
+					<reportElement uuid="2d59a482-da92-4150-ac79-9ddee648a3ca" x="459" y="4" width="60" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{factura_cobro_total}]]></textFieldExpression>
+				</textField>
+			</elementGroup>
 		</band>
 	</detail>
 	<columnFooter>

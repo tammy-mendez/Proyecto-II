@@ -74,8 +74,6 @@
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="btn_detalle" min="-2" pref="108" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
               <Component id="btn_cancelar3" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="183" max="-2" attributes="0"/>
           </Group>
@@ -87,10 +85,7 @@
               <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
               <Component id="jDesktopPane1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="btn_cancelar3" max="32767" attributes="0"/>
-                  <Component id="btn_detalle" max="32767" attributes="0"/>
-              </Group>
+              <Component id="btn_cancelar3" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="16" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -239,13 +234,5 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="btn_detalle">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Emitir Detalle"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_detalleActionPerformed"/>
-      </Events>
-    </Component>
   </SubComponents>
 </Form>
