@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="18fa1f57-3d31-47d1-892f-97d2ab7aba17">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="Periodo_q" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Periodo_i" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Seguro" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     empleado.`nombre` AS empleado_nombre,
+     empleado.`apellido` AS empleado_apellido,
+     planilla_pago_sueldo.`idPago` AS planilla_pago_sueldo_idPago,
+     planilla_pago_sueldo.`codigoEmpleado` AS planilla_pago_sueldo_codigoEmpleado,
+     planilla_pago_sueldo.`periodo` AS planilla_pago_sueldo_periodo,
+     planilla_pago_sueldo.`fechaPago` AS planilla_pago_sueldo_fechaPago,
+     planilla_pago_sueldo.`total_horas` AS planilla_pago_sueldo_total_horas,
+     planilla_pago_sueldo.`salarioBase` AS planilla_pago_sueldo_salarioBase,
+     planilla_pago_sueldo.`sueldoHorasT` AS planilla_pago_sueldo_sueldoHorasT,
+     planilla_pago_sueldo.`extras` AS planilla_pago_sueldo_extras,
+     planilla_pago_sueldo.`nocturno` AS planilla_pago_sueldo_nocturno,
+     planilla_pago_sueldo.`descuentoIPS` AS planilla_pago_sueldo_descuentoIPS,
+     planilla_pago_sueldo.`liquidoCobrado` AS planilla_pago_sueldo_liquidoCobrado,
+     empleado.`cedula` AS empleado_cedula
+FROM
+     `empleado` empleado INNER JOIN `planilla_pago_sueldo` planilla_pago_sueldo ON empleado.`codigoEmpleado` = planilla_pago_sueldo.`codigoEmpleado`
+WHERE 
+planilla_pago_sueldo.`periodo` = $P{Periodo_q}]]>
+	</queryString>
+	<field name="empleado_nombre" class="java.lang.String"/>
+	<field name="empleado_apellido" class="java.lang.String"/>
+	<field name="planilla_pago_sueldo_idPago" class="java.lang.Integer"/>
+	<field name="planilla_pago_sueldo_codigoEmpleado" class="java.lang.Integer"/>
+	<field name="planilla_pago_sueldo_periodo" class="java.lang.String"/>
+	<field name="planilla_pago_sueldo_fechaPago" class="java.sql.Date"/>
+	<field name="planilla_pago_sueldo_total_horas" class="java.lang.Float"/>
+	<field name="planilla_pago_sueldo_salarioBase" class="java.lang.Integer"/>
+	<field name="planilla_pago_sueldo_sueldoHorasT" class="java.lang.Integer"/>
+	<field name="planilla_pago_sueldo_extras" class="java.lang.Integer"/>
+	<field name="planilla_pago_sueldo_nocturno" class="java.lang.Integer"/>
+	<field name="planilla_pago_sueldo_descuentoIPS" class="java.lang.Integer"/>
+	<field name="planilla_pago_sueldo_liquidoCobrado" class="java.lang.Integer"/>
+	<field name="empleado_cedula" class="java.lang.String"/>
+	<variable name="planilla_pago_sueldo_liquidoCobrado_2" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{planilla_pago_sueldo_liquidoCobrado}]]></variableExpression>
+	</variable>
+	<variable name="extraer" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="90" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="eee25c77-7d75-4ef1-bd64-7254e6791b12" x="305" y="40" width="237" height="20" forecolor="#999999"/>
+				<textElement textAlignment="Justified">
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[PLANILLA DE PAGO DE SUELDOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d9bbc495-c9ab-452b-be00-5cc01e4d8d3c" x="58" y="70" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Correspondiente a:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="493f794a-044f-4778-82a4-0545d5c950f6" x="520" y="70" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Emisión:]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="0ec4be8f-139c-4472-809d-bd7d44de2f7b" x="620" y="70" width="131" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{planilla_pago_sueldo_fechaPago}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8e4c1bfb-7d17-48c3-8aca-2bc530a330c4" x="311" y="0" width="191" height="30" forecolor="#FF0000"/>
+				<textElement textAlignment="Justified">
+					<font fontName="MV Boli" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="71cdba4c-7637-4c43-8943-8e3614aebec0" x="236" y="0" width="50" height="60"/>
+				<imageExpression><![CDATA["C:\\Proyecto-II\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="79ec6d3f-4916-4836-9631-565c72cecc7e" x="156" y="70" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{Periodo_i}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="4bcedc29-ab23-4098-923c-bfe08f310e02" x="305" y="70" width="174" height="20" forecolor="#FF0000"/>
+				<textElement textAlignment="Justified">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Horas Trabajadas en el mes:  40]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="373af9fc-8b95-467d-83f1-f49a70b89cb5" x="0" y="0" width="802" height="20" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="676fd690-c001-4cdd-addc-f7075e171cd0" x="58" y="0" width="59" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d1f4f15b-32a8-4b46-b245-f26e8108d081" x="682" y="0" width="41" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[IPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a8d981ae-3525-4ddf-87f3-6aae5a812a46" x="530" y="0" width="63" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Extras]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="904c45f7-bad9-4dc2-9158-1ca34b7a5bb9" x="740" y="0" width="48" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Liquido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3a26fac1-cb5c-4351-832a-3366ea5a563c" x="129" y="0" width="55" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellido]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c2de9eba-61c7-44ce-bba1-d4bde7cd29a9" x="208" y="0" width="66" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Salario Base]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="12b33e62-3419-437b-a305-964554f5d9f5" x="603" y="0" width="61" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nocturno]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="87c1e343-0e1b-4aca-801c-936aea2b7407" x="14" y="0" width="36" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1b6a2e47-6f16-47a7-ab8f-ff83231d7cc9" x="286" y="0" width="74" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hs Trabajadas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5771f680-199c-4482-8ad1-020f19181cf6" x="444" y="0" width="66" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sueldo HsT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="192ea1dc-7451-4e0a-8aab-a67af08b2526" x="373" y="0" width="57" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Excedente]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement uuid="85f7452c-da4e-47af-80d0-606a717478e6" x="58" y="0" width="59" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{empleado_nombre}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="0f208b1d-b11c-4f78-9a13-ffada618539c" x="682" y="0" width="41" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{planilla_pago_sueldo_descuentoIPS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="59450631-18ca-4fba-b3f4-77bb49115800" x="530" y="0" width="63" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{planilla_pago_sueldo_extras}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="579f6a80-b7f7-4a8c-860e-0d0ae2574b13" x="736" y="0" width="52" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{planilla_pago_sueldo_liquidoCobrado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="f5d206be-d270-41c6-94dc-4b0a8cfa826d" x="208" y="0" width="66" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{planilla_pago_sueldo_salarioBase}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="509a02ad-b341-4c62-803e-de4f1c694970" x="129" y="0" width="78" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{empleado_apellido}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="3b4730f1-6aac-46c9-8246-34a3e562f101" x="603" y="0" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{planilla_pago_sueldo_nocturno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="26f867a7-8358-4c58-aa3a-942fc80b9806" x="8" y="0" width="50" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{empleado_cedula}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="66f766ae-0474-4e92-b8e8-65e7bf5bbd38" x="286" y="0" width="41" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{planilla_pago_sueldo_total_horas}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="3ea7c656-ab5f-44a1-9845-dad4166f1ca0" x="444" y="0" width="66" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{planilla_pago_sueldo_sueldoHorasT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0">
+				<reportElement uuid="038a44d6-011d-4999-a077-a28f821f2950" x="373" y="0" width="60" height="20">
+					<printWhenExpression><![CDATA[$F{planilla_pago_sueldo_total_horas}>40]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{planilla_pago_sueldo_total_horas}-40]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="4614f233-4236-4492-b208-7b534c1da037" x="704" y="0" width="58" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="eb19b6e4-7d9c-4814-9fd0-1d39432af00f" x="762" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="764c59f4-29a5-4caf-a63d-2a20806cc145" x="0" y="0" width="129" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="05e41f21-9949-4c62-8bcb-5d0cbbec183e" x="129" y="0" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="25" splitType="Stretch">
+			<textField pattern="#,##0">
+				<reportElement uuid="aafff79c-b236-499c-b488-9cbba08b18ba" x="108" y="5" width="100" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{planilla_pago_sueldo_liquidoCobrado_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="42a169e3-07be-4447-8507-96852288bf58" x="344" y="5" width="100" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Seguro}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="9565b60e-5d94-4555-b675-f05a1edbf54d" x="613" y="5" width="100" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{planilla_pago_sueldo_liquidoCobrado_2}+$P{Seguro}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ce8ddf5e-a617-4eb0-9b58-f2038ae67200" x="277" y="5" width="67" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL IPS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ce8ddf5e-a617-4eb0-9b58-f2038ae67200" x="14" y="5" width="94" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL SALARIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ce8ddf5e-a617-4eb0-9b58-f2038ae67200" x="510" y="5" width="103" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL A EXTRAER:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -113,7 +113,8 @@ public class CategHabitacion implements Serializable {
 
     @Override
     public String toString() {
-        return "bean.CategHabitacion[ codigoCategoria=" + codigoCategoria + " ]";
+        return  "codigoCategoria=" + codigoCategoria + ", nombre=" + nombre + ", costoxnoche=" + costoxnoche;
     }
+
     
 }

@@ -6,9 +6,12 @@
 
 package view;
 
+import ViewAdmHotel.MenuAdminHotel;
 import bean.CategHabitacion;
 import bean.Habitacion;
+import java.awt.Image;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -69,7 +72,7 @@ public class HabitacionBuscar extends javax.swing.JFrame {
         panel_BuscarHabitacionLayout.setHorizontalGroup(
             panel_BuscarHabitacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_BuscarHabitacionLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(167, Short.MAX_VALUE)
                 .addComponent(lbl_BuscarHabitacion)
                 .addGap(149, 149, 149))
         );
@@ -159,9 +162,9 @@ public class HabitacionBuscar extends javax.swing.JFrame {
                 .addComponent(lbl_valor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(btn_buscar)
-                .addGap(23, 23, 23))
+                .addGap(30, 30, 30))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,32 +184,33 @@ public class HabitacionBuscar extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_BuscarHabitacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(85, 85, 85)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(58, 58, 58))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_cancelar)
-                .addGap(233, 233, 233))
+                .addContainerGap(33, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(panel_BuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btn_cancelar)
+                        .addGap(256, 256, 256))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGap(22, 22, 22)
                 .addComponent(panel_BuscarHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addComponent(btn_cancelar)
-                .addGap(25, 25, 25))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -306,42 +310,7 @@ public class HabitacionBuscar extends javax.swing.JFrame {
 
     private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
         // TODO add your handling code here:
-        switch (MenuAdminHotel.opcion){
-            case 1:
-                    fila=masterTable.getSelectedRow();
-                    numero=(Integer) masterTable.getValueAt(fila, 0);
-                    //aqui obtenemos la categoria para que la muestre seleccionada en el combo box
-                    query=entityManager.createNamedQuery("Habitacion.findByNumero");
-                    query.setParameter("numero", numero);
-                    List<Habitacion> h=query.getResultList();
-                    JFrame frame= new HabitacionEdit();
-                    HabitacionEdit.tf_numeroHabit.setText(Integer.toString(numero));
-                    HabitacionEdit.list_categoria.setSelectedItem(h.get(0).getCodigoCategoria());
-                    frame.setVisible(true);
-                    frame.setTitle("Modificar Habitación");
-                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    frame.setLocationRelativeTo(null);
-                    this.dispose();
-                    break;
-            case 2:
-                    fila=masterTable.getSelectedRow();
-                    numero=(Integer) masterTable.getValueAt(fila, 0);
-                    categoria=(Integer)masterTable.getValueAt(fila, 1);
-                    nombre=(String)masterTable.getValueAt(fila, 2);
-                    JFrame frame2= new HabitacionEliminar();
-                    HabitacionEliminar.tf_numeroHabit.setText(Integer.toString(numero));
-                    HabitacionEliminar.tf_codigo.setText(Integer.toString(categoria));
-                    HabitacionEliminar.tf_categoria.setText(nombre);
-                    frame2.setVisible(true);
-                    frame2.setTitle("Eliminar Habitación");
-                    frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    frame2.setLocationRelativeTo(null);
-                    this.dispose();
-                    break;
-            case 3:
-                     break;
-            
-        }
+       
     }//GEN-LAST:event_masterTableMouseClicked
  
     /**
@@ -377,6 +346,8 @@ public class HabitacionBuscar extends javax.swing.JFrame {
                JFrame frame=new HabitacionBuscar();
                frame.setVisible(true);
                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+               Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+               frame.setIconImage(icon);
                frame.setLocationRelativeTo(null);
                frame.setTitle("Buscar Habitación");
             }

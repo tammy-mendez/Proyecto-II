@@ -855,7 +855,7 @@ public class ArticuloModificarEliminar extends  javax.swing.JFrame {
         // TODO add your handling code here:
         cate = tf_categoria.getText();
         // System.out.print(cate);
-        new ProveedorCategoriaArticulo1(this, true).setVisible(true);
+        new ArticuloModificarDialogo(this, true).setVisible(true);
     }//GEN-LAST:event_btn_aceptarActionPerformed
 
     private void tf_precioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_precioKeyTyped
@@ -941,7 +941,7 @@ public class ArticuloModificarEliminar extends  javax.swing.JFrame {
                         DetalleOrdenCompra detalleOC= new DetalleOrdenCompra();
                         detalleOC.setCantidadPedida(Integer.parseInt(tf_cantidadMaxima.getText())-Integer.parseInt(tf_cantidadStock.getText()));
                         detalleOC.setCodArticulo(a);
-                        detalleOC.setCodProveedor(p1);
+                      //  detalleOC.setCodProveedor(p1);
                         detalleOC.setEstado("pendiente");
                         entityManager.persist(detalleOC);
                         entityManager.flush();

@@ -8,23 +8,15 @@ package view;
 
 import bean.AuditoriaSistema;
 import bean.ConsumoProSer;
-import bean.FacturaCobro_1;
 import bean.Reserva;
 import java.awt.Image;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -32,12 +24,22 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class ConsumoFactura extends javax.swing.JFrame {
     private int resp;
-
+    private String condicion;
+    private int fila;
+    public static int total;
+    public static List<ConsumoProSer> cps;
+    private  Reserva re=new Reserva();
+    Date fecha=new Date();
+    DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    DateFormat form=new SimpleDateFormat("dd-MM-yyyy");
+    public static Reserva r=new Reserva();
     /**
      * Creates new form ConsumoFactura
      */
     public ConsumoFactura() {
         initComponents();
+        reservaList.clear();
+        inicializarLista();
     }
 
     /**
@@ -54,16 +56,32 @@ public class ConsumoFactura extends javax.swing.JFrame {
         entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT r FROM Reserva r");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : query.getResultList();
+        reservaQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT r FROM Reserva r");
+        reservaList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(reservaQuery.getResultList());
         jPanel1 = new javax.swing.JPanel();
         btn_cancelar = new javax.swing.JButton();
         btn_generar = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        lbl_codigoReserva = new javax.swing.JLabel();
-        list_codigoReserva = new javax.swing.JComboBox();
-        list_tipo = new javax.swing.JComboBox();
-        lbl_tipo = new javax.swing.JLabel();
         panel_generarFact = new javax.swing.JPanel();
         lbl_generarFact = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        tf_categoria = new javax.swing.JTextField();
+        tf_codigo = new javax.swing.JTextField();
+        tf_nomApe = new javax.swing.JTextField();
+        lbl_cedula = new javax.swing.JLabel();
+        tf_cedula = new javax.swing.JTextField();
+        lbl_codigo = new javax.swing.JLabel();
+        tf_habitacion = new javax.swing.JTextField();
+        lbl_habitación = new javax.swing.JLabel();
+        lbl_nomApe = new javax.swing.JLabel();
+        lbl_categoria = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        tf_valor = new javax.swing.JTextField();
+        lbl_valor = new javax.swing.JLabel();
+        lbl_filtro = new javax.swing.JLabel();
+        list_filtros = new javax.swing.JComboBox();
+        btn_buscar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        masterTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,59 +119,12 @@ public class ConsumoFactura extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btn_generar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(2, 2, 2))
-                    .addComponent(btn_cancelar))
+                        .addComponent(btn_cancelar)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btn_generar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
-        );
-
-        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        lbl_codigoReserva.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        lbl_codigoReserva.setText("Codigo de Reserva:");
-
-        list_codigoReserva.setRenderer(reservaRenderizar1);
-
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, list, list_codigoReserva);
-        bindingGroup.addBinding(jComboBoxBinding);
-
-        list_tipo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Contado", "Credito" }));
-
-        lbl_tipo.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        lbl_tipo.setText("Tipo de Factura:");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_codigoReserva)
-                    .addComponent(lbl_tipo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(list_codigoReserva, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(list_tipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(63, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_codigoReserva)
-                    .addComponent(list_codigoReserva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(list_tipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_tipo))
-                .addGap(21, 21, 21))
         );
 
         panel_generarFact.setBackground(new java.awt.Color(0, 153, 255));
@@ -167,46 +138,249 @@ public class ConsumoFactura extends javax.swing.JFrame {
         panel_generarFact.setLayout(panel_generarFactLayout);
         panel_generarFactLayout.setHorizontalGroup(
             panel_generarFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_generarFactLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel_generarFactLayout.createSequentialGroup()
+                .addGap(223, 223, 223)
                 .addComponent(lbl_generarFact)
-                .addGap(102, 102, 102))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_generarFactLayout.setVerticalGroup(
             panel_generarFactLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_generarFactLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel_generarFactLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(lbl_generarFact)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tf_categoria.setEditable(false);
+        tf_categoria.setBackground(new java.awt.Color(0, 153, 255));
+        tf_categoria.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_categoria.setForeground(new java.awt.Color(255, 255, 255));
+
+        tf_codigo.setEditable(false);
+        tf_codigo.setBackground(new java.awt.Color(0, 153, 255));
+        tf_codigo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_codigo.setForeground(new java.awt.Color(255, 255, 255));
+
+        tf_nomApe.setEditable(false);
+        tf_nomApe.setBackground(new java.awt.Color(0, 153, 255));
+        tf_nomApe.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_nomApe.setForeground(new java.awt.Color(255, 255, 255));
+
+        lbl_cedula.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        lbl_cedula.setText("Cédula:");
+
+        tf_cedula.setEditable(false);
+        tf_cedula.setBackground(new java.awt.Color(0, 153, 255));
+        tf_cedula.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_cedula.setForeground(new java.awt.Color(255, 255, 255));
+
+        lbl_codigo.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        lbl_codigo.setText("Código Reserva:");
+
+        tf_habitacion.setEditable(false);
+        tf_habitacion.setBackground(new java.awt.Color(0, 153, 255));
+        tf_habitacion.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_habitacion.setForeground(new java.awt.Color(255, 255, 255));
+
+        lbl_habitación.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        lbl_habitación.setText("Habitación:");
+
+        lbl_nomApe.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        lbl_nomApe.setText("Nombre/Apellido:");
+
+        lbl_categoria.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        lbl_categoria.setText("Categoría:");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(lbl_codigo)
+                        .addGap(18, 18, 18)
+                        .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(lbl_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(tf_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(lbl_habitación)
+                        .addGap(42, 42, 42)
+                        .addComponent(tf_habitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_categoria)
+                        .addGap(31, 31, 31)
+                        .addComponent(tf_categoria, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(lbl_nomApe, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(tf_nomApe, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(51, 51, 51))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_codigo)
+                    .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_habitación)
+                    .addComponent(tf_habitacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_categoria)
+                    .addComponent(tf_categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_cedula)
+                    .addComponent(tf_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_nomApe)
+                    .addComponent(tf_nomApe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel3.setForeground(new java.awt.Color(204, 204, 255));
+
+        tf_valor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tf_valorKeyTyped(evt);
+            }
+        });
+
+        lbl_valor.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_valor.setText("Valor:");
+
+        lbl_filtro.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_filtro.setText("Buscar por:");
+
+        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Cedula", "Nombre", "Apellido", "Habitación", "CheckIn", "CheckOut" }));
+        list_filtros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                list_filtrosFocusLost(evt);
+            }
+        });
+
+        btn_buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/zoom.png"))); // NOI18N
+        btn_buscar.setText("Buscar");
+        btn_buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_buscarActionPerformed(evt);
+            }
+        });
+        btn_buscar.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                btn_buscarFocusLost(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(lbl_filtro)
+                .addGap(18, 18, 18)
+                .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(78, 78, 78)
+                .addComponent(lbl_valor)
+                .addGap(18, 18, 18)
+                .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addComponent(btn_buscar)
+                .addGap(53, 53, 53))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_filtro)
+                    .addComponent(lbl_valor)
+                    .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_buscar))
                 .addContainerGap())
         );
+
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, reservaList, masterTable);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoReserva}"));
+        columnBinding.setColumnName(" Reserva");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numHabitacion.numero}"));
+        columnBinding.setColumnName(" Habitacion");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numHabitacion.codigoCategoria.nombre}"));
+        columnBinding.setColumnName("Categoría");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${checkIn}"));
+        columnBinding.setColumnName("Check In");
+        columnBinding.setColumnClass(java.util.Date.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${checkOut}"));
+        columnBinding.setColumnName("Check Out");
+        columnBinding.setColumnClass(java.util.Date.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoCliente.cedula}"));
+        columnBinding.setColumnName("CI Cliente");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoCliente.nombre}"));
+        columnBinding.setColumnName("Nombre");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoCliente.apellido}"));
+        columnBinding.setColumnName("Apellido");
+        columnBinding.setColumnClass(String.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        masterTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                masterTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(masterTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panel_generarFact, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 744, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(58, 58, 58)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(panel_generarFact, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(239, 239, 239)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel_generarFact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -216,45 +390,50 @@ public class ConsumoFactura extends javax.swing.JFrame {
 
     private void btn_generarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generarActionPerformed
         // TODO add your handling code here:
+        String letras;
         int codigo;
         String cedula;
         String ruc;
-        Reserva r=(Reserva) list_codigoReserva.getSelectedItem();
-        codigo=r.getCodigoReserva();
+        if(tf_codigo.getText().length()==0){
+            JOptionPane.showMessageDialog(null,"Seleccione una Reserva", "Error",JOptionPane.INFORMATION_MESSAGE);
+              return;
+        }
+        codigo=Integer.parseInt(tf_codigo.getText());
+       // ruc=r.getCodigoCliente().getRuc();
+        query=entityManager.createNamedQuery("Reserva.findByCodigoReserva");
+        query.setParameter("codigoReserva", codigo);
+        r=(Reserva) query.getSingleResult();
         cedula=r.getCodigoCliente().getCedula();
         ruc=r.getCodigoCliente().getRuc();
-        Date fecha=new Date();
-        int total;
-         DateFormat formato=new SimpleDateFormat("dd-MM-yyyy");
-        query=entityManager.createNativeQuery("SELECT * FROM factura_cobro  "
+        //
+        query=entityManager.createNativeQuery("SELECT * FROM consumo_pro_ser  "
                     + "WHERE codigoReserva="
                     +"'"+codigo+"'"
-                    +" AND concepto like '%liquidación de reserva%'", FacturaCobro_1.class);
-         List<FacturaCobro_1>fact=query.getResultList();
-      
-         if(!fact.isEmpty()){
-             JOptionPane.showMessageDialog(null,"Esta reserva ya ha cancelado su deuda", "Aviso",JOptionPane.INFORMATION_MESSAGE);
-                         return;
+                    +" AND numFactura is null", ConsumoProSer.class);
+        cps=query.getResultList();
+         if(cps.isEmpty()){
+             JOptionPane.showMessageDialog(null,"La reserva no tiene deudas hasta la fecha", "Aviso",JOptionPane.INFORMATION_MESSAGE);
+                   return;
+                   
          }
-          query=entityManager.createNativeQuery("SELECT SUM(total) FROM consumo_pro_ser  "
+         //
+         query=entityManager.createNativeQuery("SELECT SUM(total) FROM consumo_pro_ser  "
                     + "WHERE codigoReserva="
                     +"'"+codigo+"'"
-                    +"GROUP BY("  
-                     +"'"+codigo+"')");
+                    +" AND numFactura is null GROUP BY(codigoReserva)");
                     Object resultado=query.getSingleResult();
                     total=Integer.parseInt(resultado.toString());
-                    //System.out.print(total);
+                    System.out.print(total);
                     //insertamos en la tabla factura
           if(total==0){
                JOptionPane.showMessageDialog(null,"La reserva no tiene deudas hasta la fecha", "Aviso",JOptionPane.INFORMATION_MESSAGE);
                  return;
-          }
+          } 
           resp=  JOptionPane.showConfirmDialog(null,"Desea Generar una nueva factura?", "Confirmar Creación",JOptionPane.YES_NO_OPTION );
           if (resp==JOptionPane.YES_OPTION){
               entityManager.getTransaction().begin();
                 //sumamos el total a pagar por el cliente
                if(r.getMontoTotal()!=r.getMontoAbonado()){
-                   Reserva re=new Reserva();
                    re.setCodigoReserva(r.getCodigoReserva());
                    re.setCheckIn(r.getCheckIn());
                    re.setCheckOut(r.getCheckOut());
@@ -265,8 +444,11 @@ public class ConsumoFactura extends javax.swing.JFrame {
                    re.setNumHabitacion(r.getNumHabitacion());
                    entityManager.flush();
                    entityManager.merge(re);
+                   registrarAuditoria("Reserva","Modificación",r.toString(),re.toString());
                }
-       /*             FacturaCobro f=new FacturaCobro();
+                RegistrarDetalleCobro.invoca="Liquidar Reserva";
+                formaPago();
+                  /*  FacturaCobro f=new FacturaCobro();
                     f.setCodigoReserva(r);
                     f.setConcepto("liquidación de reserva");
                     if("".equals(ruc)){
@@ -274,33 +456,37 @@ public class ConsumoFactura extends javax.swing.JFrame {
                     }else{
                           f.setRucCliente(ruc);
                     }
-                    f.setFechaEmision(formato.format(fecha));
-                    f.setTotalPagar(total);
+                    f.setFechaEmision(form.format(fecha));
+                    f.setTotal(total);
                     f.setTipoFactura((String) list_tipo.getSelectedItem());
-                    
-                    entityManager.persist(f);*/
+                    entityManager.persist(f);
                     entityManager.flush();
-                    //registramos los datos de la auditoria
-                     AuditoriaSistema as=new AuditoriaSistema();
-                    as.setAccion("Inserción");
-                    as.setTabla("Factura Cobro");
-              //      as.setAntes(f.toString());
-                    as.setDespues("No hay cambios");
-                    //trabajamos con la fecha
-                    as.setFechaHora(formato.format(fecha));
-                    as.setUsuario("nadie");
-                    entityManager.persist(as);
+                     //verificar la condicion de pago
+                     if("Crédito/Cheque".equals(f.getTipoFactura()) || "Crédito/Tarjeta".equals(f.getTipoFactura()) ){
+                         condicion="Crédito";
+                                 
+                     }else{
+                         condicion="Contado";
+                     }
+                     // aca llamamos al metodo que va a poner el numero de factura a los detalles
+                    actualizarDetalle(f);
+                    registrarAuditoria("Factura de cobro","Inserción",f.toString(),null);
                     entityManager.getTransaction().commit();
                     entityManager.close();
                     this.dispose();
                     //llamamos al jasper
                       try
                         {
+                            NumberToText nt=new NumberToText();
+                            letras=nt.convertirLetras(total);
+                            System.out.print(letras);
                             Class.forName("com.mysql.jdbc.Driver");
                             Connection con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/hotel db", "root", "user");
                             HashMap par = new HashMap();//no definimos ningún parámetro por eso lo dejamos así
                             Map parametros=new HashMap();
-    //                        par.put("NumFactura",f.getNumFactura() );
+                            par.put("NumFactura",f.getNumFactura() );
+                            par.put("Letras", letras);
+                            par.put("Condicion", condicion);
                             JasperPrint jp = JasperFillManager.fillReport("C:/Proyecto-II/src/reportes/facturaLiquidacion.jasper", par,con);//el primer parámetro es el camino del archivo, se cambia esta dirección por la dirección del archivo .jasper
                             JasperViewer jv = new JasperViewer(jp,false);
                             jv.setVisible(true);
@@ -312,18 +498,195 @@ public class ConsumoFactura extends javax.swing.JFrame {
                         catch(Exception e)
                         {
                             e.printStackTrace();
-                        }
+                        }*/
           }else{
-              
+                this.dispose();
           }
         
     }//GEN-LAST:event_btn_generarActionPerformed
-
+      private void formaPago(){
+        String args[]=new String[1];
+        args[0]="Forma de Pago";
+        RegistrarDetalleCobro.main(args);
+        
+    }
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
+    private void tf_valorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_valorKeyTyped
+        // TODO add your handling code here:
+        char ch;
+        if (list_filtros.getSelectedItem()=="Habitación" || list_filtros.getSelectedItem()=="Reserva"){
+            ch=evt.getKeyChar();
+            if(!Character.isDigit(ch)){
+                getToolkit().beep();
+                evt.consume();
+            }
+        }
+    }//GEN-LAST:event_tf_valorKeyTyped
+
+    private void list_filtrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_list_filtrosFocusLost
+        // TODO add your handling code here:
+        if(list_filtros.getSelectedItem()=="CheckIn" || list_filtros.getSelectedItem()=="CheckOut"){
+            Date fecha= new Date();
+            DateFormat formato=new SimpleDateFormat("yyyy-MM-dd");
+            tf_valor.setText(formato.format(fecha));
+        }
+    }//GEN-LAST:event_list_filtrosFocusLost
+
+    private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
+        // TODO add your handling code here:
+        tf_codigo.setText(null);
+        tf_habitacion.setText(null);
+        tf_categoria.setText(null);
+        tf_cedula.setText(null);
+        tf_nomApe.setText(null);
+        if (tf_valor.getText().length()==0){
+            JOptionPane.showMessageDialog(null,"Ingrese algún valor para efectuar la búsqueda", "Advertencia",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        else{
+            if (list_filtros.getSelectedItem()=="Nombre"){
+                reservaQuery = entityManager.createNativeQuery( "SELECT * FROM reserva r "
+                    + "INNER JOIN cliente c "
+                    + "on r.codigoCliente = c.codigoCliente "
+                    + "WHERE r.checkIn<= date_format(now(),'%Y-%m-%d') and r.checkOut>=date_format(now(),'%Y-%m-%d') AND c.nombre LIKE "
+                    +"'%"+tf_valor.getText()+"%'", Reserva.class);
+                List<Reserva> r = reservaQuery.getResultList();
+                if (r.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Nombre inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                    tf_valor.setText(null);
+                    return;
+                }
+                reservaList.clear();
+                reservaList.addAll(r);
+            }
+            else if (list_filtros.getSelectedItem()=="Apellido"){
+                reservaQuery = entityManager.createNativeQuery( "SELECT * FROM reserva r "
+                    + "INNER JOIN cliente c "
+                    + "on r.codigoCliente = c.codigoCliente "
+                    + "WHERE r.checkIn<= date_format(now(),'%Y-%m-%d') and r.checkOut>=date_format(now(),'%Y-%m-%d') AND c.apellido LIKE "
+                    +"'%"+tf_valor.getText()+"%'", Reserva.class);
+                List<Reserva> r = reservaQuery.getResultList();
+                if (r.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Apellido inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                    tf_valor.setText(null);
+                    return;
+                }
+                reservaList.clear();
+                reservaList.addAll(r);
+            }
+            else if(list_filtros.getSelectedItem()=="CheckIn"){
+                reservaQuery=entityManager.createNativeQuery("SELECT * FROM reserva "
+                    + "WHERE checkIn<= date_format(now(),'%Y-%m-%d') AND checkOut>=date_format(now(),'%Y-%m-%d') AND STR_TO_DATE(checkIn, '%Y-%m-%d')= "
+                    +"'"+tf_valor.getText()+"'", Reserva.class);
+                List<Reserva> a=reservaQuery.getResultList();
+                if(a.size()==0){
+                    JOptionPane.showMessageDialog(null,"No se han encontrado registros para la fecha", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                reservaList.clear();
+                reservaList.addAll(a);
+                return;
+            }
+            else if(list_filtros.getSelectedItem()=="CheckOut"){
+                reservaQuery=entityManager.createNativeQuery("SELECT * FROM reserva "
+                    + "WHERE checkIn<= date_format(now(),'%Y-%m-%d') and checkOut>=date_format(now(),'%Y-%m-%d') AND STR_TO_DATE(checkOut, '%Y-%m-%d')= "
+                    +"'"+tf_valor.getText()+"'", Reserva.class);
+                List<Reserva> a=reservaQuery.getResultList();
+                if(a.size()==0){
+                    JOptionPane.showMessageDialog(null,"No se han encontrado registros para la fecha", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                reservaList.clear();
+                reservaList.addAll(a);
+                return;
+            }
+            else if(list_filtros.getSelectedItem()=="Cedula"){
+                reservaQuery=entityManager.createNativeQuery("SELECT * FROM reserva r "
+                    +"INNER JOIN cliente c "
+                    +"ON r.codigoCliente=c.codigoCliente "
+                    + "WHERE r.checkIn<= date_format(now(),'%Y-%m-%d') AND r.checkOut>=date_format(now(),'%Y-%m-%d') AND c.cedula= "
+                    +"'"+tf_valor.getText()+"'", Reserva.class);
+                List<Reserva> a=reservaQuery.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Cédula Inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                reservaList.clear();
+                reservaList.addAll(a);
+                return;
+            }
+            else if(list_filtros.getSelectedItem()=="Habitación"){
+                reservaQuery=entityManager.createNativeQuery("SELECT * FROM reserva r "
+                    + "WHERE r.checkIn<= date_format(now(),'%Y-%m-%d') AND r.checkOut>=date_format(now(),'%Y-%m-%d') AND r.numHabitacion= "
+                    +"'"+tf_valor.getText()+"'", Reserva.class);
+                List<Reserva> a=reservaQuery.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"No existen registros para dicha habitación", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                reservaList.clear();
+                reservaList.addAll(a);
+                return;
+            }
+        }
+    }//GEN-LAST:event_btn_buscarActionPerformed
+
+    private void btn_buscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btn_buscarFocusLost
+        // TODO add your handling code here:
+        tf_valor.setText(null);
+        /* tf_codigo.setText(null);
+        tf_habitacion.setText(null);
+        tf_categoria.setText(null);
+        tf_cedula.setText(null);
+        tf_nomApe.setText(null);*/
+    }//GEN-LAST:event_btn_buscarFocusLost
+
+    private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
+        // TODO add your handling code here:
+         int num;
+        int cod;
+        fila=masterTable.getSelectedRow();
+        cod=(Integer)masterTable.getValueAt(fila, 0);
+        num=(Integer)masterTable.getValueAt(fila, 1);
+        tf_codigo.setText(Integer.toString(cod));
+        tf_habitacion.setText(Integer.toString(num));
+        tf_categoria.setText((String) masterTable.getValueAt(fila, 2));
+        tf_cedula.setText((String) masterTable.getValueAt(fila, 5));
+        tf_nomApe.setText(masterTable.getValueAt(fila, 6)+" "+masterTable.getValueAt(fila, 7));
+    }//GEN-LAST:event_masterTableMouseClicked
+  
+   private void registrarAuditoria(String entidad,String accion,String antes, String despues){
+          AuditoriaSistema as=new AuditoriaSistema();
+                    as.setAccion(accion);
+                    as.setTabla(entidad);
+                    as.setAntes(antes);
+                    if(despues==null){
+                        as.setDespues("No hay cambios");
+                    } else{
+                        as.setDespues(despues);
+                    }
+                    //trabajamos con la fecha
+                    as.setFechaHora(formato.format(fecha));
+                    as.setUsuario("nadie");
+                    entityManager.persist(as);
+                    entityManager.flush();
+                    entityManager.getTransaction().commit();
+   }
+   private void inicializarLista(){
+    reservaQuery=entityManager.createNativeQuery("select * from reserva  "
+            + "where checkIn<= date_format(now(),'%Y-%m-%d') and checkOut>=date_format(now(),'%Y-%m-%d')",Reserva.class);
+    List<Reserva> r=reservaQuery.getResultList();
+    reservaList.addAll(r);
+    
+}
     /**
      * @param args the command line arguments
      */
@@ -356,6 +719,8 @@ public class ConsumoFactura extends javax.swing.JFrame {
             public void run() {
                 JFrame frame=new ConsumoFactura();
                 frame.setVisible(true);
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setTitle("Generar Factura de Cliente");
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
@@ -364,20 +729,36 @@ public class ConsumoFactura extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_buscar;
     private javax.swing.JButton btn_cancelar;
     private javax.swing.JButton btn_generar;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JLabel lbl_codigoReserva;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbl_categoria;
+    private javax.swing.JLabel lbl_cedula;
+    private javax.swing.JLabel lbl_codigo;
+    private javax.swing.JLabel lbl_filtro;
     private javax.swing.JLabel lbl_generarFact;
-    private javax.swing.JLabel lbl_tipo;
+    private javax.swing.JLabel lbl_habitación;
+    private javax.swing.JLabel lbl_nomApe;
+    private javax.swing.JLabel lbl_valor;
     private java.util.List<bean.Reserva> list;
-    private javax.swing.JComboBox list_codigoReserva;
-    private javax.swing.JComboBox list_tipo;
+    private javax.swing.JComboBox list_filtros;
+    private javax.swing.JTable masterTable;
     private javax.swing.JPanel panel_generarFact;
     private javax.persistence.Query query;
+    private java.util.List<bean.Reserva> reservaList;
+    private javax.persistence.Query reservaQuery;
     private renderizar.ReservaRenderizar reservaRenderizar1;
+    private javax.swing.JTextField tf_categoria;
+    private javax.swing.JTextField tf_cedula;
+    private javax.swing.JTextField tf_codigo;
+    private javax.swing.JTextField tf_habitacion;
+    private javax.swing.JTextField tf_nomApe;
+    private javax.swing.JTextField tf_valor;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

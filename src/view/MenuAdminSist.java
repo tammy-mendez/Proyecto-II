@@ -13,17 +13,19 @@ package view;
 
 import bean.AuditoriaSistema;
 import bean.Rol;
+import bean.Usuario;
+import java.awt.Image;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import static view.RolEliminar.tf_identi;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -35,6 +37,7 @@ public class MenuAdminSist extends javax.swing.JFrame {
     /** Creates new form MenuAdminSist */
     public MenuAdminSist() {
         initComponents();
+        generarMenuRolOpciones(obtenerRolesUsuario(LoginView.idUsuario));
     }
 
     /** This method is called from within the constructor to
@@ -53,17 +56,15 @@ public class MenuAdminSist extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         jMenuBar1 = new javax.swing.JMenuBar();
-        menu_rol = new javax.swing.JMenu();
-        mItem_crearR = new javax.swing.JMenuItem();
-        mItem_editarR = new javax.swing.JMenuItem();
-        mItem_eliminarR = new javax.swing.JMenuItem();
-        mItem_buscarR = new javax.swing.JMenuItem();
         menu_usuario = new javax.swing.JMenu();
         mitem_regis_usuario = new javax.swing.JMenuItem();
         mitem_editarusuario = new javax.swing.JMenuItem();
         mitem_eliminarusuario = new javax.swing.JMenuItem();
         miItem_buscarUsuario = new javax.swing.JMenuItem();
         menu_auditoria = new javax.swing.JMenu();
+        mItem_buscarRegistros = new javax.swing.JMenuItem();
+        mItem_informeAud = new javax.swing.JMenuItem();
+        menu_roles = new javax.swing.JMenu();
         menu_salir = new javax.swing.JMenu();
 
         jMenu1.setText("File");
@@ -81,56 +82,11 @@ public class MenuAdminSist extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Menu Administrador del Sistema");
 
-        jMenuBar1.setBackground(new java.awt.Color(0, 153, 255));
-        jMenuBar1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jMenuBar1.setForeground(new java.awt.Color(0, 153, 255));
-
-        menu_rol.setBackground(new java.awt.Color(204, 204, 204));
-        menu_rol.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        menu_rol.setText("Administrar Rol");
-        menu_rol.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
-        menu_rol.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        menu_rol.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-
-        mItem_crearR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/add.png"))); // NOI18N
-        mItem_crearR.setText("Crear Rol");
-        mItem_crearR.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mItem_crearRActionPerformed(evt);
-            }
-        });
-        menu_rol.add(mItem_crearR);
-
-        mItem_editarR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/refrescar.png"))); // NOI18N
-        mItem_editarR.setText("Editar Rol");
-        mItem_editarR.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mItem_editarRActionPerformed(evt);
-            }
-        });
-        menu_rol.add(mItem_editarR);
-
-        mItem_eliminarR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/trash.png"))); // NOI18N
-        mItem_eliminarR.setText("Eliminar Rol");
-        mItem_eliminarR.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mItem_eliminarRActionPerformed(evt);
-            }
-        });
-        menu_rol.add(mItem_eliminarR);
-
-        mItem_buscarR.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/zoom.png"))); // NOI18N
-        mItem_buscarR.setText("Buscar Rol");
-        mItem_buscarR.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mItem_buscarRActionPerformed(evt);
-            }
-        });
-        menu_rol.add(mItem_buscarR);
-
-        jMenuBar1.add(menu_rol);
+        jMenuBar1.setBackground(new java.awt.Color(204, 204, 204));
+        jMenuBar1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         menu_usuario.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        menu_usuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/aluno.png"))); // NOI18N
         menu_usuario.setText("Administrar Usuario");
         menu_usuario.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
 
@@ -171,7 +127,8 @@ public class MenuAdminSist extends javax.swing.JFrame {
         jMenuBar1.add(menu_usuario);
 
         menu_auditoria.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        menu_auditoria.setText("Ver Auditoría de Sistema");
+        menu_auditoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pc2.png"))); // NOI18N
+        menu_auditoria.setText("Auditoría de Sistema");
         menu_auditoria.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         menu_auditoria.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -183,10 +140,39 @@ public class MenuAdminSist extends javax.swing.JFrame {
                 menu_auditoriaActionPerformed(evt);
             }
         });
+
+        mItem_buscarRegistros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/buscar.png"))); // NOI18N
+        mItem_buscarRegistros.setText("Buscar Registros");
+        mItem_buscarRegistros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mItem_buscarRegistrosActionPerformed(evt);
+            }
+        });
+        menu_auditoria.add(mItem_buscarRegistros);
+
+        mItem_informeAud.setText("Informe de Auditoría");
+        mItem_informeAud.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mItem_informeAudActionPerformed(evt);
+            }
+        });
+        menu_auditoria.add(mItem_informeAud);
+
         jMenuBar1.add(menu_auditoria);
 
+        menu_roles.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/ventana2.png"))); // NOI18N
+        menu_roles.setText("Roles");
+        menu_roles.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        menu_roles.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menu_rolesMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(menu_roles);
+
         menu_salir.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        menu_salir.setText("Salir");
+        menu_salir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/login.png"))); // NOI18N
+        menu_salir.setText("Cerrar Sesión");
         menu_salir.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         menu_salir.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -206,49 +192,17 @@ public class MenuAdminSist extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 460, Short.MAX_VALUE)
+            .addGap(0, 609, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 290, Short.MAX_VALUE)
+            .addGap(0, 260, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void mItem_crearRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItem_crearRActionPerformed
-        // TODO add your handling code here:
-        String args[]=new String[1];
-        args[0]="Crear Rol";
-        RolCreate.main(args);
-    }//GEN-LAST:event_mItem_crearRActionPerformed
-
-    private void mItem_buscarRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItem_buscarRActionPerformed
-        // TODO add your handling code here:
-        opcion=3;
-        String args[]=new String[1];
-        args[0]="Buscar Rol";
-        RolBuscar.main(args);
-    }//GEN-LAST:event_mItem_buscarRActionPerformed
-
-    private void mItem_eliminarRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItem_eliminarRActionPerformed
-        // TODO add your handling code here:
-        opcion=2;
-         String args[]=new String[1];
-        args[0]="Buscar Rol";
-        RolBuscar.main(args);
-    }//GEN-LAST:event_mItem_eliminarRActionPerformed
-
-    private void mItem_editarRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItem_editarRActionPerformed
-        // TODO add your handling code here:
-        opcion=1;
-         String args[]=new String[1];
-        args[0]="Buscar Rol";
-        RolBuscar.main(args);
-    }//GEN-LAST:event_mItem_editarRActionPerformed
-
     private void menu_salirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_salirMouseClicked
-
             // TODO add your handling code here:
             EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
             EntityManager ema= fact.createEntityManager();
@@ -265,10 +219,10 @@ public class MenuAdminSist extends javax.swing.JFrame {
             ema.persist(as);
             ema.getTransaction().commit();
             ema.close();
-            this.dispose();
             String args[]=new String[1];
             args[0]="Ingreso al sistema";
             LoginView.main(args);
+            this.dispose();
     }//GEN-LAST:event_menu_salirMouseClicked
 
     private void menu_auditoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_auditoriaActionPerformed
@@ -278,9 +232,7 @@ public class MenuAdminSist extends javax.swing.JFrame {
 
     private void menu_auditoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_auditoriaMouseClicked
         // TODO add your handling code here:
-        String args[]=new String[1];
-        args[0]="Auditoría de Sistema";
-        VerAuditoriaSistema.main(args);
+      
     }//GEN-LAST:event_menu_auditoriaMouseClicked
 
     private void mitem_regis_usuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitem_regis_usuarioActionPerformed
@@ -303,21 +255,38 @@ public class MenuAdminSist extends javax.swing.JFrame {
         opcion = 1;
         String args[]=new String[1];
         args[0]="Editar usuario";
-        UsuarioBuscar.main(args);
+        EditarUsuario.main(args);
     }//GEN-LAST:event_mitem_editarusuarioActionPerformed
 
     private void mitem_eliminarusuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mitem_eliminarusuarioActionPerformed
-        // TODO add your handling code here:
-                // TODO add your handling code here:
         opcion = 2;
         String args[]=new String[1];
         args[0]="Eliminar usuario";
-        UsuarioBuscar.main(args);
+        EliminarUsuario.main(args);
     }//GEN-LAST:event_mitem_eliminarusuarioActionPerformed
 
     private void menu_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_salirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menu_salirActionPerformed
+
+    private void mItem_buscarRegistrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItem_buscarRegistrosActionPerformed
+        // TODO add your handling code here:
+          String args[]=new String[1];
+        args[0]="Auditoría de Sistema";
+        VerAuditoriaSistema.main(args);
+    }//GEN-LAST:event_mItem_buscarRegistrosActionPerformed
+
+    private void mItem_informeAudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mItem_informeAudActionPerformed
+        // TODO add your handling code here:
+          String args[]=new String[1];
+        args[0]="Informe Auditoría de Sistema";
+        InformeAuditoria.main(args);
+    }//GEN-LAST:event_mItem_informeAudActionPerformed
+
+    private void menu_rolesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_rolesMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_menu_rolesMouseClicked
 
     /**
     * @param args the command line arguments
@@ -328,7 +297,9 @@ public class MenuAdminSist extends javax.swing.JFrame {
                JFrame frame= new MenuAdminSist();
                frame.setVisible(true);
                frame.setLocationRelativeTo(null);
-               frame.setTitle(args[0]);
+               frame.setTitle("Menu Administrador del Sistema");
+               Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+               frame.setIconImage(icon);
                frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             }
         });
@@ -342,12 +313,10 @@ public class MenuAdminSist extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuBar jMenuBar3;
-    private javax.swing.JMenuItem mItem_buscarR;
-    private javax.swing.JMenuItem mItem_crearR;
-    private javax.swing.JMenuItem mItem_editarR;
-    private javax.swing.JMenuItem mItem_eliminarR;
+    private javax.swing.JMenuItem mItem_buscarRegistros;
+    private javax.swing.JMenuItem mItem_informeAud;
     private javax.swing.JMenu menu_auditoria;
-    private javax.swing.JMenu menu_rol;
+    private javax.swing.JMenu menu_roles;
     private javax.swing.JMenu menu_salir;
     private javax.swing.JMenu menu_usuario;
     private javax.swing.JMenuItem miItem_buscarUsuario;
@@ -355,5 +324,54 @@ public class MenuAdminSist extends javax.swing.JFrame {
     private javax.swing.JMenuItem mitem_eliminarusuario;
     private javax.swing.JMenuItem mitem_regis_usuario;
     // End of variables declaration//GEN-END:variables
-
+    private void generarMenuRolOpciones(Collection<Rol> nombreRoles){
+        if(nombreRoles.size() > 1){
+            for(final Rol rol : nombreRoles){
+                javax.swing.JMenuItem menuItem = new javax.swing.JMenuItem();
+                menuItem.setText(rol.getNombre());
+                //creación de acctionlisteners para los menus
+                menuItem.addActionListener(new java.awt.event.ActionListener() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        switch (rol.getNombre()) {
+                            case "Recepcionista":
+                                {
+                                    String args[] = new String[1];
+                                    args[0] = "Recepcionista";
+                                    view.MenuRecepcionista.main(args);
+                                    dispose();
+                                    break;
+                                }
+                            case "Administrador del Hotel":
+                                {
+                                    String args[] = new String[1];
+                                    args[0] = "Administrador del Hotel";
+                                    ViewAdmHotel.MenuAdminHotel.main(args);
+                                    dispose();
+                                    break;
+                                }
+                            default:
+                                JOptionPane.showMessageDialog(null, "Sin permisos para "
+                                        + "esta operación", "Acceso denegado", JOptionPane.ERROR_MESSAGE);
+                                break;
+                        }
+                    }
+                });
+                if(!menuItem.getText().equals("Administrador del Sistema")){
+                    menu_roles.add(menuItem);
+                }
+            }
+        }else{
+            menu_roles.setEnabled(false);
+        }
+        
+    }
+     private Collection<Rol> obtenerRolesUsuario(int codigoUsuario){
+         EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
+         EntityManager ema = fact.createEntityManager();
+         Query query = ema.createNamedQuery("Usuario.findByCodigoEmpleado");
+         query.setParameter("codigoEmpleado", codigoUsuario);
+         Usuario usu = (Usuario)query.getSingleResult();
+         return usu.getRolCollection();
+     }
 }

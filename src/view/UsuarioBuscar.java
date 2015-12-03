@@ -2,10 +2,14 @@
 
 package view;
 
+import bean.Rol;
 import bean.Usuario;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -62,7 +66,12 @@ public class UsuarioBuscar extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jLabel1.setText("Buscar por:");
 
-        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Codigo Empleado", "Codigo Rol", "Rol", "Empleado" }));
+        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código", "Nombre", "Apellido" }));
+        list_filtros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                list_filtrosFocusGained(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jLabel2.setText("Valor:");
@@ -116,13 +125,13 @@ public class UsuarioBuscar extends javax.swing.JFrame {
 
         org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, list, masterTableUsuario);
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoEmpleado}"));
-        columnBinding.setColumnName("Codigo Empleado");
+        columnBinding.setColumnName("Código");
         columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${idRol.idRol}"));
-        columnBinding.setColumnName("Id Rol");
-        columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${idRol.nombre}"));
-        columnBinding.setColumnName("Rol");
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${empleado.nombre}"));
+        columnBinding.setColumnName("Nombre");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${empleado.apellido}"));
+        columnBinding.setColumnName("Apellido");
         columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
@@ -145,16 +154,16 @@ public class UsuarioBuscar extends javax.swing.JFrame {
         panel_BuscarUsuarioLayout.setHorizontalGroup(
             panel_BuscarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_BuscarUsuarioLayout.createSequentialGroup()
-                .addGap(185, 185, 185)
+                .addGap(152, 152, 152)
                 .addComponent(lbl_BuscarUsuario)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_BuscarUsuarioLayout.setVerticalGroup(
             panel_BuscarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_BuscarUsuarioLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel_BuscarUsuarioLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(lbl_BuscarUsuario)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/delete.png"))); // NOI18N
@@ -170,16 +179,17 @@ public class UsuarioBuscar extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2)
-                    .addComponent(panel_BuscarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(46, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_cancelar)
-                .addGap(279, 279, 279))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2)
+                            .addComponent(panel_BuscarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(238, 238, 238)
+                        .addComponent(btn_cancelar)))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,9 +200,9 @@ public class UsuarioBuscar extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btn_cancelar)
-                .addGap(21, 21, 21))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -209,7 +219,7 @@ public class UsuarioBuscar extends javax.swing.JFrame {
             return;
         }
  else{
-         if (list_filtros.getSelectedItem()=="Codigo Empleado"){
+         if (list_filtros.getSelectedItem()=="Código"){
             id=Integer.parseInt(tf_valor.getText());
             query = entityManager.createNamedQuery( "Usuario.findByCodigoEmpleado");
             query.setParameter("codigoEmpleado",id);
@@ -222,39 +232,37 @@ public class UsuarioBuscar extends javax.swing.JFrame {
             list.clear();
             list.addAll(r);
         }
-         else if (list_filtros.getSelectedItem()=="Codigo Rol"){
-            id=Integer.parseInt(tf_valor.getText());
+         else if (list_filtros.getSelectedItem()=="Nombre"){
+//            id=Integer.parseInt(tf_valor.getText());
             query = entityManager.createNativeQuery( "SELECT * FROM usuario u "
-                    + "INNER JOIN rol r "
-                    + "on u.idRol = r.idRol "
-                    + "WHERE r.idRol = "
-                    +id, Usuario.class);
+                    + "INNER JOIN empleado e "
+                    + "on u.codigoEmpleado = e.codigoEmpleado "
+                    + "WHERE e.nombre like '%"
+                    +tf_valor.getText()+ "%'", Usuario.class);
             List<Usuario> r = query.getResultList();
           
             if (r.size()==0){
-                JOptionPane.showMessageDialog(null,"Identificación inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null,"No se encontró al usuario", "Error",JOptionPane.ERROR_MESSAGE);
                  tf_valor.setText(null);
                  return;
             }
             list.clear();
             list.addAll(r);            
          }
-         else if (list_filtros.getSelectedItem()=="Rol"){
+         else if (list_filtros.getSelectedItem()=="Apellido"){
             query = entityManager.createNativeQuery( "SELECT * FROM usuario u "
-                    + "INNER JOIN rol r "
-                    + "on u.idRol = r.idRol "
-                    + "WHERE r.nombre LIKE "
-                    +"'%"+tf_valor.getText()+"%'", Usuario.class);
+                    + "INNER JOIN empleado e "
+                    + "on u.codigoEmpleado = e.codigoEmpleado "
+                    + "WHERE e.apellido like '%"
+                    +tf_valor.getText()+ "%'", Usuario.class);
             List<Usuario> r = query.getResultList();
             if (r.isEmpty()){
-                 JOptionPane.showMessageDialog(null, "Nombre inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                 JOptionPane.showMessageDialog(null, "Usuario inexistente","Error",JOptionPane.ERROR_MESSAGE );
                  tf_valor.setText(null);
                   return;
             }
             list.clear();
             list.addAll(r);
-
-          
          }
     
            
@@ -269,7 +277,7 @@ public class UsuarioBuscar extends javax.swing.JFrame {
 
     private void masterTableUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableUsuarioMouseClicked
         // TODO add your handling code here:
-          int iden2;
+        /*  int iden2;
           switch (MenuAdminSist.opcion){
           case 1:
                  cantidad=masterTableUsuario.getSelectedRow();
@@ -285,7 +293,7 @@ public class UsuarioBuscar extends javax.swing.JFrame {
                  List<Usuario> u=query.getResultList();
                  JFrame frame=new EditarUsuario();
                  EditarUsuario.tf_idEmpleado.setText(iden);
-                 EditarUsuario.list_roles.setSelectedItem(u.get(0).getIdRol());
+//                 EditarUsuario.list_roles.setSelectedItem(u.get(0).getIdRol());
                  frame.setVisible(true);
                  frame.setTitle("Editar Usuario");
                  frame.setLocationRelativeTo(null);
@@ -309,14 +317,13 @@ public class UsuarioBuscar extends javax.swing.JFrame {
 
           case 3:
               break;
-      }
+      }*/
 
     }//GEN-LAST:event_masterTableUsuarioMouseClicked
 
     private void tf_valorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_valorKeyTyped
         // TODO add your handling code here:
-       if (list_filtros.getSelectedItem()=="Codigo Empleado" || 
-                list_filtros.getSelectedItem()=="Codigo Rol"){
+       if (list_filtros.getSelectedItem()=="Código"){
              ch=evt.getKeyChar();
              if(!Character.isDigit(ch)){
                    getToolkit().beep();
@@ -336,6 +343,11 @@ public class UsuarioBuscar extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_btn_cancelarActionPerformed
+
+    private void list_filtrosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_list_filtrosFocusGained
+        // TODO add your handling code here:
+        tf_valor.setText("");
+    }//GEN-LAST:event_list_filtrosFocusGained
 
     /**
      * @param args the command line arguments
@@ -396,4 +408,30 @@ public class UsuarioBuscar extends javax.swing.JFrame {
     private renderizar.UsuarioListRenderizar usuarioListRenderizar1;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
+    private void generarCamposTabla(String codigo, String nombre, String apellido,
+            Collection<Rol> lista){
+        DefaultTableModel modelo = (DefaultTableModel)masterTableUsuario.getModel();
+        String datos[] = new String[4];
+        datos[0] = codigo;
+        datos[1] = nombre;
+        datos[2] = apellido;
+            
+        for(Rol rol : lista){
+            datos[3] = rol.getNombre();
+            modelo.addRow(datos);
+        }
+        TableColumn colum1 = null;
+        colum1 = masterTableUsuario.getColumnModel().getColumn(0);
+        colum1.setPreferredWidth(60);
+        TableColumn colum2 = null;
+        colum2 = masterTableUsuario.getColumnModel().getColumn(1);
+        colum2.setPreferredWidth(5);
+        TableColumn colum3 = null;
+        colum3 = masterTableUsuario.getColumnModel().getColumn(2);
+        colum3.setPreferredWidth(40);
+        colum3.setPreferredWidth(10);
+        TableColumn colum4 = null;
+        colum4 = masterTableUsuario.getColumnModel().getColumn(3);
+        colum4.setPreferredWidth(10);
+    }
 }

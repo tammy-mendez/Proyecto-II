@@ -14,7 +14,6 @@ import bean.FacturaPago;
 import bean.Informerecepcion;
 import bean.OrdenCompra;
 import bean.Proveedor;
-import bean.TablaOrdenCompra;
 import java.awt.EventQueue;
 import java.beans.Beans;
 import java.sql.Connection;
@@ -1039,7 +1038,7 @@ private DetalleFacturacompra obtenerDetalleFactura(int fac){
             cantidadPedida= tc3.getCantidadPedida();
             nombreArticulo = tc3.getCodArticulo().getNombre();
             precio = tc3.getCodArticulo().getCosto();
-            tf_proveedor.setText(tc3.getCodProveedor().getRazonSocial());
+            tf_proveedor.setText(oc.get(i).getCodOrden().getCodProveedor().getRazonSocial());
             totalCompra = precio*cantidadRecibida;
             inicializar_factura_compra(nombreArticulo, precio, cantidadPedida,cantidadRecibida, codigo);
                 }

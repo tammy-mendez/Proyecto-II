@@ -33,7 +33,7 @@ public class ProveedorCategoria extends javax.swing.JDialog {
         
         super(parent, modal);
         
-        valor= OrdenDeCompra1.categoria;
+        valor= OrdenDeCompra.categoria;
        // String valor= "lapiz de papel";
         initComponents();
         //llenarTabla();
@@ -168,7 +168,7 @@ public class ProveedorCategoria extends javax.swing.JDialog {
     private void btn_aceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aceptarActionPerformed
         // TODO add your handling code here:
         
-        OrdenDeCompra1.tf_proveedor.setText(proveedor);
+        OrdenDeCompra.tf_proveedor.setText(proveedor);
         dispose();
     }//GEN-LAST:event_btn_aceptarActionPerformed
 

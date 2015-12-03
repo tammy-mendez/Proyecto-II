@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9b5f6b21-9494-4514-a3e4-e1ee10d52166">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FechaDesde" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaHasta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     consumo_pro_ser.`codigoConsumo` AS consumo_pro_ser_codigoConsumo,
+     consumo_pro_ser.`cantidad` AS consumo_pro_ser_cantidad,
+     consumo_pro_ser.`total` AS consumo_pro_ser_total,
+     consumo_pro_ser.`fecha` AS consumo_pro_ser_fecha,
+     producto_servicio.`codigoPS` AS producto_servicio_codigoPS,
+     producto_servicio.`nombre` AS producto_servicio_nombre,
+     producto_servicio.`costo` AS producto_servicio_costo
+FROM
+     `producto_servicio` producto_servicio INNER JOIN `consumo_pro_ser` consumo_pro_ser ON producto_servicio.`codigoPS` = consumo_pro_ser.`codigoPS`
+WHERE
+	(fecha>=$P{FechaDesde} and fecha<= $P{FechaHasta})
+	and nombre NOT LIKE '%saldo de reserva%']]>
+	</queryString>
+	<field name="consumo_pro_ser_codigoConsumo" class="java.lang.Integer"/>
+	<field name="consumo_pro_ser_cantidad" class="java.lang.Integer"/>
+	<field name="consumo_pro_ser_total" class="java.lang.Integer"/>
+	<field name="consumo_pro_ser_fecha" class="java.lang.String"/>
+	<field name="producto_servicio_codigoPS" class="java.lang.Integer"/>
+	<field name="producto_servicio_nombre" class="java.lang.String"/>
+	<field name="producto_servicio_costo" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="8e4c1bfb-7d17-48c3-8aca-2bc530a330c4" x="217" y="0" width="191" height="30" forecolor="#FF0000"/>
+				<textElement>
+					<font fontName="MV Boli" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eee25c77-7d75-4ef1-bd64-7254e6791b12" x="149" y="30" width="372" height="20" forecolor="#999999"/>
+				<textElement>
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[INFORME DE CONSUMO DE PRODUCTOS/SERVICIOS]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="ad1b74dd-6b6b-4dea-9cbc-8a74c1411d2f" x="40" y="13" width="42" height="50"/>
+				<imageExpression><![CDATA["C:\\Proyecto-II\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="62b05e99-6923-4dfa-9e11-86be4a896a9e" x="149" y="59" width="29" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Del:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="62b05e99-6923-4dfa-9e11-86be4a896a9e" x="338" y="59" width="29" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[AL:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="04ece2ad-6f28-4894-b4f7-355569e3e6f6" x="178" y="59" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{FechaDesde}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b53b10d0-d15e-41e6-afe9-43709e23d302" x="367" y="59" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{FechaHasta}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="0f0e1dd2-8f9a-4531-a970-eca748fe5469" x="0" y="0" width="555" height="20" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="edb6276f-94a4-4cc6-9218-0ca07881880b" x="0" y="0" width="54" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consumo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="db325822-7045-4456-9d42-eccd982a5fbe" x="72" y="0" width="60" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código P/S]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="93bd10a4-fa79-4bed-927c-2bfa49fd79d6" x="162" y="0" width="85" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c6433cfd-a3c9-4478-a54d-6542342ba1a2" x="276" y="0" width="62" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a7177fd7-fdd2-492c-901b-745409afdf00" x="349" y="0" width="59" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c15ab5f6-2551-4dc8-b4b9-8e22cabc9f6a" x="429" y="0" width="46" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Costo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ccbbe331-fe05-44a7-8f2a-3f26c46b9552" x="489" y="0" width="56" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="4bcf2fca-681b-41cf-aef2-9e3828d282b1" x="0" y="0" width="54" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{consumo_pro_ser_codigoConsumo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1d6f1f98-2e36-4d0c-afef-65bce3144d6f" x="72" y="0" width="60" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{producto_servicio_codigoPS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c0dd6d20-458a-4515-abbf-c5716c7a00a9" x="132" y="0" width="128" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{producto_servicio_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="528dac38-ab38-4d25-b0a4-8d02aa7d47ff" x="276" y="0" width="62" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{consumo_pro_ser_fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5f270bf6-c93d-4ef8-8b29-ba87aa153a1b" x="349" y="0" width="49" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{consumo_pro_ser_cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="09843949-d48e-4336-a882-4c7c243224dd" x="418" y="0" width="57" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{producto_servicio_costo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="0e3933fb-aa7a-4f5e-a8c7-cc5efaab56ce" x="489" y="0" width="56" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{consumo_pro_ser_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="405ece1e-3f1f-4457-934a-30d57d1ed29b" x="435" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="de2ade16-096f-47bc-abb9-491e32137f0e" x="515" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="181f6773-9a6b-4242-b6b6-80ac3fac5189" x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm">
+				<reportElement uuid="b02861ef-963b-47ad-acce-f1a41c16e3fc" x="100" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

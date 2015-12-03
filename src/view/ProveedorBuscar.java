@@ -6,7 +6,6 @@
 
 package view;
 
-//import javaapplication1.Proveedor;be
 import bean.Proveedor;
 import java.awt.EventQueue;
 import java.beans.Beans;
@@ -24,17 +23,7 @@ import javax.swing.JPanel;
 public class ProveedorBuscar extends javax.swing.JFrame {
     private char ch;
     private int id;
-    private int fila;
-    private int codigo;
-    private String email;
-    private String nombre;
-    private String cedula;
-    private String ruc;
-    private String tipo;
-    private int telef;
-    private String dire;
-   // private int cantDias;
-    private String categoria;
+    
     public ProveedorBuscar() {
         initComponents();
        
@@ -371,69 +360,7 @@ public class ProveedorBuscar extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
     private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
- switch (MenuEncargadoDeposito.opcion){
-          case 1:
-                fila=masterTable.getSelectedRow();
-                codigo=(Integer) masterTable.getValueAt(fila, 0);
-                tipo=(String)masterTable.getValueAt(fila, 1);
-                nombre=(String)masterTable.getValueAt(fila, 2);
-                ruc=(String)masterTable.getValueAt(fila, 3);
-                cedula=(String)masterTable.getValueAt(fila, 4);
-                email=(String)masterTable.getValueAt(fila, 5);
-                dire=(String)masterTable.getValueAt(fila, 6);
-                telef=(Integer)masterTable.getValueAt(fila, 7);
-     //           cantDias=(Integer)masterTable.getValueAt(fila, 8);
-                categoria = (String)masterTable.getValueAt(fila, 8);
-                JFrame frame= new ProveedorEdit();  
-                ProveedorEdit.tf_codigo.setText(Integer.toString(codigo));
-            //    ProveedorEdit.tf.setText(Integer.toString(codigo));
-                 ProveedorEdit.tf_tipo.setText(tipo);
-                 ProveedorEdit.tf_razon.setText(nombre);
-                 ProveedorEdit.tf_ruc.setText(ruc);
-                 ProveedorEdit.tf_cedula.setText(cedula);
-                 ProveedorEdit.tf_telef.setText(Integer.toString(telef));
-                 ProveedorEdit.tf_direccion.setText(dire);
-                 ProveedorEdit.tf_email.setText(email);   
-             //    ProveedorEdit.tf_cantDias.setText(Integer.toString(cantDias));
-                 ProveedorEdit.tf_categoria.setText(categoria);
-                 frame.setVisible(true);
-                 frame.setTitle("Modificar Proveedor");
-                 frame.setLocationRelativeTo(null);
-                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                 this.setVisible(false);
-                 break;
-           case 2:
-                fila=masterTable.getSelectedRow();
-                codigo=(Integer) masterTable.getValueAt(fila, 0);
-                tipo=(String)masterTable.getValueAt(fila, 1);
-                nombre=(String)masterTable.getValueAt(fila, 2);
-                ruc=(String)masterTable.getValueAt(fila, 3);
-                cedula=(String)masterTable.getValueAt(fila, 4);
-                email=(String)masterTable.getValueAt(fila, 5);
-                dire=(String)masterTable.getValueAt(fila, 6);
-                telef=(Integer)masterTable.getValueAt(fila, 7);
-             //   cantDias=(Integer)masterTable.getValueAt(fila, 8);
-                categoria = (String)masterTable.getValueAt(fila, 8);
-                JFrame fr= new ProveedorEliminar();
-                 ProveedorEliminar.tf_codigo.setText(Integer.toString(codigo));
-                 ProveedorEliminar.tf_tipo.setText(tipo);
-                 ProveedorEliminar.tf_razon.setText(nombre);
-                 ProveedorEliminar.tf_ruc.setText(ruc);
-                 ProveedorEliminar.tf_cedula.setText(cedula);
-                 ProveedorEliminar.tf_telef.setText(Integer.toString(telef));
-                 ProveedorEliminar.tf_direccion.setText(dire);
-                 ProveedorEliminar.tf_email.setText(email);
-               //  ProveedorEliminar.tf_cantDias.setText(Integer.toString(cantDias));
-                 ProveedorEliminar.tf_categoria.setText(categoria);
-                 fr.setVisible(true);
-                 fr.setTitle("Eliminar Proveedor");
-                 fr.setLocationRelativeTo(null);
-                 fr.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                 this.setVisible(false);
-                 break;
-              case 3:
-                  break;
-              }
+
          
     }//GEN-LAST:event_masterTableMouseClicked
 

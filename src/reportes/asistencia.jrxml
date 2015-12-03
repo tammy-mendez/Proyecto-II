@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14ecae6e-20a1-470f-8f15-97ca22e59608">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codigoEmpleado" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mes" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="año" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Proyecto-II\\src\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select asis.codigoEmpleado,emp.nombre,emp.apellido,asis.codigoAsistencia,asis.fechaAsistencia,asis.horaEntrada,asis.horaSalida,asis.horasTrabajadas,tp.tipo_evento
+from asistencia asis left outer join
+(SELECT e.codigoEmpleado,e.nombre,e.apellido,a.fechaAsistencia,a.codigoAsistencia,ev.tipo_evento
+from empleado e inner join asistencia a
+on e.codigoEmpleado=a.codigoEmpleado
+inner join eventos ev
+on e.codigoEmpleado=ev.codigoEmpleado
+where e.codigoEmpleado=$P{codigoEmpleado} and ev.fecha_inicio=a.fechaAsistencia and ev.tipo_evento='Horas Extras')tp
+on asis.codigoAsistencia=tp.codigoAsistencia
+inner join empleado emp
+on emp.codigoEmpleado=asis.codigoEmpleado
+where asis.codigoEmpleado=$P{codigoEmpleado} and ( month(asis.fechaAsistencia) = $P{mes} and year(asis.fechaAsistencia) = $P{año})]]>
+	</queryString>
+	<field name="codigoEmpleado" class="java.lang.Integer"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="apellido" class="java.lang.String"/>
+	<field name="codigoAsistencia" class="java.lang.Integer"/>
+	<field name="fechaAsistencia" class="java.sql.Date"/>
+	<field name="horaEntrada" class="java.lang.String"/>
+	<field name="horaSalida" class="java.lang.String"/>
+	<field name="horasTrabajadas" class="java.lang.Float"/>
+	<field name="tipo_evento" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="85" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="8e4c1bfb-7d17-48c3-8aca-2bc530a330c4" x="187" y="0" width="191" height="30" forecolor="#FF0000"/>
+				<textElement>
+					<font fontName="MV Boli" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hotel Santa María]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="71cdba4c-7637-4c43-8943-8e3614aebec0" x="16" y="0" width="49" height="50"/>
+				<imageExpression><![CDATA["C:\\Proyecto-II\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="eee25c77-7d75-4ef1-bd64-7254e6791b12" x="139" y="30" width="296" height="20" forecolor="#999999"/>
+				<textElement>
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[INFORME DE ASISTENCIA DE EMPLEADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e53566b4-07de-4a77-a9a5-4ebfb7ec55cc" x="0" y="59" width="66" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Empleado:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7462cde0-2f3b-4779-b7ce-196dcc030fe9" x="328" y="59" width="117" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Correspondiente a:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="03a79055-305e-4bf1-abdf-3718392024b3" x="445" y="59" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0e81adb9-3439-4555-86ac-e820ac28da93" x="67" y="59" width="33" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigoEmpleado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="313aaa7b-f216-40c4-b7be-9336ed490e72" x="113" y="59" width="87" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="61b537fd-2acc-4a97-a68a-6f415a7cf3da" x="200" y="59" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellido}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="b6e79d0f-91cf-49d5-b609-3016c5cd2c27" x="0" y="0" width="555" height="20" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="3f5c642d-00e5-433a-a107-ca50cb6d4d8b" x="0" y="0" width="65" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Asistencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="acd012fb-2800-4438-9736-00817dfef8fe" x="216" y="0" width="68" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora Salida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="62eae662-90e2-4251-9d1e-7799b1d1455d" x="294" y="0" width="73" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hs Trabajadas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fba643c3-b85c-4828-b56a-06e627e8845d" x="124" y="0" width="76" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora Entrada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1d41160e-5df7-41c9-b5d6-17e3be8553f8" x="67" y="0" width="49" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="23b7afa0-eed3-4da1-bd80-5dfa91ad6d5e" x="374" y="0" width="85" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Excendente Min]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1c56c5fc-7e9e-4940-9210-a9f9e25da056" x="476" y="0" width="50" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Evento]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField pattern="###0">
+				<reportElement uuid="45ed2d18-69c1-4f7f-9897-36019c663d9c" x="374" y="0" width="42" height="20" forecolor="#FF0000">
+					<printWhenExpression><![CDATA[$F{horasTrabajadas}.floatValue()>8.0]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{horasTrabajadas}>8.0 ? ($F{horasTrabajadas}-8.0)*60 : 0.0 )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4f6bb0c9-a417-41b8-a673-ef6bd7567744" x="16" y="0" width="33" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{codigoAsistencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7305a062-2cfd-49d9-8394-bb28c24f3d16" x="65" y="0" width="51" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{fechaAsistencia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="01ba3ef3-6ede-4669-8ce5-80a9ff49e0df" x="139" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{horaEntrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9a51db16-e9d1-411c-8d2a-ca815ca3d271" x="231" y="0" width="42" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{horaSalida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="627c7d85-2fd3-4195-a263-27de7fdd81e7" x="300" y="0" width="50" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{horasTrabajadas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6c0e82d0-4885-4a65-875d-0ae46dad6691" x="459" y="0" width="100" height="20" forecolor="#FF0000">
+					<printWhenExpression><![CDATA[$F{tipo_evento} !=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_evento}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="32e46aab-4145-438b-99d7-fe8e605357d8" x="435" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="e65f1b5d-aab8-4e18-9923-28013e674e18" x="515" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="d95db8fc-982f-48c1-90de-3226d56866b9" x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="085ddb36-f0bc-48ad-85e9-481636119090" x="100" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="170" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="25ae6d05-d96f-461e-9032-ee09a68475f5" x="-12" y="0" width="28" height="25"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="mes">
+					<subreportParameterExpression><![CDATA[$P{mes}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="año">
+					<subreportParameterExpression><![CDATA[$P{año}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codigoEmpleado">
+					<subreportParameterExpression><![CDATA[$P{codigoEmpleado}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "eventos.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement uuid="86a851c6-c4a2-408b-b6df-5410c8f25ab8" x="-12" y="142" width="32" height="28"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="mes">
+					<subreportParameterExpression><![CDATA[$P{mes}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="año">
+					<subreportParameterExpression><![CDATA[$P{año}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codigoEmpleado">
+					<subreportParameterExpression><![CDATA[$P{codigoEmpleado}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "asistenciaSueldo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

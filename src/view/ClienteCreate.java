@@ -8,10 +8,15 @@ package view;
 
 import bean.AuditoriaSistema;
 import bean.Cliente;
+import java.awt.Image;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -24,6 +29,8 @@ public class ClienteCreate extends javax.swing.JFrame {
     private int resp;
     public static String llamadaCrearReserva = "";
     public static String llamadaEditarReserva = "";
+    public static String llamadaGenerarPresupuesto="";
+    private int bandera=0;
 
     /**
      * Creates new form ClienteCreate
@@ -88,7 +95,7 @@ public class ClienteCreate extends javax.swing.JFrame {
             }
         });
 
-        lbl_apellido.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_apellido.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_apellido.setText("Apellido:");
 
         tf_email.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -97,13 +104,13 @@ public class ClienteCreate extends javax.swing.JFrame {
             }
         });
 
-        lbl_direccion.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_direccion.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_direccion.setText("Dirección:");
 
-        lbl_cedula.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_cedula.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_cedula.setText("Cedula:");
 
-        lbl_ruc.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_ruc.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_ruc.setText("RUC:");
 
         tf_ruc.addActionListener(new java.awt.event.ActionListener() {
@@ -117,6 +124,9 @@ public class ClienteCreate extends javax.swing.JFrame {
             }
         });
         tf_ruc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_rucKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_rucKeyTyped(evt);
             }
@@ -133,12 +143,18 @@ public class ClienteCreate extends javax.swing.JFrame {
             }
         });
         tf_cedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tf_cedulaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_cedulaKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_cedulaKeyTyped(evt);
             }
         });
 
-        lbl_email.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_email.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_email.setText("Email:");
 
         tf_direccion.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -147,10 +163,10 @@ public class ClienteCreate extends javax.swing.JFrame {
             }
         });
 
-        lbl_nombre.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_nombre.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_nombre.setText("Nombre:");
 
-        lbl_telef.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_telef.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_telef.setText("Teléfono:");
 
         tf_nombre.addActionListener(new java.awt.event.ActionListener() {
@@ -170,15 +186,16 @@ public class ClienteCreate extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_ruc)
                             .addComponent(lbl_cedula))
                         .addGap(11, 11, 11)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_cedula)
-                            .addComponent(tf_ruc)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tf_cedula, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                            .addComponent(tf_ruc))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_nombre)
@@ -186,13 +203,14 @@ public class ClienteCreate extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(tf_nombre)
-                            .addComponent(tf_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(58, 58, 58)
+                            .addComponent(tf_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(58, 58, 58)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lbl_telef)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(tf_telef, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tf_telef, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(53, 53, 53))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_email)
@@ -301,15 +319,16 @@ public class ClienteCreate extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(150, 150, 150))
             .addGroup(layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(64, 64, 64)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(150, 150, 150)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(58, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -319,9 +338,9 @@ public class ClienteCreate extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addGap(30, 30, 30)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
@@ -411,7 +430,7 @@ public class ClienteCreate extends javax.swing.JFrame {
 
     private void tf_telefKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_telefKeyTyped
         // TODO add your handling code here:
-        int limite=10;
+        int limite=11;
         if(tf_telef.getText().length()==limite){
             getToolkit().beep();
             evt.consume(); //se le ignora
@@ -432,41 +451,66 @@ public class ClienteCreate extends javax.swing.JFrame {
 
     private void tf_cedulaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_cedulaFocusLost
         // TODO add your handling code here:
-      
-      
-    }//GEN-LAST:event_tf_cedulaFocusLost
-
-    private void tf_rucFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_rucFocusLost
-        // TODO add your handling code here:
-      
-    }//GEN-LAST:event_tf_rucFocusLost
-
-    private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
-        // TODO add your handling code here:
-       
-        if(tf_cedula.getText().length()==0 || tf_nombre.getText().length()==0
-             || tf_apellido.getText().length()==0 || tf_email.getText().length()==0
-              || tf_direccion.getText().length()==0 || tf_telef.getText().length()==0  ){
-             JOptionPane.showMessageDialog(null,"No se permiten campos con valores nulos", "Error",JOptionPane.ERROR_MESSAGE);
-             return;    
-        }else{
-                query=entityManager.createNamedQuery("Cliente.findByCedula");
+        if(tf_cedula.getText().length()==0){
+            tf_cedula.requestFocus();
+            return;
+        }
+         query=entityManager.createNamedQuery("Cliente.findByCedula");
                 query.setParameter("cedula", tf_cedula.getText());
                 List<Cliente> cli=query.getResultList();
                 if(cli.size()>=1){
                     JOptionPane.showMessageDialog(null,"El número de cedula ya ha sido registrado", "Error",JOptionPane.ERROR_MESSAGE);
                     tf_cedula.setText(null);
-                    return;
+                     tf_cedula.requestFocus();
                  }
-                 if(tf_ruc.getText().length()!=0){
+      
+    }//GEN-LAST:event_tf_cedulaFocusLost
+
+    private void tf_rucFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_rucFocusLost
+        // TODO add your handling code here:
+           if(tf_ruc.getText().length()!=0){
                     query=entityManager.createNamedQuery("Cliente.findByRuc");
                     query.setParameter("ruc", tf_ruc.getText().toLowerCase());
                     List<Cliente> cl=query.getResultList();
                     if(cl.size()>=1){
                          JOptionPane.showMessageDialog(null,"El número de RUC ya ha sido registrado", "Error",JOptionPane.ERROR_MESSAGE);
-                         return;
+                         tf_ruc.setText(null);
+                         tf_ruc.requestFocus();
                      }  
-                 } 
+            } 
+      
+    }//GEN-LAST:event_tf_rucFocusLost
+
+    private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
+        // TODO add your handling code here:
+        //verifica nuevamente que el numero de cedula no este repetido
+                query=entityManager.createNamedQuery("Cliente.findByCedula");
+                query.setParameter("cedula", tf_cedula.getText());
+                List<Cliente> a=query.getResultList();
+                if(a.size()>=1){
+                     tf_cedula.setText(null);
+                     tf_cedula.requestFocus();
+                     return;
+                 }
+                //verifica nuevamente que el ruc no esté repetido
+                if(tf_ruc.getText().length()!=0){
+                    query=entityManager.createNamedQuery("Cliente.findByRuc");
+                    query.setParameter("ruc", tf_ruc.getText());
+                    List<Cliente> b=query.getResultList();
+                    if(b.size()>=1){
+                         tf_ruc.setText(null);
+                         tf_ruc.requestFocus();
+                         return;
+                     } 
+                }
+                 
+        if(tf_cedula.getText().length()==0 || tf_nombre.getText().length()==0
+             || tf_apellido.getText().length()==0
+              || tf_direccion.getText().length()==0 || tf_telef.getText().length()==0  ){
+             JOptionPane.showMessageDialog(null,"No se permiten campos con valores nulos", "Error",JOptionPane.ERROR_MESSAGE);
+             return;    
+        }else{
+                
                resp=  JOptionPane.showConfirmDialog(null,"Desea Registrar un nuevo Cliente?", "Confirmar Creación",JOptionPane.YES_NO_OPTION );
                if (resp==JOptionPane.YES_OPTION){
                    entityManager.getTransaction().begin();
@@ -475,7 +519,7 @@ public class ClienteCreate extends javax.swing.JFrame {
                    c.setRuc(tf_ruc.getText().toLowerCase());
                    c.setNombre(tf_nombre.getText().toLowerCase());
                    c.setApellido(tf_apellido.getText().toLowerCase());
-                   c.setTelefono(Integer.parseInt(tf_telef.getText()));
+                   c.setTelefono((tf_telef.getText()));
                    c.setDireccion(tf_direccion.getText().toLowerCase());
                    c.setEmail(tf_email.getText().toLowerCase());
                    entityManager.persist(c);
@@ -493,33 +537,67 @@ public class ClienteCreate extends javax.swing.JFrame {
                     as.setUsuario(LoginView.nombreUsuario);  
                     entityManager.persist(as);
                     entityManager.getTransaction().commit();
+                    //si registramos un cliente desde la reserva lo agregamos a masterTable
+                    if(CrearReserva.opcionReserva==1){
+                         query=entityManager.createNamedQuery( "Cliente.findByCodigoCliente");
+                         query.setParameter("codigoCliente",c.getCodigoCliente());
+                         Cliente clie=(Cliente)query.getSingleResult();
+                         CrearReserva.clienteList.clear();
+                         CrearReserva.clienteList.add(clie);
+                    }else if(Presupuestar.opcionReserva==1){
+                             query=entityManager.createNamedQuery( "Cliente.findByCodigoCliente");
+                         query.setParameter("codigoCliente",c.getCodigoCliente());
+                         Cliente cli=(Cliente)query.getSingleResult();
+                         Presupuestar.list.clear();
+                         Presupuestar.list.add(cli);
+                    }
                     JOptionPane.showMessageDialog(null,"Creación exitosa", "Confirmación",JOptionPane.INFORMATION_MESSAGE);
+                    resetear();
+               }else{
+                     this.dispose();
                }
-        }if (!llamadaCrearReserva.equals("")){
-                JFrame frame=new CrearReserva();
-                CrearReserva.tf_cedulaCliente.setText(tf_cedula.getText());
-                frame.setVisible(true);
-                frame.setTitle("Registar Reserva");
-                frame.setLocationRelativeTo(null);
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                
         }
-        if (!llamadaEditarReserva.equals("")){
-                JFrame frame=new ReservaEditar();
-                CrearReserva.tf_cedulaCliente.setText(tf_cedula.getText());
-                frame.setVisible(true);
-                frame.setTitle("Editar Reserva");
-                frame.setLocationRelativeTo(null);
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                
-        }
-        this.dispose();
+     
+       
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void tf_telefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_telefActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_telefActionPerformed
 
+    private void tf_cedulaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_cedulaKeyPressed
+        // TODO add your handling code here:
+      /*   if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+                query=entityManager.createNamedQuery("Cliente.findByCedula");
+                query.setParameter("cedula", tf_cedula.getText());
+                List<Cliente> cli=query.getResultList();
+                if(cli.size()>=1){
+                    JOptionPane.showMessageDialog(null,"El número de cedula ya ha sido registrado", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_cedula.setText(null);
+                    tf_cedula.requestFocus();
+                 }
+         }*/
+    }//GEN-LAST:event_tf_cedulaKeyPressed
+
+    private void tf_cedulaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_cedulaKeyReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_tf_cedulaKeyReleased
+
+    private void tf_rucKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_rucKeyReleased
+        // TODO add your handling code here:
+      
+    }//GEN-LAST:event_tf_rucKeyReleased
+      private void resetear(){
+        
+        tf_nombre.setText(null);
+        tf_apellido.setText(null);
+        tf_cedula.setText(null);
+        tf_ruc.setText(null);
+        tf_direccion.setText(null);
+        tf_telef.setText(null);
+        tf_email.setText(null);
+    }
     /**
      * @param args the command line arguments
      */
@@ -552,6 +630,8 @@ public class ClienteCreate extends javax.swing.JFrame {
             public void run() {
                 JFrame frame=new ClienteCreate();
                 frame.setTitle("Registrar Cliente");
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -577,7 +657,7 @@ public class ClienteCreate extends javax.swing.JFrame {
     private java.util.List<bean.Cliente> list;
     private javax.persistence.Query query;
     private javax.swing.JTextField tf_apellido;
-    public static javax.swing.JTextField tf_cedula;
+    private javax.swing.JTextField tf_cedula;
     private javax.swing.JTextField tf_direccion;
     private javax.swing.JTextField tf_email;
     private javax.swing.JTextField tf_nombre;

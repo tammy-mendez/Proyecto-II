@@ -10,7 +10,7 @@ import bean.AuditoriaSistema;
 import bean.Caja;
 import bean.CuentaBancaria;
 import bean.ExtraccionDeposito;
-import bean.FacturaCobro_1;
+import bean.FacturaCobro;
 import java.awt.PageAttributes;
 import java.text.DateFormat;
 import java.text.ParseException;

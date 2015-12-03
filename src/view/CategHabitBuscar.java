@@ -6,8 +6,13 @@
 
 package view;
 
+import ViewAdmHotel.MenuAdminHotel;
 import bean.CategHabitacion;
+import bean.Habitacion;
+import bean.Reserva;
+import java.awt.Image;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -27,6 +32,7 @@ public class CategHabitBuscar extends javax.swing.JFrame {
      */
     public CategHabitBuscar() {
         initComponents();
+        habitacionList.clear();
     }
 
     /**
@@ -42,6 +48,8 @@ public class CategHabitBuscar extends javax.swing.JFrame {
         EntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         Query = java.beans.Beans.isDesignTime() ? null : EntityManager.createQuery("SELECT c FROM CategHabitacion c");
         List = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(Query.getResultList());
+        habitacionQuery = java.beans.Beans.isDesignTime() ? null : EntityManager.createQuery("SELECT h FROM Habitacion h");
+        habitacionList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(habitacionQuery.getResultList());
         panel_BuscarCH = new javax.swing.JPanel();
         lbl_BuscarCH = new javax.swing.JLabel();
         panel_buscarCH = new javax.swing.JPanel();
@@ -53,6 +61,8 @@ public class CategHabitBuscar extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
         btn_cancelar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -67,17 +77,17 @@ public class CategHabitBuscar extends javax.swing.JFrame {
         panel_BuscarCH.setLayout(panel_BuscarCHLayout);
         panel_BuscarCHLayout.setHorizontalGroup(
             panel_BuscarCHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_BuscarCHLayout.createSequentialGroup()
-                .addContainerGap(106, Short.MAX_VALUE)
+            .addGroup(panel_BuscarCHLayout.createSequentialGroup()
+                .addGap(96, 96, 96)
                 .addComponent(lbl_BuscarCH)
-                .addGap(88, 88, 88))
+                .addContainerGap(98, Short.MAX_VALUE))
         );
         panel_BuscarCHLayout.setVerticalGroup(
             panel_BuscarCHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_BuscarCHLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel_BuscarCHLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(lbl_BuscarCH)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panel_buscarCH.setBackground(new java.awt.Color(204, 204, 204));
@@ -120,11 +130,11 @@ public class CategHabitBuscar extends javax.swing.JFrame {
                 .addComponent(lbl_filtro)
                 .addGap(18, 18, 18)
                 .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
                 .addComponent(lbl_valor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tf_valor, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(btn_buscar)
                 .addGap(21, 21, 21))
         );
@@ -171,6 +181,14 @@ public class CategHabitBuscar extends javax.swing.JFrame {
             }
         });
 
+        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, habitacionList, jTable1);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numero}"));
+        columnBinding.setColumnName("Habitaciones");
+        columnBinding.setColumnClass(Integer.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        jScrollPane2.setViewportView(jTable1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -178,18 +196,20 @@ public class CategHabitBuscar extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(275, 275, 275)
-                        .addComponent(btn_cancelar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
+                        .addGap(36, 36, 36)
                         .addComponent(panel_BuscarCH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(panel_buscarCH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                        .addGap(59, 59, 59)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panel_buscarCH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(288, 288, 288)
+                        .addComponent(btn_cancelar)))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,11 +218,13 @@ public class CategHabitBuscar extends javax.swing.JFrame {
                 .addComponent(panel_BuscarCH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(panel_buscarCH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(43, 43, 43)
                 .addComponent(btn_cancelar)
-                .addGap(27, 27, 27))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -231,24 +253,29 @@ public class CategHabitBuscar extends javax.swing.JFrame {
 
     private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
         // TODO add your handling code here:
+        int cod;
         if (tf_valor.getText().length()==0){
             JOptionPane.showMessageDialog(null,"Ingrese algún valor para efectuar la búsqueda", "Advertencia",JOptionPane.ERROR_MESSAGE);
             return;
         }else{
             if (list_filtros.getSelectedItem()=="Código"){
+                cod=Integer.parseInt(tf_valor.getText());
                 Query=EntityManager.createNamedQuery("CategHabitacion.findByCodigoCategoria");
-                Query.setParameter("codigoCategoria", Integer.parseInt(tf_valor.getText()));
+                Query.setParameter("codigoCategoria", cod);
                 List<CategHabitacion> ch=Query.getResultList();
                 if(ch.isEmpty()){
                     JOptionPane.showMessageDialog(null,"Código de categoría inexistente", "Error",JOptionPane.ERROR_MESSAGE);
                     tf_valor.setText(null);
                     return;
                 }
+                habitacionList.clear();
                 List.clear();
                 List.addAll(ch);
+                cargarHabitacion(cod);
                 return;
             }
             if(list_filtros.getSelectedItem()=="Nombre"){
+                habitacionList.clear();
                 Query = EntityManager.createNativeQuery( "SELECT * FROM categ_habitacion WHERE nombre LIKE "
                 +"'%"+tf_valor.getText()+"%'", CategHabitacion.class);
                 List<CategHabitacion> ch=Query.getResultList();
@@ -262,6 +289,7 @@ public class CategHabitBuscar extends javax.swing.JFrame {
                 return;
             }
             if(list_filtros.getSelectedItem()=="Costo"){
+                habitacionList.clear();
                 Query = EntityManager.createNativeQuery( "SELECT * FROM categ_habitacion WHERE costoxnoche>= "
                 +"'"+tf_valor.getText()+"'", CategHabitacion.class);
                 List<CategHabitacion> ch=Query.getResultList();
@@ -291,42 +319,21 @@ public class CategHabitBuscar extends javax.swing.JFrame {
 
     private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
         // TODO add your handling code here:
-         switch (MenuAdminHotel.opcion){
-             case 1:
-                    fila=masterTable.getSelectedRow();
-                    codigo=(Integer) masterTable.getValueAt(fila, 0);
-                    nombre=(String)masterTable.getValueAt(fila, 1);
-                    costo=(Integer)masterTable.getValueAt(fila, 2);
-                    JFrame frame=new CategHabitEdit();
-                    CategHabitEdit.tf_codigo.setText(Integer.toString(codigo));
-                    CategHabitEdit.tf_nombre.setText(nombre);
-                    CategHabitEdit.tf_costo.setText(Integer.toString(costo));
-                    frame.setVisible(true);
-                    frame.setTitle("Editar Categoría de Habitación");
-                    frame.setLocationRelativeTo(null);
-                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    this.dispose();
-                    break;
-             case 2:
-                    fila=masterTable.getSelectedRow();
-                    codigo=(Integer) masterTable.getValueAt(fila, 0);
-                    nombre=(String)masterTable.getValueAt(fila, 1);
-                    costo=(Integer)masterTable.getValueAt(fila, 2);
-                    JFrame fram=new CategHabitEliminar();
-                    CategHabitEliminar.tf_codigo.setText(Integer.toString(codigo));
-                    CategHabitEliminar.tf_nombre.setText(nombre);
-                    CategHabitEliminar.tf_costo.setText(Integer.toString(costo));
-                    fram.setVisible(true);
-                    fram.setTitle("Eliminar Categoría de Habitación");
-                    fram.setLocationRelativeTo(null);
-                    fram.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    this.setVisible(false);
-                    break;
-             case 3:
-                     break;
-         }
+        int num;
+         fila = masterTable.getSelectedRow();
+         num=(Integer) masterTable.getValueAt(fila, 0);
+         cargarHabitacion(num);
     }//GEN-LAST:event_masterTableMouseClicked
- 
+      private void cargarHabitacion(int codCateg){
+         habitacionQuery=EntityManager.createNativeQuery("SELECT * FROM habitacion "
+                     + "WHERE codigoCategoria= "
+                     +codCateg, Habitacion.class);
+        List<Habitacion> h=habitacionQuery.getResultList();
+        if(h.size()>=1){
+              habitacionList.clear();
+              habitacionList.addAll(h);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -360,6 +367,8 @@ public class CategHabitBuscar extends javax.swing.JFrame {
                 JFrame frame=new CategHabitBuscar();
                 frame.setVisible(true);
                 frame.setTitle("Buscar Categoría de Habitación");
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
@@ -372,7 +381,11 @@ public class CategHabitBuscar extends javax.swing.JFrame {
     private javax.persistence.Query Query;
     private javax.swing.JButton btn_buscar;
     private javax.swing.JButton btn_cancelar;
+    private java.util.List<bean.Habitacion> habitacionList;
+    private javax.persistence.Query habitacionQuery;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbl_BuscarCH;
     private javax.swing.JLabel lbl_filtro;
     private javax.swing.JLabel lbl_valor;

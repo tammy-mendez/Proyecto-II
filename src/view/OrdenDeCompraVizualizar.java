@@ -13,7 +13,6 @@ import bean.CategoriaArticulo;
 import bean.DetalleOrdenCompra;
 import bean.OrdenCompra;
 import bean.Proveedor;
-import bean.TablaOrdenCompra;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.beans.Beans;
@@ -263,7 +262,6 @@ public class OrdenDeCompraVizualizar extends javax.swing.JFrame {
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cantidadPedida}"));
         columnBinding.setColumnName("Cantidad Pedida");
         columnBinding.setColumnClass(Integer.class);
-        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cantidadRecibida}"));
         columnBinding.setColumnName("Cantidad Recibida");
         columnBinding.setColumnClass(Integer.class);
@@ -419,7 +417,8 @@ public class OrdenDeCompraVizualizar extends javax.swing.JFrame {
         codigo=(Integer) masterTable.getValueAt(fila, 0);
         proveedor= (String) masterTable.getValueAt(fila, 1);
         fecha = (String) masterTable.getValueAt(fila, 2);
-        detalle_oc(codigo);
+        OrdenCompra oc = obtenerOrden(codigo);
+        detalle_oc(oc);
        
     }//GEN-LAST:event_masterTableMouseClicked
 
@@ -438,7 +437,8 @@ public class OrdenDeCompraVizualizar extends javax.swing.JFrame {
 
     private void btn_imprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_imprimirActionPerformed
         // TODO add your handling code here:
-        imprimir(codigo);
+        OrdenCompra o= obtenerOrden(codigo);
+        imprimir(o.getCodOrden());
     }//GEN-LAST:event_btn_imprimirActionPerformed
 
     /**
@@ -518,7 +518,7 @@ public class OrdenDeCompraVizualizar extends javax.swing.JFrame {
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
-    public  void detalle_oc(int cod){
+    public  void detalle_oc(OrdenCompra cod){
                 //id=Integer.parseInt(tf_valor.getText());
                 detalleOrdenCompraQuery=entityManager.createNamedQuery( "DetalleOrdenCompra.findByCodOrden");
                 detalleOrdenCompraQuery.setParameter("codOrden", cod);
@@ -566,5 +566,25 @@ public class OrdenDeCompraVizualizar extends javax.swing.JFrame {
             e.printStackTrace();
         }
          }
+    }
+    private OrdenCompra obtenerOrden(int codigo){
+        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
+        EntityManager ema = fact.createEntityManager();
+        Query query = ema.createNamedQuery("OrdenCompra.findByCodOrden");
+        query.setParameter("codOrden", codigo);
+        List<OrdenCompra> a = query.getResultList();
+        OrdenCompra nom = null;
+        try{
+            nom = a.get(0);
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.out.println(e);
+        }catch(NullPointerException e){
+            System.out.println(e);
+        }catch(Exception e){
+            System.out.println("Algo pasó");
+        }
+        
+        ema.close();
+        return nom;
     }
 }

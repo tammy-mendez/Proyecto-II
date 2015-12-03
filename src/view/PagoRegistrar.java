@@ -12,6 +12,7 @@ import bean.CuentaBancaria;
 import bean.DetallePago;
 import bean.ExtraccionDeposito;
 import bean.FacturaPago;
+import bean.Informerecepcion;
 import bean.Pago;
 import bean.Proveedor;
 import com.mxrck.autocompleter.TextAutoCompleter;
@@ -73,6 +74,8 @@ public class PagoRegistrar extends javax.swing.JFrame {
         cuentaBancariaList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : cuentaBancariaQuery.getResultList();
         extraccionDepositoQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT e FROM ExtraccionDeposito e");
         extraccionDepositoList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(extraccionDepositoQuery.getResultList());
+        informerecepcionQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT i FROM Informerecepcion i");
+        informerecepcionList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : informerecepcionQuery.getResultList();
         masterScrollPane = new javax.swing.JScrollPane();
         tablaPago = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
@@ -355,13 +358,22 @@ public class PagoRegistrar extends javax.swing.JFrame {
                          System.out.println("Formateo de fechas fallido");
                      }
                      System.out.print(d1 +"  "+d2);
-            facturaPagoQuery=entityManager.createNativeQuery("select * from factura_pago" 
+          /*  facturaPagoQuery=entityManager.createNativeQuery("select * from factura_pago" 
                                        + " where estado='pendiente' "  
                                      +"AND STR_TO_DATE(fecha_vence , '%d/%m/%Y') "+
             "BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y ') "+
-            "AND STR_TO_DATE('"+d2+"', '%d/%m/%Y ') ", FacturaPago.class);
-
-                List<FacturaPago> p=facturaPagoQuery.getResultList();
+            "AND STR_TO_DATE('"+d2+"', '%d/%m/%Y ') ", FacturaPago.class);*/
+            informerecepcionQuery=entityManager.createNativeQuery("select * from  informerecepcion i " 
+                    +"join factura_pago fp "
+                    +"on fp.num_factura=i.nroFactura "
+                    +"join orden_compra oc "
+                    +"on oc.cod_orden=i.codOC "
+                    +"where fp.estado='pendiente' "
+                    +"AND STR_TO_DATE(fp.fecha_vence , '%d/%m/%Y') "
+                    +"BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y ') "
+                    +"AND STR_TO_DATE('"+d2+"', '%d/%m/%Y ') "
+                     , Informerecepcion.class);
+                List<Informerecepcion> p=informerecepcionQuery.getResultList();
                 if (p.isEmpty()){
                     JOptionPane.showMessageDialog(null,"Sin cuentas pendientes de pago", "Error",JOptionPane.ERROR_MESSAGE);
                     jf_fechaDesde.requestFocus();
@@ -369,20 +381,24 @@ public class PagoRegistrar extends javax.swing.JFrame {
                 else{
                     btn_guardar.setEnabled(true);
                     for (int j=0;j<p.size();j++){
-                         if (validar(p.get(j).getCodProveedor().getRazonSocial()) == false){
-                     query=entityManager.createNativeQuery("select sum(monto_total) "+
-                    "from factura_pago "+
-                    "where estado='pendiente' "+
-                    "AND STR_TO_DATE(fecha_vence , '%d/%m/%Y') "+
-                    "BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y ') "+
-                    "AND STR_TO_DATE('"+d2+"', '%d/%m/%Y ') "+
-                    "and cod_proveedor="+p.get(j).getCodProveedor().getCodigoProveedor()+
-                    " GROUP BY cod_proveedor");
+                         if (validar(p.get(i).getCodOC().getCodProveedor().getRazonSocial()) == false){
+                        // if (validar(p.get(j).gegetCodProveedor().getRazonSocial()) == false){
+                     query=entityManager.createNativeQuery("select sum(fp.monto_total) "
+                     +"join factura_pago fp "
+                    +"on fp.num_factura=i.nroFactura "
+                    +"join orden_compra oc "
+                    +"on oc.cod_orden=i.codOC "
+                    +"where fp.estado='pendiente' "
+                    +"AND STR_TO_DATE(fp.fecha_vence , '%d/%m/%Y') "
+                    +"BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y ') "
+                    +"AND STR_TO_DATE('"+d2+"', '%d/%m/%Y ') "
+                    +"and oc.cod_proveedor= "+(p.get(j).getCodOC().getCodProveedor().getCodigoProveedor())
+                    +" GROUP BY oc.cod_proveedor");
      
                     Object resultado2=query.getSingleResult();          
                       totalPago=Integer.parseInt(resultado2.toString());
                       
-                      Proveedor p1= obtenerProveedorCodigo(p.get(j).getCodProveedor().getCodigoProveedor());
+                      Proveedor p1= obtenerProveedorCodigo(p.get(j).getCodOC().getCodProveedor().getCodigoProveedor());
                      proveedor=p1.getRazonSocial();
                      
                       inicializar_tabla(proveedor, totalPago);
@@ -490,6 +506,8 @@ public class PagoRegistrar extends javax.swing.JFrame {
     private javax.persistence.Query extraccionDepositoQuery;
     private java.util.List<bean.FacturaPago> facturaPagoList;
     private javax.persistence.Query facturaPagoQuery;
+    private java.util.List<bean.Informerecepcion> informerecepcionList;
+    private javax.persistence.Query informerecepcionQuery;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
@@ -618,24 +636,35 @@ public class PagoRegistrar extends javax.swing.JFrame {
          
            prov= (String)tablaPago.getValueAt( i,0);
            Proveedor p1 = obtenerProveedorNombre(prov);
-            facturaPagoQuery=entityManager.createNativeQuery("select * from factura_pago" 
+          facturaPagoQuery=entityManager.createNativeQuery/*("select * from factura_pago" 
                                        + " where estado='pendiente' "                                     
                                      +"AND STR_TO_DATE(fecha_vence , '%d/%m/%Y') "+
             "BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y %H') "+
             "AND STR_TO_DATE('"+d2+"', '%d/%m/%Y %H') "+
             "AND cod_proveedor= "+
-             p1.getCodigoProveedor(), FacturaPago.class);
+             p1.getCodigoProveedor(), FacturaPago.class);*/
+           ("select * from factura_pago fp " 
+                    +"join  informerecepcion i "
+                    +"on fp.num_factura=i.nroFactura "
+                    +"join orden_compra oc "
+                    +"on oc.cod_orden=i.codOC "
+                    +"where fp.estado='pendiente' "
+                    +"AND STR_TO_DATE(fp.fecha_vence , '%d/%m/%Y') "
+                    +"BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y ') "
+                    +"AND STR_TO_DATE('"+d2+"', '%d/%m/%Y ') "
+                    +" and oc.cod_proveedor= "+(p1.getCodigoProveedor())
+                     , FacturaPago.class);
             List<FacturaPago> p=facturaPagoQuery.getResultList();
             for (int j=0;j<p.size();j++){
                 
                 FacturaPago fpg= new FacturaPago();
                 fpg.setNumFactura(p.get(j).getNumFactura());
                 fpg.setFecha(p.get(j).getFecha());
-                fpg.setOrdenCompra(p.get(j).getOrdenCompra());
+            //    fpg.setOrdenCompra(p.get(j).getOrdenCompra());
                 fpg.setEstado("pagado");
                 fpg.setMontoTotal(p.get(j).getMontoTotal());
                 fpg.setMontoTotalIva(p.get(j).getMontoTotalIva());
-                fpg.setCodProveedor(p.get(j).getCodProveedor());
+              //  fpg.setCodProveedor(p.get(j).getCodProveedor());
                 fpg.setFechaVence(p.get(j).getFechaVence());
     //            entityManager.getTransaction().begin();
                 entityManager.merge(fpg);
@@ -661,13 +690,32 @@ public class PagoRegistrar extends javax.swing.JFrame {
                          System.out.println("Formateo de fechas fallido");
                      }
 
-             facturaPagoQuery=entityManager.createNativeQuery("select * from factura_pago" 
+             /*facturaPagoQuery=entityManager.createNativeQuery("select * from factura_pago" 
                                        + " where estado='pendiente' "                                     
                                      +"and STR_TO_DATE(fecha_vence , '%d/%m/%Y') "+
             "BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y ') "+
             "AND STR_TO_DATE('"+d2+"', '%d/%m/%Y ') "+
             "AND cod_proveedor= "+detPago.getCodProveedor().getCodigoProveedor(), FacturaPago.class);
-              List<FacturaPago> p=facturaPagoQuery.getResultList();
+              List<FacturaPago> p=facturaPagoQuery.getResultList()*/
+                      facturaPagoQuery=entityManager.createNativeQuery/*("select * from factura_pago" 
+                                       + " where estado='pendiente' "                                     
+                                     +"AND STR_TO_DATE(fecha_vence , '%d/%m/%Y') "+
+            "BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y %H') "+
+            "AND STR_TO_DATE('"+d2+"', '%d/%m/%Y %H') "+
+            "AND cod_proveedor= "+
+             p1.getCodigoProveedor(), FacturaPago.class);*/
+           ("select * from factura_pago fp " 
+                    +"join  informerecepcion i "
+                    +"on fp.num_factura=i.nroFactura "
+                    +"join orden_compra oc "
+                    +"on oc.cod_orden=i.codOC "
+                    +"where fp.estado='pendiente' "
+                    +"AND STR_TO_DATE(fp.fecha_vence , '%d/%m/%Y') "
+                    +"BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y ') "
+                    +"AND STR_TO_DATE('"+d2+"', '%d/%m/%Y ') "
+                    +" and oc.cod_proveedor= "+detPago.getCodProveedor().getCodigoProveedor()
+                     , FacturaPago.class);
+            List<FacturaPago> p=facturaPagoQuery.getResultList();
              
             for (int j=0;j<p.size();j++){
                 numFacturaDetalle=p.get(j).getNumFactura();

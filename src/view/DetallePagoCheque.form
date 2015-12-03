@@ -7,24 +7,6 @@
         <Property name="persistenceUnit" type="java.lang.String" value="proyectoPU"/>
       </Properties>
     </Component>
-    <Component class="javax.persistence.Query" name="facturaCobroQuery">
-      <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT f FROM FacturaCobro f"/>
-        <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
-          <ComponentRef name="entityManager"/>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="java.util.List" name="facturaCobroList">
-      <Properties>
-        <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="facturaCobroQuery"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;bean.FacturaCobro_1&gt;"/>
-      </AuxValues>
-    </Component>
     <Component class="javax.persistence.Query" name="detalleCobroQuery">
       <Properties>
         <Property name="query" type="java.lang.String" value="SELECT d FROM DetalleCobro d"/>
@@ -41,6 +23,24 @@
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;bean.DetalleCobro&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.persistence.Query" name="facturaCobroQuery">
+      <Properties>
+        <Property name="query" type="java.lang.String" value="SELECT f FROM FacturaCobro f"/>
+        <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
+          <ComponentRef name="entityManager"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="java.util.List" name="facturaCobroList">
+      <Properties>
+        <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
+          <ComponentRef name="facturaCobroQuery"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;bean.FacturaCobro&gt;"/>
       </AuxValues>
     </Component>
   </NonVisualComponents>

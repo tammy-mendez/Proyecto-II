@@ -8,7 +8,7 @@ package view;
 
 import bean.ConsumoProSer;
 import bean.DetallePago;
-import bean.FacturaCobro_1;
+import bean.FacturaCobro;
 import bean.NumberToText;
 import bean.Pago;
 import bean.Proveedor;

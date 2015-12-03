@@ -9,13 +9,12 @@ package view;
 import bean.AuditoriaSistema;
 import bean.CategHabitacion;
 import bean.Habitacion;
+import java.awt.Image;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -75,7 +74,7 @@ public class HabitacionCreate extends javax.swing.JFrame {
             .addGroup(panel_crearHabitacionLayout.createSequentialGroup()
                 .addGap(105, 105, 105)
                 .addComponent(lbl_registrarHabitacion)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
         panel_crearHabitacionLayout.setVerticalGroup(
             panel_crearHabitacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -88,10 +87,18 @@ public class HabitacionCreate extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lbl_numeroHabit.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
+        lbl_numeroHabit.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_numeroHabit.setText("Número de Habitación:");
 
+        tf_numeroHabit.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tf_numeroHabitFocusLost(evt);
+            }
+        });
         tf_numeroHabit.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_numeroHabitKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_numeroHabitKeyTyped(evt);
             }
@@ -102,7 +109,7 @@ public class HabitacionCreate extends javax.swing.JFrame {
         org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, List, list_categoria);
         bindingGroup.addBinding(jComboBoxBinding);
 
-        lbl_categoria.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
+        lbl_categoria.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_categoria.setText("Categoría de Habitación:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -127,11 +134,11 @@ public class HabitacionCreate extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tf_numeroHabit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_numeroHabit))
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(list_categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_categoria))
-                .addContainerGap(28, Short.MAX_VALUE))
+                    .addComponent(lbl_categoria)
+                    .addComponent(list_categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26))
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
@@ -179,26 +186,26 @@ public class HabitacionCreate extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel_crearHabitacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(23, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(90, 90, 90)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(93, 93, 93))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 36, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_crearHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(panel_crearHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(28, 28, 28)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
+                .addGap(20, 20, 20))
         );
 
         bindingGroup.bind();
@@ -224,28 +231,30 @@ public class HabitacionCreate extends javax.swing.JFrame {
 
     private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
         // TODO add your handling code here:
+        
         if(tf_numeroHabit.getText().length()==0){
              JOptionPane.showMessageDialog(null,"Ingrese algun valor para el campo numero", "Advertencia",JOptionPane.ERROR_MESSAGE);
-             return;
+             tf_numeroHabit.requestFocus();
         }else{
-                Query=EntityManager.createNamedQuery("Habitacion.findByNumero");
+                //verificar otra vez si el numero de habitacion no está repetida
+               Query=EntityManager.createNamedQuery("Habitacion.findByNumero");
                 Query.setParameter("numero",Integer.parseInt(tf_numeroHabit.getText()));
                 List<Habitacion> h=Query.getResultList();
                 if(h.size()>=1){
-                    JOptionPane.showMessageDialog(null,"El número de habitación ya ha sido registrado", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_numeroHabit.setText(null);
+                    tf_numeroHabit.requestFocus(); 
                     return;
-                }
+                 }
+                //
                resp=  JOptionPane.showConfirmDialog(null,"Desea Registrar una nueva habitación?", "Confirmar Creación",JOptionPane.YES_NO_OPTION );
                if (resp==JOptionPane.YES_OPTION){
-                   EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
-                   EntityManager em=fact.createEntityManager();
-                   em.getTransaction().begin();
+                   EntityManager.getTransaction().begin();
                    Habitacion ha=new Habitacion();
                    ha.setNumero(Integer.parseInt(tf_numeroHabit.getText()));
                    CategHabitacion c=(CategHabitacion) list_categoria.getSelectedItem();
                    ha.setCodigoCategoria(c);
-                   em.persist(ha);
-                   em.flush();
+                   EntityManager.persist(ha);
+                   EntityManager.flush();
                     //registramos los datos de la auditoria
                     AuditoriaSistema as=new AuditoriaSistema();
                     as.setAccion("Creación");
@@ -257,14 +266,17 @@ public class HabitacionCreate extends javax.swing.JFrame {
                     DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                     as.setFechaHora((formato.format(fecha)));
                     as.setUsuario("nadie");
-                    em.persist(as);
-                    em.getTransaction().commit();
-                    em.close();
+                    EntityManager.persist(as);
+                    EntityManager.getTransaction().commit();
+                   // em.close();
                      JOptionPane.showMessageDialog(null,"Creación exitosa", "Confirmación",JOptionPane.INFORMATION_MESSAGE);
+                     resetear();
                    
+               }else{
+                     this.dispose();
                }
         }
-        this.dispose();
+       
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
@@ -272,6 +284,31 @@ public class HabitacionCreate extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
+    private void tf_numeroHabitFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_numeroHabitFocusLost
+        // TODO add your handling code here:
+         if(tf_numeroHabit.getText().length()==0){
+            tf_numeroHabit.requestFocus();
+            return;
+        }
+       Query=EntityManager.createNamedQuery("Habitacion.findByNumero");
+                Query.setParameter("numero",Integer.parseInt(tf_numeroHabit.getText()));
+                List<Habitacion> h=Query.getResultList();
+                if(h.size()>=1){
+                    JOptionPane.showMessageDialog(null,"El número de habitación ya ha sido registrado", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_numeroHabit.setText(null);
+                    tf_numeroHabit.requestFocus();   
+        }
+    }//GEN-LAST:event_tf_numeroHabitFocusLost
+
+    private void tf_numeroHabitKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_numeroHabitKeyReleased
+        // TODO add your handling code here:
+      
+        
+    }//GEN-LAST:event_tf_numeroHabitKeyReleased
+  
+    private void resetear(){
+        tf_numeroHabit.setText(null);
+    }
     /**
      * @param args the command line arguments
      */
@@ -305,6 +342,8 @@ public class HabitacionCreate extends javax.swing.JFrame {
                 JFrame frame=new HabitacionCreate();
                 frame.setVisible(true);
                 frame.setTitle("Crear Habitación");
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }

@@ -6,14 +6,14 @@
 
 package view;
 
+import ViewAdmHotel.MenuAdminHotel;
+import bean.Articulo;
 import bean.ProductoServicio;
-import bean.ProductoServicio;
+import java.awt.Image;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import view.MenuAdminHotel;
-import view.ProdSerEdit;
-import view.ProdSerEliminar;
 
 /**
  *
@@ -93,7 +93,7 @@ public class ProdSerBuscar extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         jLabel1.setText("Buscar por:");
 
-        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código P/S", "Nombre", "Costo", "Categoría P/S" }));
+        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código P/S", "Nombre", "Costo", " " }));
 
         lbl_valor.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         lbl_valor.setText("Valor:");
@@ -168,9 +168,6 @@ public class ProdSerBuscar extends javax.swing.JFrame {
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${costo}"));
         columnBinding.setColumnName("Costo");
         columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoCategoria.nombre}"));
-        columnBinding.setColumnName("Categoría");
-        columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         masterTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -184,18 +181,12 @@ public class ProdSerBuscar extends javax.swing.JFrame {
             masterTable.getColumnModel().getColumn(1).setPreferredWidth(80);
             masterTable.getColumnModel().getColumn(2).setResizable(false);
             masterTable.getColumnModel().getColumn(2).setPreferredWidth(30);
-            masterTable.getColumnModel().getColumn(3).setResizable(false);
-            masterTable.getColumnModel().getColumn(3).setPreferredWidth(40);
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -204,22 +195,25 @@ public class ProdSerBuscar extends javax.swing.JFrame {
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(panel_BuscarPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(272, 272, 272)
+                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 603, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(261, 261, 261)
                         .addComponent(btn_cancelar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(26, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panel_BuscarPS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGap(56, 56, 56)
                 .addComponent(btn_cancelar)
-                .addGap(35, 35, 35))
+                .addGap(27, 27, 27))
         );
 
         bindingGroup.bind();
@@ -240,13 +234,7 @@ public class ProdSerBuscar extends javax.swing.JFrame {
                 evt.consume();
             }
         }
-        else{
-            ch=evt.getKeyChar();
-            if(Character.isDigit(ch)){
-                getToolkit().beep();
-                evt.consume();
-            }
-        }
+       
 
     }//GEN-LAST:event_tf_valorKeyTyped
 
@@ -270,7 +258,7 @@ public class ProdSerBuscar extends javax.swing.JFrame {
                 List.clear();
                 List.addAll(ps);
             }
-           else if (list_filtros.getSelectedItem()=="Categoría P/S"){
+        /*   else if (list_filtros.getSelectedItem()=="Categoría P/S"){
                 Query = EntityManager.createNativeQuery( "SELECT * FROM producto_servicio p "
                     + "INNER JOIN categoria_prod_ser c "
                     + "on p.codigoCategoria = c.codigoCategoria "
@@ -284,7 +272,7 @@ public class ProdSerBuscar extends javax.swing.JFrame {
                 }
                 List.clear();
                 List.addAll(ps);
-            }
+            }*/
             else if (list_filtros.getSelectedItem()=="Nombre"){
                 Query = EntityManager.createNativeQuery( "SELECT * FROM producto_servicio p "
                     + "WHERE p.nombre LIKE "
@@ -328,46 +316,7 @@ public class ProdSerBuscar extends javax.swing.JFrame {
 
     private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
         // TODO add your handling code here:
-        switch(MenuAdminHotel.opcion){
-            case 1:
-                    fila=masterTable.getSelectedRow();
-                    codigo=(Integer) masterTable.getValueAt(fila, 0);
-                    nombre=(String)masterTable.getValueAt(fila, 1);
-                    costo=(Integer)masterTable.getValueAt(fila, 2);
-                    Query=EntityManager.createNamedQuery("ProductoServicio.findByCodigoPS");
-                    Query.setParameter("codigoPS", codigo);
-                    List<ProductoServicio> p=Query.getResultList();
-                    JFrame frame=new ProdSerEdit();
-                    ProdSerEdit.tf_codigoPS.setText(Integer.toString(codigo));
-                    ProdSerEdit.tf_nombrePS.setText(nombre);
-                    ProdSerEdit.tf_costoPS.setText(Integer.toString(costo));
-                 
-                    frame.setVisible(true);
-                    frame.setTitle("Editar Producto/Servicio");
-                    frame.setLocationRelativeTo(null);
-                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    this.dispose();
-                    break;
-            case 2:
-                    fila=masterTable.getSelectedRow();
-                    codigo=(Integer) masterTable.getValueAt(fila, 0);
-                    nombre=(String)masterTable.getValueAt(fila, 1);
-                    costo=(Integer)masterTable.getValueAt(fila, 2);
-                    categoria=(String)masterTable.getValueAt(fila, 3);
-                    JFrame frame2=new ProdSerEliminar();
-                    ProdSerEliminar.tf_codigoPS.setText(Integer.toString(codigo));
-                    ProdSerEliminar.tf_nombrePS.setText(nombre);
-                    ProdSerEliminar.tf_costoPS.setText(Integer.toString(costo));
-                    ProdSerEliminar.tf_categoriaPS.setText(categoria);
-                    frame2.setVisible(true);
-                    frame2.setTitle("Eliminar Producto/Servicio");
-                    frame2.setLocationRelativeTo(null);
-                    frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    this.dispose();
-                    break;
-            case 3:
-                    break;
-        }
+        
     }//GEN-LAST:event_masterTableMouseClicked
 
     /**
@@ -403,6 +352,8 @@ public class ProdSerBuscar extends javax.swing.JFrame {
                 JFrame frame=new ProdSerBuscar();
                 frame.setVisible(true);
                 frame.setTitle("Buscar Producto/Servicio");
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
             }

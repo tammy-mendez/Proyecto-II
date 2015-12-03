@@ -7,20 +7,33 @@
 package view;
 
 import bean.Reserva;
+import java.awt.Image;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
  * @author Vladimir
  */
 public class BuscarReserva extends javax.swing.JFrame {
-    public int fila;
+    private int fila;
+    private int codigo;
     
 
     /**
@@ -91,6 +104,9 @@ public class BuscarReserva extends javax.swing.JFrame {
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${montoAbonado}"));
         columnBinding.setColumnName("Monto Abonado");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numPresupuesto.numPresupuesto}"));
+        columnBinding.setColumnName("Presupuesto");
+        columnBinding.setColumnClass(Integer.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         masterTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -100,8 +116,12 @@ public class BuscarReserva extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(masterTable);
         if (masterTable.getColumnModel().getColumnCount() > 0) {
+            masterTable.getColumnModel().getColumn(0).setPreferredWidth(40);
+            masterTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+            masterTable.getColumnModel().getColumn(2).setPreferredWidth(100);
             masterTable.getColumnModel().getColumn(6).setPreferredWidth(50);
             masterTable.getColumnModel().getColumn(9).setPreferredWidth(80);
+            masterTable.getColumnModel().getColumn(10).setPreferredWidth(50);
         }
 
         panel_BuscarRol.setBackground(new java.awt.Color(0, 153, 255));
@@ -115,10 +135,10 @@ public class BuscarReserva extends javax.swing.JFrame {
         panel_BuscarRol.setLayout(panel_BuscarRolLayout);
         panel_BuscarRolLayout.setHorizontalGroup(
             panel_BuscarRolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_BuscarRolLayout.createSequentialGroup()
-                .addGap(227, 227, 227)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_BuscarRolLayout.createSequentialGroup()
+                .addContainerGap(248, Short.MAX_VALUE)
                 .addComponent(lbl_BuscarRol)
-                .addContainerGap(255, Short.MAX_VALUE))
+                .addGap(234, 234, 234))
         );
         panel_BuscarRolLayout.setVerticalGroup(
             panel_BuscarRolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,6 +165,14 @@ public class BuscarReserva extends javax.swing.JFrame {
         lbl_filtro.setText("Buscar por:");
 
         list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Reserva", "Nombre", "Apellido", "Habitación", "Categoría", "CheckIn", "CheckOut" }));
+        list_filtros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                list_filtrosFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                list_filtrosFocusLost(evt);
+            }
+        });
 
         btn_buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/zoom.png"))); // NOI18N
         btn_buscar.setText("Buscar");
@@ -204,30 +232,30 @@ public class BuscarReserva extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(380, 380, 380)
-                        .addComponent(btn_cancelar))
+                        .addGap(163, 163, 163)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panel_BuscarRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 907, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1009, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(128, 128, 128)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(panel_BuscarRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                        .addGap(457, 457, 457)
+                        .addComponent(btn_cancelar)))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addContainerGap()
                 .addComponent(panel_BuscarRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addComponent(btn_cancelar)
-                .addGap(21, 21, 21))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -242,6 +270,13 @@ public class BuscarReserva extends javax.swing.JFrame {
         if (list_filtros.getSelectedItem()=="Habitación" || list_filtros.getSelectedItem()=="Reserva"){
             ch=evt.getKeyChar();
             if(!Character.isDigit(ch)){
+                getToolkit().beep();
+                evt.consume();
+            }
+        }
+         if (list_filtros.getSelectedItem()=="Categoría" || list_filtros.getSelectedItem()=="Nombre" || list_filtros.getSelectedItem()=="Apellido"){
+            ch=evt.getKeyChar();
+            if(Character.isDigit(ch)){
                 getToolkit().beep();
                 evt.consume();
             }
@@ -289,7 +324,7 @@ public class BuscarReserva extends javax.swing.JFrame {
             }
             else if(list_filtros.getSelectedItem()=="CheckIn"){
                  query=entityManager.createNativeQuery("SELECT * FROM reserva "
-                         + "WHERE STR_TO_DATE(checkIn, '%d/%m/%Y') >= "
+                         + "WHERE STR_TO_DATE(checkIn, '%Y-%m-%d')= "
                     +"'"+tf_valor.getText()+"'", Reserva.class);
                  List<Reserva> a=query.getResultList();
                  if(a.size()==0){
@@ -302,8 +337,9 @@ public class BuscarReserva extends javax.swing.JFrame {
                  return;
              }
             else if(list_filtros.getSelectedItem()=="CheckOut"){
-                 query=entityManager.createNativeQuery("SELECT * FROM reserva WHERE checkOut LIKE "
-                    +"'%"+tf_valor.getText()+"%'", Reserva.class);
+                  query=entityManager.createNativeQuery("SELECT * FROM reserva "
+                         + "WHERE STR_TO_DATE(checkOut, '%Y-%m-%d')= "
+                    +"'"+tf_valor.getText()+"'", Reserva.class);
                  List<Reserva> a=query.getResultList();
                  if(a.size()==0){
                      JOptionPane.showMessageDialog(null,"No se han encontrado registros para la fecha", "Error",JOptionPane.ERROR_MESSAGE);
@@ -322,7 +358,7 @@ public class BuscarReserva extends javax.swing.JFrame {
                     +tf_valor.getText(), Reserva.class);
                  List<Reserva> a=query.getResultList();
                  if(a.size()==0){
-                     JOptionPane.showMessageDialog(null,"No se han encontrado registros para la fecha", "Error",JOptionPane.ERROR_MESSAGE);
+                     JOptionPane.showMessageDialog(null,"No se han encontrado registros para la habitación", "Error",JOptionPane.ERROR_MESSAGE);
                      tf_valor.setText(null);
                      return;
                  }
@@ -366,7 +402,7 @@ public class BuscarReserva extends javax.swing.JFrame {
 
     private void btn_buscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btn_buscarFocusLost
         // TODO add your handling code here:
-        tf_valor.setText(null);
+     
     }//GEN-LAST:event_btn_buscarFocusLost
 
     private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
@@ -374,29 +410,29 @@ public class BuscarReserva extends javax.swing.JFrame {
       
       switch (MenuRecepcionista.opcion){
           case 1:
-                 fila = masterTable.getSelectedRow();
-                 ReservaEditar.reserva = obtenerReserva(fila);
-                 JFrame frame1=new ReservaEditar();
-                 frame1.setVisible(true);
-                 frame1.setTitle("Modificar Reserva");
-                 frame1.setLocationRelativeTo(null);
-                 frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                 this.dispose();
-                 break;
-          case 2:
-
-                 fila = masterTable.getSelectedRow();
-                 ReservaEliminar.reserva = obtenerReserva(fila);
-                 JFrame frame2=new ReservaEliminar();
-                 frame2.setVisible(true);
-                 frame2.setTitle("Eliminar Reserva");
-                 frame2.setLocationRelativeTo(null);
-                 frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                 this.dispose();    
-                 break;
-
-          case 3:
-              break;
+                fila = masterTable.getSelectedRow();
+                codigo=(Integer)masterTable.getValueAt(fila, 0);
+                this.dispose();
+                try
+                 {
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/hotel db", "root", "user");
+                    HashMap par = new HashMap();//no definimos ningún parámetro por eso lo dejamos así
+                    Map parametros=new HashMap();
+                    par.put("CodigoReserva",codigo);
+                    JasperPrint jp = JasperFillManager.fillReport("C:/Proyecto-II/src/reportes/contrato.jasper", par,con);//el primer parámetro es el camino del archivo, se cambia esta dirección por la dirección del archivo .jasper
+                    JasperViewer jv = new JasperViewer(jp,false);
+                    jv.setVisible(true);
+                    jv.setTitle("Contrato de Reserva");
+                    Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                    jv.setIconImage(icon);
+                    jv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
+                    catch(Exception e)
+                {
+                     e.printStackTrace();
+                 }
+                break;
       }
         
     }//GEN-LAST:event_masterTableMouseClicked
@@ -405,6 +441,20 @@ public class BuscarReserva extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_btn_cancelarActionPerformed
+
+    private void list_filtrosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_list_filtrosFocusLost
+        // TODO add your handling code here:
+         if(list_filtros.getSelectedItem()=="CheckIn" || list_filtros.getSelectedItem()=="CheckOut"){
+             Date fecha= new Date(); 
+            DateFormat formato=new SimpleDateFormat("yyyy-MM-dd");
+            tf_valor.setText(formato.format(fecha));   
+         }
+    }//GEN-LAST:event_list_filtrosFocusLost
+
+    private void list_filtrosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_list_filtrosFocusGained
+        // TODO add your handling code here:
+           tf_valor.setText(null);
+    }//GEN-LAST:event_list_filtrosFocusGained
 
     /**
      * @param args the command line arguments
@@ -439,6 +489,8 @@ public class BuscarReserva extends javax.swing.JFrame {
                 JFrame frame=new BuscarReserva();
                 frame.setVisible(true);
                 frame.setTitle("Buscar Reserva");
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
             }
@@ -462,21 +514,6 @@ public class BuscarReserva extends javax.swing.JFrame {
     private javax.swing.JTextField tf_valor;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-        private Reserva obtenerReserva(int fila) {
-            EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
-            EntityManager ema = fact.createEntityManager(); 
-            Query clienteQuery;
-            clienteQuery = ema.createNamedQuery("Reserva.findByCodigoReserva");
-            clienteQuery.setParameter("codigoReserva", Integer.parseInt(masterTable.getValueAt(fila, 0).toString()) );
-            Reserva reserva = null;
-            try{
-               reserva = (Reserva)clienteQuery.getSingleResult();
-               System.out.println(reserva);
-            }catch(javax.persistence.NoResultException e){
-                System.out.println(reserva);
-            }
-            ema.close();
-            return reserva;
-        }
+   
 
 }

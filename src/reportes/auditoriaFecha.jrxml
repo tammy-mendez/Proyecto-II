@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="851" pageHeight="595" orientation="Landscape" columnWidth="811" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="220d8776-82ac-453f-ac85-ef9b6b675bc8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FechaDesde" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaHasta" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     auditoria_sistema.`codigoAuditoria` AS auditoria_sistema_codigoAuditoria,
+     auditoria_sistema.`tabla` AS auditoria_sistema_tabla,
+     auditoria_sistema.`accion` AS auditoria_sistema_accion,
+     auditoria_sistema.`fechaHora` AS auditoria_sistema_fechaHora,
+     auditoria_sistema.`usuario` AS auditoria_sistema_usuario,
+     auditoria_sistema.`antes` AS auditoria_sistema_antes,
+     auditoria_sistema.`despues` AS auditoria_sistema_despues
+FROM
+     `auditoria_sistema` auditoria_sistema
+where str_to_date(fechaHora,'%d-%m-%Y')>=str_to_date($P{FechaDesde},'%d-%m-%Y') and str_to_date(fechaHora,'%d-%m-%Y')<=str_to_date($P{FechaHasta},'%d-%m-%Y')]]>
+	</queryString>
+	<field name="auditoria_sistema_codigoAuditoria" class="java.lang.Integer"/>
+	<field name="auditoria_sistema_tabla" class="java.lang.String"/>
+	<field name="auditoria_sistema_accion" class="java.lang.String"/>
+	<field name="auditoria_sistema_fechaHora" class="java.lang.String"/>
+	<field name="auditoria_sistema_usuario" class="java.lang.String"/>
+	<field name="auditoria_sistema_antes" class="java.lang.String"/>
+	<field name="auditoria_sistema_despues" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<image>
+				<reportElement uuid="45280752-cfbd-4857-8517-7e31e07389f2" x="211" y="11" width="45" height="60"/>
+				<imageExpression><![CDATA["C:\\Proyecto-II\\src\\imagenes\\logo1.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="9d10ad89-097f-4e0e-bc84-eafcb12f89e8" x="283" y="11" width="268" height="20" forecolor="#FF0000"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFORME DE AUDITORÍA DE SISTEMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7ceda491-ee01-4502-89b6-e9fbf6629cd6" x="283" y="40" width="42" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Del:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="1dfef61d-93ff-4f3a-a676-88340994b72d" x="325" y="40" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FechaDesde}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="7ceda491-ee01-4502-89b6-e9fbf6629cd6" x="444" y="40" width="42" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Al:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="1d33baa1-3aac-4984-9f1b-464f9473a233" x="486" y="40" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FechaHasta}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="15f09d06-95ec-48b4-af8c-17667d8c4544" x="0" y="0" width="811" height="20" forecolor="#000000" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="abc0104b-7c12-4c18-bf4a-93faee26e8e2" x="0" y="0" width="58" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="67b58ba2-e464-44b6-97c3-23ccd09b91e4" x="72" y="0" width="39" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tabla]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="537910cf-dce6-4c31-9100-cf82843e3426" x="155" y="0" width="46" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Acción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5d3e5b95-1f30-444b-91ec-9b3df0ca2469" x="240" y="0" width="66" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha/Hora]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="51dc36ba-5c81-4469-a3b8-f399fc31639d" x="332" y="0" width="39" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6a02506c-dfab-4017-8b76-fc61cb0c343b" x="386" y="0" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Antes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5ebf212a-499c-46d1-ac43-76bb9cc30f83" x="623" y="0" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Despues]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="1e895eb3-55c9-4707-98e6-6709af863a11" x="0" y="0" width="43" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{auditoria_sistema_codigoAuditoria}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="778b7e1d-2ef3-4c59-b6d4-daf2553743da" x="43" y="0" width="101" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{auditoria_sistema_tabla}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a5f12c90-fb24-4cf6-8ecf-1f699b796cc5" x="144" y="0" width="76" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{auditoria_sistema_accion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="270f77c4-3297-4d98-b4c7-38a1370c0bf3" x="229" y="0" width="96" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{auditoria_sistema_fechaHora}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bdd104f4-1167-4283-a0d1-7e21def7290d" x="332" y="0" width="54" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{auditoria_sistema_usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c9fcf022-fd86-494c-9864-47a79fe2de52" x="386" y="0" width="237" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{auditoria_sistema_antes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e2906517-a827-4cc7-92f4-a1697ec8e63e" x="623" y="0" width="188" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{auditoria_sistema_despues}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="e7d2751d-31a6-4759-8f3d-4d664a0e9b74" x="0" y="0" width="111" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b44fb8d0-2366-4a19-b4bb-555b14a2f857" x="431" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="77bae754-5b53-475f-a0ab-b65f301e6b76" x="511" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm">
+				<reportElement uuid="2e6ba19b-976c-4923-96da-c2ed764da00c" x="101" y="0" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -26,7 +26,7 @@ import javax.persistence.Transient;
 
 /**
  *
- * @author pc
+ * @author tammy
  */
 @Entity
 @Table(name = "orden_compra")
@@ -35,8 +35,7 @@ import javax.persistence.Transient;
     @NamedQuery(name = "OrdenCompra.findByCodOrden", query = "SELECT o FROM OrdenCompra o WHERE o.codOrden = :codOrden"),
     @NamedQuery(name = "OrdenCompra.findByFecha", query = "SELECT o FROM OrdenCompra o WHERE o.fecha = :fecha"),
     @NamedQuery(name = "OrdenCompra.findByCodProveedor", query = "SELECT o FROM OrdenCompra o WHERE o.codProveedor = :codProveedor")})
-  //  @NamedQuery(name = "OrdenCompra.findByDetalle", query = "SELECT o FROM OrdenCompra o WHERE o.detalle = :detalle")})
-public class OrdenCompra implements Serializable {
+ public class OrdenCompra implements Serializable {
     @Transient
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
@@ -48,18 +47,9 @@ public class OrdenCompra implements Serializable {
     @Basic(optional = false)
     @Column(name = "fecha")
     private String fecha;
-  //  @Basic(optional = false)
-  //  @Column(name = "detalle")
-   // private Collection<DetalleOrdenCompra> detalle;
-//    private List<DetalleOrdenCompra> detalle;
- // private List<Integer> detalle;
-  //private String detalle; 
     @JoinColumn(name = "cod_proveedor", referencedColumnName = "codigoProveedor")
     @ManyToOne
     private Proveedor codProveedor;
-  //  private Integer codDetalle;
-    //private Integer cant;
-    //private Integer codArticulo;
     public OrdenCompra() {
     }
 
@@ -67,12 +57,9 @@ public class OrdenCompra implements Serializable {
         this.codOrden = codOrden;
     }
 
-    public OrdenCompra(Integer codOrden, String fecha
-          //  , String detalle
-    ) {
+    public OrdenCompra(Integer codOrden, String fecha) {
         this.codOrden = codOrden;
         this.fecha = fecha;
-      // this.detalle = detalle;
     }
 
     public Integer getCodOrden() {
@@ -104,45 +91,6 @@ public class OrdenCompra implements Serializable {
         this.fecha = fecha;
         changeSupport.firePropertyChange("fecha", oldFecha, fecha);
     }
-
-/*
-    public String getDetalle() {
-    return detalle;
-    }
-    public void setDetalle(String detalle) {
-    this.detalle = detalle;
-    }
-     */
-/*        public Collection<DetalleOrdenCompra> getDetalle() {
-    return detalle;
-    }
-    public void setDetalle(Collection<DetalleOrdenCompra> detalle) {
-    this.detalle = detalle;
-    }*/
-    /*  public List<DetalleOrdenCompra> getDetalle() {
-    return detalle;
-    }
-    public void setDetalle(List<DetalleOrdenCompra> detalle) {
-    int cant;
-    this.detalle = detalle;
-    }*/
-/*
-    public List<Integer> getDetalle() {
-    return detalle;
-    }
-    public void setDetalle(List<Integer> detalle) {
-    this.detalle = detalle;
-    }
-     */
-    /*public String getDetalle() {
-        return detalle;
-    }
-
-    public void setDetalle(String detalle) {
-        this.detalle = detalle;
-    }
-*/
-
     @Override
     public int hashCode() {
         int hash = 0;

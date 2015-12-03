@@ -6,8 +6,6 @@
 
 package bean;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -20,7 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  *
@@ -34,8 +31,6 @@ import javax.persistence.Transient;
     @NamedQuery(name = "DetalleCobro.findByForma", query = "SELECT d FROM DetalleCobro d WHERE d.forma = :forma"),
     @NamedQuery(name = "DetalleCobro.findByNumeroChTarj", query = "SELECT d FROM DetalleCobro d WHERE d.numeroChTarj = :numeroChTarj")})
 public class DetalleCobro implements Serializable {
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,9 +63,7 @@ public class DetalleCobro implements Serializable {
     }
 
     public void setIdDetalle(Integer idDetalle) {
-        Integer oldIdDetalle = this.idDetalle;
         this.idDetalle = idDetalle;
-        changeSupport.firePropertyChange("idDetalle", oldIdDetalle, idDetalle);
     }
 
     public String getForma() {
@@ -78,9 +71,7 @@ public class DetalleCobro implements Serializable {
     }
 
     public void setForma(String forma) {
-        String oldForma = this.forma;
         this.forma = forma;
-        changeSupport.firePropertyChange("forma", oldForma, forma);
     }
 
     public String getNumeroChTarj() {
@@ -88,9 +79,7 @@ public class DetalleCobro implements Serializable {
     }
 
     public void setNumeroChTarj(String numeroChTarj) {
-        String oldNumeroChTarj = this.numeroChTarj;
         this.numeroChTarj = numeroChTarj;
-        changeSupport.firePropertyChange("numeroChTarj", oldNumeroChTarj, numeroChTarj);
     }
 
     public Banco getIdBanco() {
@@ -98,9 +87,7 @@ public class DetalleCobro implements Serializable {
     }
 
     public void setIdBanco(Banco idBanco) {
-        Banco oldIdBanco = this.idBanco;
         this.idBanco = idBanco;
-        changeSupport.firePropertyChange("idBanco", oldIdBanco, idBanco);
     }
 
     @Override
@@ -126,14 +113,6 @@ public class DetalleCobro implements Serializable {
     @Override
     public String toString() {
         return  "idDetalle=" + idDetalle + ", forma=" + forma + ", numeroChTarj=" + numeroChTarj + ", idBanco=" + idBanco;
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
     }
 
   

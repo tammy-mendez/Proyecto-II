@@ -8,10 +8,12 @@ package view;
 
 import bean.AuditoriaSistema;
 import bean.Cliente;
+import java.awt.Image;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -22,6 +24,8 @@ import javax.swing.JOptionPane;
 public class ClienteEdit extends javax.swing.JFrame {
     private char ch;
     private int resp;
+    private int fila;
+    private Cliente cliente;
 
     /**
      * Creates new form ClienteEdit
@@ -38,6 +42,7 @@ public class ClienteEdit extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT c FROM Cliente c");
@@ -64,6 +69,14 @@ public class ClienteEdit extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         btn_cancelar = new javax.swing.JButton();
         btn_guardar = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        lbl_valor = new javax.swing.JLabel();
+        tf_valor = new javax.swing.JTextField();
+        lbl_filtro = new javax.swing.JLabel();
+        list_filtros = new javax.swing.JComboBox();
+        btn_buscar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        masterTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -107,7 +120,7 @@ public class ClienteEdit extends javax.swing.JFrame {
             }
         });
 
-        lbl_apellido.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_apellido.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_apellido.setText("Apellido:");
 
         tf_email.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -116,13 +129,13 @@ public class ClienteEdit extends javax.swing.JFrame {
             }
         });
 
-        lbl_direccion.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_direccion.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_direccion.setText("Dirección:");
 
-        lbl_cedula.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_cedula.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_cedula.setText("Cedula:");
 
-        lbl_ruc.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_ruc.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_ruc.setText("RUC:");
 
         tf_ruc.addActionListener(new java.awt.event.ActionListener() {
@@ -136,6 +149,9 @@ public class ClienteEdit extends javax.swing.JFrame {
             }
         });
         tf_ruc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_rucKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_rucKeyTyped(evt);
             }
@@ -152,12 +168,15 @@ public class ClienteEdit extends javax.swing.JFrame {
             }
         });
         tf_cedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_cedulaKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_cedulaKeyTyped(evt);
             }
         });
 
-        lbl_email.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_email.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_email.setText("Email:");
 
         tf_direccion.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -166,10 +185,10 @@ public class ClienteEdit extends javax.swing.JFrame {
             }
         });
 
-        lbl_nombre.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_nombre.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_nombre.setText("Nombre:");
 
-        lbl_telef.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_telef.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_telef.setText("Teléfono:");
 
         tf_nombre.addActionListener(new java.awt.event.ActionListener() {
@@ -183,11 +202,13 @@ public class ClienteEdit extends javax.swing.JFrame {
             }
         });
 
-        lbl_codigo.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_codigo.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_codigo.setText("Código:");
 
         tf_codigo.setEditable(false);
-        tf_codigo.setEnabled(false);
+        tf_codigo.setBackground(new java.awt.Color(0, 153, 255));
+        tf_codigo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_codigo.setForeground(new java.awt.Color(255, 255, 255));
         tf_codigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tf_codigoActionPerformed(evt);
@@ -202,64 +223,67 @@ public class ClienteEdit extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(lbl_nombre)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tf_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
-                            .addComponent(tf_ruc)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_codigo)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lbl_ruc)
-                                .addComponent(lbl_cedula)))
+                        .addComponent(lbl_codigo)
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_cedula)
-                            .addComponent(tf_codigo))))
-                .addGap(48, 48, 48)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_apellido)
-                    .addComponent(lbl_telef)
-                    .addComponent(lbl_direccion)
-                    .addComponent(lbl_email))
+                        .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_nombre)
+                        .addGap(18, 18, 18)
+                        .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_direccion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tf_direccion, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tf_email, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                    .addComponent(tf_direccion)
-                    .addComponent(tf_apellido)
-                    .addComponent(tf_telef))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_cedula)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tf_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(85, 85, 85)
+                        .addComponent(lbl_ruc)
+                        .addGap(18, 18, 18)
+                        .addComponent(tf_ruc, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_telef)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tf_telef, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbl_email)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tf_email, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_apellido)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tf_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 35, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_apellido)
                     .addComponent(lbl_codigo)
-                    .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_email)
+                    .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_cedula)
                     .addComponent(tf_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_cedula))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                    .addComponent(lbl_ruc)
+                    .addComponent(tf_ruc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_nombre)
+                    .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_apellido)
+                    .addComponent(tf_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_direccion)
                     .addComponent(tf_direccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_ruc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_ruc))
-                .addGap(36, 36, 36)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_nombre)
                     .addComponent(lbl_telef)
-                    .addComponent(tf_telef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34))
+                    .addComponent(tf_telef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_email)
+                    .addComponent(tf_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
@@ -302,32 +326,144 @@ public class ClienteEdit extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lbl_valor.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_valor.setText("Valor:");
+
+        tf_valor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_valorActionPerformed(evt);
+            }
+        });
+        tf_valor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tf_valorKeyTyped(evt);
+            }
+        });
+
+        lbl_filtro.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_filtro.setText("Buscar por:");
+
+        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código", "Cedula", "Nombre", "Apellido", " " }));
+
+        btn_buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/zoom.png"))); // NOI18N
+        btn_buscar.setText("Buscar");
+        btn_buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_buscarActionPerformed(evt);
+            }
+        });
+        btn_buscar.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                btn_buscarFocusLost(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(lbl_filtro)
+                .addGap(18, 18, 18)
+                .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addComponent(lbl_valor)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_buscar)
+                .addGap(36, 36, 36))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_filtro)
+                    .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_valor)
+                    .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_buscar))
+                .addContainerGap())
+        );
+
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, list, masterTable);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoCliente}"));
+        columnBinding.setColumnName("Cliente");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cedula}"));
+        columnBinding.setColumnName("Cedula");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${ruc}"));
+        columnBinding.setColumnName("Ruc");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nombre}"));
+        columnBinding.setColumnName("Nombre");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${apellido}"));
+        columnBinding.setColumnName("Apellido");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${direccion}"));
+        columnBinding.setColumnName("Direccion");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${email}"));
+        columnBinding.setColumnName("Email");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefono}"));
+        columnBinding.setColumnName("Telefono");
+        columnBinding.setColumnClass(Integer.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        masterTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                masterTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(masterTable);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panel_editarC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(251, 251, 251)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1))))
+                .addContainerGap(34, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(187, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(178, 178, 178))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_editarC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(108, 108, 108))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel_editarC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
+
+        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -352,7 +488,7 @@ public class ClienteEdit extends javax.swing.JFrame {
     }//GEN-LAST:event_tf_apellidoKeyTyped
 
     private void tf_telefKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_telefKeyTyped
-       int limite=10;
+       int limite=11;
         if(tf_telef.getText().length()==limite){
             getToolkit().beep();
             evt.consume(); //se le ignora
@@ -380,6 +516,20 @@ public class ClienteEdit extends javax.swing.JFrame {
 
     private void tf_rucFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_rucFocusLost
         // TODO add your handling code here:
+          int codigo;
+          if(tf_ruc.getText().length()!=0){//si el ruc no es nulo
+                    query=entityManager.createNamedQuery("Cliente.findByRuc");
+                    query.setParameter("ruc", tf_ruc.getText().toLowerCase());
+                    List<Cliente> clie=query.getResultList();
+                    if(clie.size()!=0){
+                        codigo=clie.get(0).getCodigoCliente();
+                        if(Integer.parseInt(tf_codigo.getText())!=codigo){//pregunta si esta intentando cambiar por un numero de cedula ya existente
+                            JOptionPane.showMessageDialog(null,"El numero de RUC ya ha sido registrado", "Error",JOptionPane.ERROR_MESSAGE);
+                            tf_ruc.setText(null);
+                            tf_ruc.requestFocus();
+                        }  
+                     }  
+             } 
           
     }//GEN-LAST:event_tf_rucFocusLost
 
@@ -397,8 +547,23 @@ public class ClienteEdit extends javax.swing.JFrame {
     }//GEN-LAST:event_tf_cedulaActionPerformed
 
     private void tf_cedulaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_cedulaFocusLost
-        // TODO add your handling code here:
-        
+        // TODO add your handling code here: 
+          int codigo;
+               if(tf_cedula.getText().length()==0){
+                   tf_cedula.requestFocus();
+                   return;
+               }
+              query=entityManager.createNamedQuery("Cliente.findByCedula");
+              query.setParameter("cedula", tf_cedula.getText());
+              List<Cliente> c=query.getResultList();
+              if(c.size()!=0){
+                    codigo=c.get(0).getCodigoCliente();
+                    if(Integer.parseInt(tf_codigo.getText())!=codigo){//pregunta si esta intentando cambiar por un numero de cedula ya existente
+                            JOptionPane.showMessageDialog(null,"El numero de cedula ya ha sido registrado", "Error",JOptionPane.ERROR_MESSAGE);
+                            tf_cedula.setText(null);
+                            tf_cedula.requestFocus();
+                     }
+                }
     }//GEN-LAST:event_tf_cedulaFocusLost
 
     private void tf_cedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_cedulaKeyTyped
@@ -450,36 +615,39 @@ public class ClienteEdit extends javax.swing.JFrame {
         String antes;
         String despues;
         int codigo;
-          if(tf_cedula.getText().length()==0 || tf_nombre.getText().length()==0
-             || tf_apellido.getText().length()==0 || tf_email.getText().length()==0
-              || tf_direccion.getText().length()==0 || tf_telef.getText().length()==0  ){
-             JOptionPane.showMessageDialog(null,"No se permiten campos con valores nulos", "Error",JOptionPane.ERROR_MESSAGE);
-             return;    
-        }else{
+        // verifica nuevamente si la cedula no esta repetida
               query=entityManager.createNamedQuery("Cliente.findByCedula");
               query.setParameter("cedula", tf_cedula.getText());
               List<Cliente> c=query.getResultList();
               if(c.size()!=0){
-                    codigo=c.get(0).getCodigoCliente();
+                     codigo=c.get(0).getCodigoCliente();
                     if(Integer.parseInt(tf_codigo.getText())!=codigo){//pregunta si esta intentando cambiar por un numero de cedula ya existente
-                            JOptionPane.showMessageDialog(null,"El numero de cedula ya ha sido registrado", "Error",JOptionPane.ERROR_MESSAGE);
                             tf_cedula.setText(null);
+                            tf_cedula.requestFocus();
                             return;
                      }
                 }
-               if(tf_ruc.getText().length()!=0){//si el ruc no es nulo
-                    query=entityManager.createNamedQuery("Cliente.findByRuc");
+              //verifica nuevamente si el ruc no esta repetida
+              if(tf_ruc.getText().length()!=0){
+                  query=entityManager.createNamedQuery("Cliente.findByRuc");
                     query.setParameter("ruc", tf_ruc.getText().toLowerCase());
                     List<Cliente> clie=query.getResultList();
                     if(clie.size()!=0){
                         codigo=clie.get(0).getCodigoCliente();
                         if(Integer.parseInt(tf_codigo.getText())!=codigo){//pregunta si esta intentando cambiar por un numero de cedula ya existente
-                            JOptionPane.showMessageDialog(null,"El numero de RUC ya ha sido registrado", "Error",JOptionPane.ERROR_MESSAGE);
                             tf_ruc.setText(null);
+                            tf_ruc.requestFocus();
                             return;
                         }  
-                     }  
-                } 
+                   }      
+              }
+              
+          if(tf_cedula.getText().length()==0 || tf_nombre.getText().length()==0
+             || tf_apellido.getText().length()==0 
+              || tf_direccion.getText().length()==0 || tf_telef.getText().length()==0  ){
+             JOptionPane.showMessageDialog(null,"No se permiten campos con valores nulos", "Error",JOptionPane.ERROR_MESSAGE);
+             return;    
+             }          
               resp=  JOptionPane.showConfirmDialog(null,"Desea guardar los cambios?", "Confirmar Modificación",JOptionPane.YES_NO_OPTION );
               if (resp==JOptionPane.YES_OPTION){
                    query=entityManager.createNamedQuery("Cliente.findByCodigoCliente");
@@ -495,7 +663,7 @@ public class ClienteEdit extends javax.swing.JFrame {
                     cli.setApellido(tf_apellido.getText().toLowerCase());
                     cli.setDireccion(tf_direccion.getText().toLowerCase());
                     cli.setEmail(tf_email.getText().toLowerCase());
-                    cli.setTelefono(Integer.parseInt(tf_telef.getText()));
+                    cli.setTelefono(tf_telef.getText());
                     entityManager.getTransaction().begin();
                     entityManager.merge(cli);
                     entityManager.flush();
@@ -514,14 +682,161 @@ public class ClienteEdit extends javax.swing.JFrame {
                      as.setDespues(despues);
                      entityManager.persist(as);
                      entityManager.getTransaction().commit();
-                     entityManager.close();
+                    // entityManager.close();
                      JOptionPane.showMessageDialog(null, "Modificación Exitosa");
+                     //actualizamos la tabla
+                     resetear();
+                    list.remove(cl.get(0));
+                    list.add(cli);
                      
+              }else{
+                    this.dispose();
               }
-          }
-          this.dispose();
+         
+          
     }//GEN-LAST:event_btn_guardarActionPerformed
 
+    private void tf_valorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_valorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_valorActionPerformed
+
+    private void tf_valorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_valorKeyTyped
+        // TODO add your handling code here:
+        if(list_filtros.getSelectedItem()=="Nombre" || list_filtros.getSelectedItem()=="Apellido"){
+            ch=evt.getKeyChar();
+            if(Character.isDigit(ch)){
+                getToolkit().beep();
+                evt.consume();
+            }
+        }else{
+            if(list_filtros.getSelectedItem()=="Código"){
+                ch=evt.getKeyChar();
+                if(!Character.isDigit(ch)){
+                    getToolkit().beep();
+                    evt.consume();
+                }
+
+            }
+        }
+    }//GEN-LAST:event_tf_valorKeyTyped
+
+    private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
+        // TODO add your handling code here:
+       int id;
+        if (tf_valor.getText().length()==0){
+            JOptionPane.showMessageDialog(null,"Ingrese algún valor para efectuar la búsqueda", "Advertencia",JOptionPane.ERROR_MESSAGE);
+            return;
+        }else{
+            if(list_filtros.getSelectedItem()=="Código"){
+                id=Integer.parseInt(tf_valor.getText());
+                query=entityManager.createNamedQuery( "Cliente.findByCodigoCliente");
+                query.setParameter("codigoCliente", id);
+                List<Cliente> c=query.getResultList();
+                if (c.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Código inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(c);
+
+            }
+            if(list_filtros.getSelectedItem()=="Cedula"){
+                query = entityManager.createNativeQuery( "SELECT * FROM cliente WHERE cedula LIKE "
+                    +"'%"+tf_valor.getText()+"%'", Cliente.class);
+                List<Cliente> c=query.getResultList();
+                if (c.size()==0){
+                    JOptionPane.showMessageDialog(null,"Cédula inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(c);
+
+            }
+            if(list_filtros.getSelectedItem()=="Nombre"){
+                query = entityManager.createNativeQuery( "SELECT * FROM cliente WHERE nombre LIKE "
+                    +"'%"+tf_valor.getText()+"%'", Cliente.class);
+                List<Cliente> c=query.getResultList();
+                if (c.size()==0){
+                    JOptionPane.showMessageDialog(null,"Nombre de cliente inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(c);
+
+            }
+            if(list_filtros.getSelectedItem()=="Apellido"){
+                query = entityManager.createNativeQuery( "SELECT * FROM cliente WHERE apellido LIKE "
+                    +"'%"+tf_valor.getText()+"%'", Cliente.class);
+                List<Cliente> c=query.getResultList();
+                if (c.size()==0){
+                    JOptionPane.showMessageDialog(null,"Apellido de cliente inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(c);
+
+            }
+        }
+
+    }//GEN-LAST:event_btn_buscarActionPerformed
+
+    private void btn_buscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btn_buscarFocusLost
+        // TODO add your handling code here:
+        tf_valor.setText(null);
+    }//GEN-LAST:event_btn_buscarFocusLost
+
+    private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
+        // TODO add your handling code here:
+        fila=masterTable.getSelectedRow();
+        obtenerCliente(fila);
+         inicializarCliente();
+    }//GEN-LAST:event_masterTableMouseClicked
+
+    private void tf_cedulaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_cedulaKeyReleased
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_tf_cedulaKeyReleased
+
+    private void tf_rucKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_rucKeyReleased
+        // TODO add your handling code here:
+         
+    }//GEN-LAST:event_tf_rucKeyReleased
+    private void obtenerCliente(int fila) {
+            query = entityManager.createNamedQuery("Cliente.findByCodigoCliente");
+            query.setParameter("codigoCliente", Integer.parseInt(masterTable.getValueAt(fila, 0).toString()) );
+           
+            try{
+               cliente = (Cliente)query.getSingleResult();
+               System.out.println(cliente);
+            }catch(javax.persistence.NoResultException e){
+                System.out.println(cliente);
+            }
+      }
+    private void inicializarCliente(){
+        tf_codigo.setText(Integer.toString(cliente.getCodigoCliente()));
+        tf_nombre.setText(cliente.getNombre());
+        tf_apellido.setText(cliente.getApellido());
+        tf_cedula.setText(cliente.getCedula());
+        tf_ruc.setText(cliente.getRuc());
+        tf_direccion.setText(cliente.getDireccion());
+        tf_telef.setText(cliente.getTelefono());
+        tf_email.setText(cliente.getEmail());
+      
+     }   
+    private void resetear(){
+         tf_codigo.setText(null);
+        tf_nombre.setText(null);
+        tf_apellido.setText(null);
+        tf_cedula.setText(null);
+        tf_ruc.setText(null);
+        tf_direccion.setText(null);
+        tf_telef.setText(null);
+        tf_email.setText(null);
+    }
     /**
      * @param args the command line arguments
      */
@@ -555,6 +870,8 @@ public class ClienteEdit extends javax.swing.JFrame {
                 JFrame frame=new ClienteEdit();
                 frame.setVisible(true);
                 frame.setTitle("Modificar Cliente");
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
             }
@@ -562,30 +879,39 @@ public class ClienteEdit extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_buscar;
     private javax.swing.JButton btn_cancelar;
     private javax.swing.JButton btn_guardar;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_EditarC;
     private javax.swing.JLabel lbl_apellido;
     private javax.swing.JLabel lbl_cedula;
     private javax.swing.JLabel lbl_codigo;
     private javax.swing.JLabel lbl_direccion;
     private javax.swing.JLabel lbl_email;
+    private javax.swing.JLabel lbl_filtro;
     private javax.swing.JLabel lbl_nombre;
     private javax.swing.JLabel lbl_ruc;
     private javax.swing.JLabel lbl_telef;
+    private javax.swing.JLabel lbl_valor;
     private java.util.List<bean.Cliente> list;
+    private javax.swing.JComboBox list_filtros;
+    private javax.swing.JTable masterTable;
     private javax.swing.JPanel panel_editarC;
     private javax.persistence.Query query;
-    public static javax.swing.JTextField tf_apellido;
-    public static javax.swing.JTextField tf_cedula;
-    public static javax.swing.JTextField tf_codigo;
-    public static javax.swing.JTextField tf_direccion;
-    public static javax.swing.JTextField tf_email;
-    public static javax.swing.JTextField tf_nombre;
-    public static javax.swing.JTextField tf_ruc;
-    public static javax.swing.JTextField tf_telef;
+    private javax.swing.JTextField tf_apellido;
+    private javax.swing.JTextField tf_cedula;
+    private javax.swing.JTextField tf_codigo;
+    private javax.swing.JTextField tf_direccion;
+    private javax.swing.JTextField tf_email;
+    private javax.swing.JTextField tf_nombre;
+    private javax.swing.JTextField tf_ruc;
+    private javax.swing.JTextField tf_telef;
+    private javax.swing.JTextField tf_valor;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

@@ -456,7 +456,6 @@ tabla.setVisible(true);
                    DetalleOrdenCompra detalleOC= new DetalleOrdenCompra();
                    detalleOC.setCantidadPedida(art.getCantidadMaxima()-art.getCantidadStock());
                    detalleOC.setCodArticulo(art);
-                   detalleOC.setCodProveedor(art.getCodigoProveedor());
                    detalleOC.setEstado("pendiente");
                    entityManager.persist(detalleOC);
                    entityManager.flush();

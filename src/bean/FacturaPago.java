@@ -26,7 +26,7 @@ import javax.persistence.Transient;
 
 /**
  *
- * @author pc
+ * @author tammy
  */
 @Entity
 @Table(name = "factura_pago")
@@ -34,15 +34,14 @@ import javax.persistence.Transient;
     @NamedQuery(name = "FacturaPago.findAll", query = "SELECT f FROM FacturaPago f"),
     @NamedQuery(name = "FacturaPago.findByNumFactura", query = "SELECT f FROM FacturaPago f WHERE f.numFactura = :numFactura"),
     @NamedQuery(name = "FacturaPago.findByFecha", query = "SELECT f FROM FacturaPago f WHERE f.fecha = :fecha"),
-    @NamedQuery(name = "FacturaPago.findByOrdenCompra", query = "SELECT f FROM FacturaPago f WHERE f.ordenCompra = :ordenCompra"),
+ //   @NamedQuery(name = "FacturaPago.findByOrdenCompra", query = "SELECT f FROM FacturaPago f WHERE f.ordenCompra = :ordenCompra"),
     @NamedQuery(name = "FacturaPago.findByEstado", query = "SELECT f FROM FacturaPago f WHERE f.estado = :estado"),
     @NamedQuery(name = "FacturaPago.findByMontoTotal", query = "SELECT f FROM FacturaPago f WHERE f.montoTotal = :montoTotal"),
     @NamedQuery(name = "FacturaPago.findByMontoTotalIva", query = "SELECT f FROM FacturaPago f WHERE f.montoTotalIva = :montoTotalIva"),
-    @NamedQuery(name = "FacturaPago.findByFechaVence", query = "SELECT f FROM FacturaPago f WHERE f.fechaVence = :fechaVence"),
-    @NamedQuery(name = "FacturaPago.findByCodProveedor", query = "SELECT f FROM FacturaPago f WHERE f.codProveedor = :codProveedor")})
-public class FacturaPago implements Serializable {
-  //  @OneToMany(cascade = CascadeType.ALL, mappedBy = "numfacturaPago")
- //   private Collection<Pago> pagoCollection;
+    @NamedQuery(name = "FacturaPago.findByFechaVence", query = "SELECT f FROM FacturaPago f WHERE f.fechaVence = :fechaVence")//,
+ //   @NamedQuery(name = "FacturaPago.findByCodProveedor", query = "SELECT f FROM FacturaPago f WHERE f.codProveedor = :codProveedor")
+})
+   public class FacturaPago implements Serializable {
    @Transient
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
@@ -53,8 +52,8 @@ public class FacturaPago implements Serializable {
     @Basic(optional = false)
     @Column(name = "fecha")
     private String fecha;
-    @Column(name = "orden_compra")
-    private Integer ordenCompra;
+   // @Column(name = "orden_compra")
+  //  private Integer ordenCompra;
     @Column(name = "estado")
     private String estado;
     @Column(name = "monto_total")
@@ -65,9 +64,9 @@ public class FacturaPago implements Serializable {
      @Column(name = "fecha_vence")
     private String fechaVence;
    
-    @JoinColumn(name = "cod_proveedor", referencedColumnName = "codigoProveedor")
+  /*  @JoinColumn(name = "cod_proveedor", referencedColumnName = "codigoProveedor")
     @ManyToOne
-    private Proveedor codProveedor;
+    private Proveedor codProveedor;*/
 /*    private Collection<DetalleFacturacompra> detalleFacturaCompra;
 
     public Collection<DetalleFacturacompra> getDetalleFacturaCompra() {
@@ -132,7 +131,7 @@ public class FacturaPago implements Serializable {
         changeSupport.firePropertyChange("fecha_vence", oldFecha_vence, fecha_vence);
     }
 */
-    public Integer getOrdenCompra() {
+  /*  public Integer getOrdenCompra() {
         return ordenCompra;
     }
 
@@ -141,7 +140,7 @@ public class FacturaPago implements Serializable {
         this.ordenCompra = ordenCompra;
         changeSupport.firePropertyChange("ordenCompra", oldOrdenCompra, ordenCompra);
     }
-
+*/
     /*  public String getFormaPago() {
     return formaPago;
     }
@@ -181,7 +180,7 @@ public class FacturaPago implements Serializable {
         changeSupport.firePropertyChange("montoTotalIva", oldMontoTotalIva, montoTotalIva);
     }
 
-    public Proveedor getCodProveedor() {
+ /*   public Proveedor getCodProveedor() {
         return codProveedor;
     }
 
@@ -189,7 +188,7 @@ public class FacturaPago implements Serializable {
         Proveedor oldCodProveedor = this.codProveedor;
         this.codProveedor = codProveedor;
         changeSupport.firePropertyChange("codProveedor", oldCodProveedor, codProveedor);
-    }
+    }*/
 
     @Override
     public int hashCode() {

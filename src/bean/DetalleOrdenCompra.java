@@ -24,7 +24,7 @@ import javax.persistence.Transient;
 
 /**
  *
- * @author pc
+ * @author tammy
  */
 @Entity
 @Table(name = "detalle_orden_compra")
@@ -34,7 +34,7 @@ import javax.persistence.Transient;
     @NamedQuery(name = "DetalleOrdenCompra.findByCantidadPedida", query = "SELECT d FROM DetalleOrdenCompra d WHERE d.cantidadPedida = :cantidadPedida"),
     @NamedQuery(name = "DetalleOrdenCompra.findByCantidadRecibida", query = "SELECT d FROM DetalleOrdenCompra d WHERE d.cantidadRecibida = :cantidadRecibida"),
     @NamedQuery(name = "DetalleOrdenCompra.findByCodArticulo", query = "SELECT d FROM DetalleOrdenCompra d WHERE d.codArticulo = :codArticulo"),
-    @NamedQuery(name = "DetalleOrdenCompra.findByCodProveedor", query = "SELECT d FROM DetalleOrdenCompra d WHERE d.codProveedor = :codProveedor"),
+   // @NamedQuery(name = "DetalleOrdenCompra.findByCodProveedor", query = "SELECT d FROM DetalleOrdenCompra d WHERE d.codProveedor = :codProveedor"),
     @NamedQuery(name = "DetalleOrdenCompra.findByCodOrden", query = "SELECT d FROM DetalleOrdenCompra d WHERE d.codOrden = :codOrden"),
     @NamedQuery(name = "DetalleOrdenCompra.findByEstado", query = "SELECT d FROM DetalleOrdenCompra d WHERE d.estado = :estado")})
 public class DetalleOrdenCompra implements Serializable {
@@ -46,9 +46,9 @@ public class DetalleOrdenCompra implements Serializable {
     @Basic(optional = false)
     @Column(name = "cod_detalle")
     private Integer codDetalle;
-    @Basic(optional = false)
-    @Column(name = "cod_orden")
-    private Integer codOrden;
+   // @Basic(optional = false)
+    //@Column(name = "cod_orden")
+   // private Integer codOrden;
     
     @Basic(optional = false)
     @Column(name = "cantidadPedida")
@@ -58,10 +58,13 @@ public class DetalleOrdenCompra implements Serializable {
     private int cantidadRecibida;
     @Column(name = "estado")
     private String estado;
-        @JoinColumn(name = "cod_proveedor", referencedColumnName = "codigoProveedor")
+    /*@JoinColumn(name = "cod_proveedor", referencedColumnName = "codigoProveedor")
     @ManyToOne
-    private Proveedor codProveedor;
-@JoinColumn(name = "cod_articulo", referencedColumnName = "codigoArticulo")
+    private Proveedor codProveedor;*/
+    @JoinColumn(name = "cod_orden", referencedColumnName = "cod_orden")
+    @ManyToOne
+    private OrdenCompra codOrden;
+    @JoinColumn(name = "cod_articulo", referencedColumnName = "codigoArticulo")
    @ManyToOne
    private Articulo codArticulo;
 
@@ -110,7 +113,7 @@ public class DetalleOrdenCompra implements Serializable {
         changeSupport.firePropertyChange("estado", oldEstado, estado);
     }
 
-    public Proveedor getCodProveedor() {
+   /* public Proveedor getCodProveedor() {
         return codProveedor;
     }
 
@@ -118,7 +121,7 @@ public class DetalleOrdenCompra implements Serializable {
         Proveedor oldCodProveedor = this.codProveedor;
         this.codProveedor = codProveedor;
         changeSupport.firePropertyChange("codProveedor", oldCodProveedor, codProveedor);
-    }
+    }*/
 
     public Articulo getCodArticulo() {
         return codArticulo;
@@ -173,12 +176,20 @@ public class DetalleOrdenCompra implements Serializable {
         changeSupport.removePropertyChangeListener(listener);
     }
 
-    public Integer getCodOrden() {
+    /*  public Integer getCodOrden() {
+    return codOrden;
+    }
+    public void setCodOrden(Integer codOrden) {
+    Integer oldCodOrden = this.codOrden;
+    this.codOrden = codOrden;
+    changeSupport.firePropertyChange("codOrden", oldCodOrden, codOrden);
+    }*/
+    public OrdenCompra getCodOrden() {
         return codOrden;
     }
 
-    public void setCodOrden(Integer codOrden) {
-        Integer oldCodOrden = this.codOrden;
+    public void setCodOrden(OrdenCompra codOrden) {
+        OrdenCompra oldCodOrden = this.codOrden;
         this.codOrden = codOrden;
         changeSupport.firePropertyChange("codOrden", oldCodOrden, codOrden);
     }

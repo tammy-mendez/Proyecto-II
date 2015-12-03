@@ -14,7 +14,6 @@ import bean.FacturaPago;
 import bean.Informerecepcion;
 import bean.OrdenCompra;
 import bean.Proveedor;
-import bean.TablaOrdenCompra;
 import java.awt.EventQueue;
 import java.beans.Beans;
 import java.sql.Connection;
@@ -775,8 +774,11 @@ private static int totalCompra = 0, totaliva=0;
                          System.out.println("Formateo de fechas fallido");
                      }
                    Informerecepcion i = new Informerecepcion();
-                   i.setCodOC(Integer.parseInt(tf_oc.getText()));
-                   i.setNroFactura(Integer.parseInt(numero));
+                    OrdenCompra oc1 = obtenerOrdenCompra(Integer.valueOf(tf_oc.getText()));
+                   i.setCodOC(oc1);
+                  // i.setCodOC(Integer.parseInt(tf_oc.getText()));
+                   FacturaPago fp1= obtenerFactura(Integer.parseInt(numero));
+                   i.setNroFactura(fp1);
                    i.setFecha(d);
                    i.setFechaVto(f);
 
@@ -787,14 +789,14 @@ private static int totalCompra = 0, totaliva=0;
                  
                  FacturaPago fp=new FacturaPago();
                    fp.setFecha(d);
-                   fp.setOrdenCompra(Integer.parseInt(tf_oc.getText()));
+                 //  fp.setOrdenCompra(Integer.parseInt(tf_oc.getText()));
                    fp.setEstado("pendiente");
                    fp.setMontoTotal(Integer.parseInt(txt_total.getText()));
                    fp.setMontoTotalIva(Integer.parseInt(txtIva.getText()));
                    fp.setNumFactura(Integer.parseInt(numero));
                    fp.setFechaVence(f);
                    Proveedor pr= obtenerProveedor(tf_proveedor.getText());
-                   fp.setCodProveedor(pr);
+//                   fp.setCodProveedor(pr);
                    /*******************************/
                    entityManager.persist(fp);
                    //REGISTRAR DETALLE COMPRA
@@ -825,14 +827,15 @@ private static int totalCompra = 0, totaliva=0;
       List<DetalleOrdenCompra> cps=detalleOrdenCompraQuery.getResultList();
       if (!cps.isEmpty()){
           for (int j=0;j<cps.size();j++){
-                            DetalleOrdenCompra doc = new DetalleOrdenCompra();
+              DetalleOrdenCompra doc = new DetalleOrdenCompra();
               doc.setCantidadPedida(cps.get(j).getCantidadPedida());
               doc.setCodArticulo(cps.get(j).getCodArticulo());
               doc.setCodDetalle(cps.get(j).getCodDetalle());
               doc.setCantidadRecibida((Integer.parseInt(tablaCompra.getValueAt(k, 3).toString()))+cps.get(j).getCantidadRecibida());
-              
-              doc.setCodOrden(Integer.valueOf(tf_oc.getText()));
-              doc.setCodProveedor(cps.get(j).getCodProveedor());
+              OrdenCompra oc2 = obtenerOrdenCompra(Integer.valueOf(tf_oc.getText()));
+              doc.setCodOrden(oc2);
+             // doc.setCodOrden(oc1);
+              //doc.setCodProveedor(cps.get(j).getCodProveedor());
               if (((cps.get(j).getCantidadPedida())-(Integer.parseInt(cant)))==0){
                   doc.setEstado("recibido");
               }
@@ -1111,9 +1114,9 @@ private static int totalCompra = 0, totaliva=0;
              /* if (cps.get(j).getCantidadRecibida()==0){doc.setCantidadRecibida((Integer.parseInt(tablaCompra.getValueAt(k, 3).toString())));}
               else{}*/
               doc.setCantidadRecibida(cps.get(j).getCantidadRecibida()-(Integer.parseInt(tablaCompra.getValueAt(k, 3).toString())));
-              
-              doc.setCodOrden(Integer.valueOf(tf_oc.getText()));
-              doc.setCodProveedor(cps.get(j).getCodProveedor());
+              OrdenCompra oc1 = obtenerOrdenCompra(Integer.valueOf(tf_oc.getText()));
+              doc.setCodOrden(oc1);
+            //  doc.setCodProveedor(cps.get(j).getCodProveedor());
               doc.setEstado("solicitado");
                         entityManager.merge(doc);
                      entityManager.flush();
@@ -1672,46 +1675,6 @@ private DetalleOrdenCompra obtenerArticulos(int oc){
         ema.close();
         return nom;
     }
-private TablaOrdenCompra obtenerCantidad(int oc){
-        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
-        EntityManager ema = fact.createEntityManager();
-        Query query = ema.createNamedQuery("TablaOrdenCompra.findByCodigoOrden");
-        query.setParameter("codigoOrden",oc);
-        List<TablaOrdenCompra> a = query.getResultList();
-        TablaOrdenCompra nom = null;
-        try{
-            nom = a.get(0);
-        }catch(ArrayIndexOutOfBoundsException e){
-            System.out.println(e);
-        }catch(NullPointerException e){
-            System.out.println(e);
-        }catch(Exception e){
-            System.out.println("Algo pasó");
-        }
-        
-        ema.close();
-        return nom;
-    }
-private Informerecepcion obtenerFecha(int factura){
-        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
-        EntityManager ema = fact.createEntityManager();
-        Query query = ema.createNamedQuery("Informerecepcion.findByNroFactura");
-        query.setParameter("nroFactura", factura);
-        List<Informerecepcion> a = query.getResultList();
-        Informerecepcion nom = null;
-        try{
-            nom = a.get(0);
-        }catch(ArrayIndexOutOfBoundsException e){
-            System.out.println(e);
-        }catch(NullPointerException e){
-            System.out.println(e);
-        }catch(Exception e){
-            System.out.println("Algo pasó");
-        }
-        
-        ema.close();
-        return nom;
-    }  
 
     private void registarFacturaDetalle() {
    detalleOrdenCompraQuery=entityManager.createNamedQuery( "DetalleOrdenCompra.findByCodOrden");
@@ -1733,7 +1696,7 @@ private Informerecepcion obtenerFecha(int factura){
            // cantidad = tc3.getCantidadPedida();
             nombreArticulo = tc3.getCodArticulo().getNombre();
             precio = tc3.getCodArticulo().getCosto();
-            tf_proveedor.setText(tc3.getCodProveedor().getRazonSocial());
+            tf_proveedor.setText(oc.get(i).getCodOrden().getCodProveedor().getRazonSocial());
             totalCompra = precio*cantidadRecibida;
             inicializar_factura_compra(nombreArticulo, precio, cantidadPedida,cantidadRecibida, codigo);
                 }
@@ -1934,8 +1897,10 @@ public static void vaciar() {
                         de.setCantidadPedida(oc.get(j).getCantidadPedida());
                         de.setCodArticulo(a);
                         de.setCodDetalle(oc.get(j).getCodDetalle());
-                        de.setCodOrden(Integer.parseInt(tf_oc.getText()));
-                        de.setCodProveedor(oc.get(j).getCodProveedor());
+                        OrdenCompra oc1 = obtenerOrdenCompra(Integer.valueOf(tf_oc.getText()));
+                        de.setCodOrden(oc1);
+                       // de.setCodOrden(Integer.parseInt(tf_oc.getText()));
+                       // de.setCodProveedor(oc.get(j).getCodProveedor());
                          de.setEstado("solicitado");
                          de.setCantidadRecibida(0);
                         entityManager.merge(de);
@@ -1947,39 +1912,7 @@ public static void vaciar() {
    }
 }
 
-    private void actualizarCantidadPendiente(String arti) {
-        Articulo a= obtenerArticulo(arti);
-        detalleOrdenCompraQuery =entityManager.createNativeQuery("select * from detalle_orden_compra"
-                +" where cod_articulo="+a.getCodigoArticulo()
-                +" and cod_orden="+Integer.parseInt(tf_oc.getText()) , DetalleOrdenCompra.class);
-     List<DetalleOrdenCompra> oc=detalleOrdenCompraQuery.getResultList();
-                if (oc.isEmpty()){
-                    JOptionPane.showMessageDialog(null,"no se encuentran detalles", "Error",JOptionPane.ERROR_MESSAGE);
-                   // tf_valor.setText(null);
-                    return;
-                }
-                else{   
-                    for (int j=0;j<oc.size();j++){
-                                      //     entityManager.getTransaction().begin();
-
-                        DetalleOrdenCompra de= new DetalleOrdenCompra();
-                        de.setCantidadPedida(oc.get(j).getCantidadPedida());
-                        de.setCodArticulo(a);
-                        de.setCodDetalle(oc.get(j).getCodDetalle());
-                        de.setCodOrden(Integer.parseInt(tf_oc.getText()));
-                        de.setCodProveedor(oc.get(j).getCodProveedor());
-                         de.setEstado("solicitado");
-                         de.setCantidadRecibida(Integer.parseInt(tf_cantidad.getText()));
-                        entityManager.merge(de);
-                     entityManager.flush();
-                        
-                    }
-                  //  DetalleOrdenCompra de= new DetalleOrdenCompra();
-                    //de.setCantidadPedida(oc.get(i));
-   }  
-    
-    
-    }
+ 
         private void registarFacturaDetalle1() {
    detalleOrdenCompraQuery=entityManager.createNamedQuery( "DetalleOrdenCompra.findByCodOrden");
                 detalleOrdenCompraQuery.setParameter("codOrden", Integer.valueOf(tf_oc.getText()));
@@ -1999,7 +1932,7 @@ public static void vaciar() {
             cantidadPedida= tc3.getCantidadPedida();
             nombreArticulo = tc3.getCodArticulo().getNombre();
             precio = tc3.getCodArticulo().getCosto();
-            tf_proveedor.setText(tc3.getCodProveedor().getRazonSocial());
+            tf_proveedor.setText(oc.get(i).getCodOrden().getCodProveedor().getRazonSocial());
             totalCompra = precio*cantidadRecibida;
             inicializar_factura_compra(nombreArticulo, precio, cantidadPedida,cantidadRecibida, codigo);
                 }
@@ -2025,5 +1958,44 @@ public static void vaciar() {
         ema.close();
         return nom;
     }
-
+         private FacturaPago obtenerFactura(int f){
+        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
+        EntityManager ema = fact.createEntityManager();
+        Query query = ema.createNamedQuery("FacturaPago.findByNumFactura");
+        query.setParameter("numFactura",f);
+        List<FacturaPago> a = query.getResultList();
+        FacturaPago nom = null;
+        try{
+            nom = a.get(0);
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.out.println(e);
+        }catch(NullPointerException e){
+            System.out.println(e);
+        }catch(Exception e){
+            System.out.println("Algo pasó");
+        }
+        
+        ema.close();
+        return nom;
+    }
+private OrdenCompra obtenerOrdenCompra(int codigo){
+        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
+        EntityManager ema = fact.createEntityManager();
+        Query query = ema.createNamedQuery("OrdenCompra.findByCodOrden");
+        query.setParameter("codOrden", codigo);
+        List<OrdenCompra> o = query.getResultList();
+        OrdenCompra nom = null;
+        try{
+            nom = o.get(0);
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.out.println(e);
+        }catch(NullPointerException e){
+            System.out.println(e);
+        }catch(Exception e){
+            System.out.println("Algo pasó");
+        }
+        
+        ema.close();
+        return nom;
+    }
 }

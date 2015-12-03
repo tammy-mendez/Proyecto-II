@@ -15,6 +15,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -22,7 +24,7 @@ import javax.persistence.Transient;
 
 /**
  *
- * @author pc
+ * @author tammy
  */
 @Entity
 @Table(name = "informerecepcion")
@@ -33,7 +35,6 @@ import javax.persistence.Transient;
     @NamedQuery(name = "Informerecepcion.findByNroFactura", query = "SELECT i FROM Informerecepcion i WHERE i.nroFactura = :nroFactura"),
     @NamedQuery(name = "Informerecepcion.findByFecha", query = "SELECT i FROM Informerecepcion i WHERE i.fecha = :fecha"),
     @NamedQuery(name = "Informerecepcion.findByFechaVto", query = "SELECT i FROM Informerecepcion i WHERE i.fechaVto = :fechaVto"),
-//    @NamedQuery(name = "Informerecepcion.findByUsuario", query = "SELECT i FROM Informerecepcion i WHERE i.usuario = :usuario")
 })
 public class Informerecepcion implements Serializable {
     @Transient
@@ -44,17 +45,20 @@ public class Informerecepcion implements Serializable {
     @Basic(optional = false)
     @Column(name = "codInformeRecepcion")
     private Integer codInformeRecepcion;
-    @Column(name = "codOC")
-    private Integer codOC;
-    @Column(name = "nroFactura")
-    private Integer nroFactura;
+    //@Column(name = "codOC")
+  //  private Integer codOC;
+   // @Column(name = "nroFactura")
+  //  private Integer nroFactura;
+    @JoinColumn(name = "codOC", referencedColumnName = "cod_orden")
+    @ManyToOne
+    private OrdenCompra codOC;
+    @JoinColumn(name = "nroFactura", referencedColumnName = "num_factura")
+    @ManyToOne
+    private FacturaPago nroFactura;
     @Column(name = "fecha")
     private String fecha;
     @Column(name = "fechaVto")
     private String fechaVto;
-//    @Column(name = "usuario")
-  //  private String usuario;
-
     public Informerecepcion() {
     }
 
@@ -71,7 +75,7 @@ public class Informerecepcion implements Serializable {
         this.codInformeRecepcion = codInformeRecepcion;
         changeSupport.firePropertyChange("codInformeRecepcion", oldCodInformeRecepcion, codInformeRecepcion);
     }
-
+/*
     public Integer getCodOC() {
         return codOC;
     }
@@ -90,6 +94,22 @@ public class Informerecepcion implements Serializable {
         Integer oldNroFactura = this.nroFactura;
         this.nroFactura = nroFactura;
         changeSupport.firePropertyChange("nroFactura", oldNroFactura, nroFactura);
+    }
+*/
+    public OrdenCompra getCodOC() {
+        return codOC;
+    }
+
+    public void setCodOC(OrdenCompra codOC) {
+        this.codOC = codOC;
+    }
+
+    public FacturaPago getNroFactura() {
+        return nroFactura;
+    }
+
+    public void setNroFactura(FacturaPago nroFactura) {
+        this.nroFactura = nroFactura;
     }
 
     public String getFecha() {
@@ -111,17 +131,6 @@ public class Informerecepcion implements Serializable {
         this.fechaVto = fechaVto;
         changeSupport.firePropertyChange("fechaVto", oldFechaVto, fechaVto);
     }
-
- /*   public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        String oldUsuario = this.usuario;
-        this.usuario = usuario;
-        changeSupport.firePropertyChange("usuario", oldUsuario, usuario);
-    }
-*/
     @Override
     public int hashCode() {
         int hash = 0;

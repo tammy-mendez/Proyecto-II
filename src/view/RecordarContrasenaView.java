@@ -14,7 +14,10 @@ package view;
 import bean.Correo;
 import bean.Empleado;
 import bean.Usuario;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -35,6 +38,7 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
     /** Creates new form RecordarContrasenaView */
     public RecordarContrasenaView() {
         initComponents();
+        lbl_nombreEmpleado.setVisible(false);
     }
 
     /** This method is called from within the constructor to
@@ -52,6 +56,9 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         lbl_codigo = new javax.swing.JLabel();
         tf_codempl = new javax.swing.JTextField();
+        jPanel3 = new javax.swing.JPanel();
+        lbl_nombreEmpleado = new javax.swing.JLabel();
+        lbl_nombre = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btn_aceptar = new javax.swing.JButton();
         btn_cancelar = new javax.swing.JButton();
@@ -73,10 +80,49 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
             }
         });
         tf_codempl.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tf_codemplKeyPressed(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_codemplKeyTyped(evt);
             }
         });
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+
+        lbl_nombreEmpleado.setFont(new java.awt.Font("Candara", 1, 13)); // NOI18N
+        lbl_nombreEmpleado.setText("Empleado: ");
+        lbl_nombreEmpleado.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lbl_nombreEmpleadoKeyPressed(evt);
+            }
+        });
+
+        lbl_nombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                lbl_nombreKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(54, Short.MAX_VALUE)
+                .addComponent(lbl_nombreEmpleado)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbl_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_nombreEmpleado)
+                    .addComponent(lbl_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -85,12 +131,16 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(77, 77, 77)
+                        .addGap(83, 83, 83)
                         .addComponent(lbl_codigo))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(128, 128, 128)
                         .addComponent(tf_codempl, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -99,7 +149,9 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
                 .addComponent(lbl_codigo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tf_codempl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 7, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
@@ -173,34 +225,37 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(117, 117, 117)
+                        .addGap(99, 99, 99)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
+                        .addGap(40, 40, 40)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
+                        .addGap(17, 17, 17)
                         .addComponent(panel_Recordar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
+                .addGap(21, 21, 21)
                 .addComponent(panel_Recordar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addGap(22, 22, 22)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(63, 63, 63)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
+                .addGap(18, 18, 18))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
-        // TODO add your handling code here:
-        this.setVisible(false);
+        // TODO add your handling code here
+        String args[]=new String[1];
+        args[0]="Ingreso al Sistema";
+        LoginView.main(args);            
+        this.dispose();
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
     private void tf_codemplKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_codemplKeyTyped
@@ -238,6 +293,7 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
             List<Usuario> u=query.getResultList();
             if(e.size()==0 ){
                 JOptionPane.showMessageDialog(null,"Identificación de Usuario inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                tf_codempl.setText(null);
                  return;
             }else{
                 receptor=e.get(0).getEmail();//obtenemos el email del usuario
@@ -252,10 +308,36 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
                }else{
                     JOptionPane.showMessageDialog(null,"Dirección de correo invalida", "Error",JOptionPane.ERROR_MESSAGE);
                }
+               String args[]=new String[1];
+               args[0]="Ingreso al Sistema";
+               LoginView.main(args);
+               this.dispose();
             }
         }
          this.dispose();
     }//GEN-LAST:event_btn_aceptarActionPerformed
+
+    private void lbl_nombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lbl_nombreKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbl_nombreKeyReleased
+
+    private void lbl_nombreEmpleadoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lbl_nombreEmpleadoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbl_nombreEmpleadoKeyPressed
+
+    private void tf_codemplKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_codemplKeyPressed
+        // TODO add your handling code here:
+        if(!tf_codempl.getText().equals("")){
+            if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+                obtenerUsuario();
+            }
+            if(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+                lbl_nombreEmpleado.setVisible(false);
+                lbl_nombre.setText(null);
+            }    
+        }
+        
+    }//GEN-LAST:event_tf_codemplKeyPressed
 
     /**
     * @param args the command line arguments
@@ -267,6 +349,8 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
                frame.setTitle("Recordar Contraseña");
                frame.setLocationRelativeTo(null);
                frame.setVisible(true);
+               Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+               frame.setIconImage(icon);
                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
         });
@@ -278,12 +362,29 @@ public class RecordarContrasenaView extends javax.swing.JFrame {
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbl_Recordar;
     private javax.swing.JLabel lbl_codigo;
+    private javax.swing.JLabel lbl_nombre;
+    private javax.swing.JLabel lbl_nombreEmpleado;
     private java.util.List<bean.Empleado> list;
     private javax.swing.JPanel panel_Recordar;
     private javax.persistence.Query query;
     private javax.swing.JTextField tf_codempl;
     // End of variables declaration//GEN-END:variables
-
+    private void obtenerUsuario(){
+        query = entityManager.createNamedQuery("Empleado.findByCodigoEmpleado");
+        query.setParameter("codigoEmpleado", Integer.parseInt(tf_codempl.getText()));
+        try{
+            Empleado empleado = (Empleado)query.getSingleResult();
+            lbl_nombre.setText(empleado.getNombre() + " " + empleado.getApellido());
+            lbl_nombreEmpleado.setVisible(true);
+        }catch(  javax.persistence.NoResultException | NumberFormatException e ){
+            JOptionPane.showMessageDialog(null, "Código de empleado inexistente",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            lbl_nombreEmpleado.setVisible(false);
+            lbl_nombre.setText(null);
+        }
+            
+    }
 }

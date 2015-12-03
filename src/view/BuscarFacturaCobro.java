@@ -6,26 +6,40 @@
 
 package view;
 
-import bean.FacturaCobro_1;
+import bean.ConsumoProSer;
+import bean.DetalleCobro;
+import bean.FacturaCobro;
+import bean.NumberToText;
 import bean.Reserva;
+import java.awt.Image;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
  * @author Jorge
  */
 public class BuscarFacturaCobro extends javax.swing.JFrame {
-
+    private int fila;
+    FacturaCobro fact=new FacturaCobro();
     /**
      * Creates new form BuscarFacturaCobro
      */
     public BuscarFacturaCobro() {
         initComponents();
+         DetalleList.clear();
     }
 
     /**
@@ -41,6 +55,8 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
         entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT f FROM FacturaCobro f");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
+        DetalleQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT c FROM ConsumoProSer c");
+        DetalleList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(DetalleQuery.getResultList());
         panel_BuscarFacturaCobro = new javax.swing.JPanel();
         lbl_BuscarFacturaCobro = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -51,6 +67,10 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
         btn_buscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel3 = new javax.swing.JPanel();
+        btn_generarFact = new javax.swing.JButton();
         btn_cancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -69,7 +89,7 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
             .addGroup(panel_BuscarFacturaCobroLayout.createSequentialGroup()
                 .addGap(191, 191, 191)
                 .addComponent(lbl_BuscarFacturaCobro)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(155, Short.MAX_VALUE))
         );
         panel_BuscarFacturaCobroLayout.setVerticalGroup(
             panel_BuscarFacturaCobroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,8 +115,11 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
         lbl_filtro.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
         lbl_filtro.setText("Buscar por:");
 
-        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Número Factura", "Condición de Pago", "Concepto", "Fecha", "Reserva", "Ruc Cliente", " " }));
+        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Número Factura", "Tipo Factura", "Forma Pago", "Concepto", "Fecha", "Reserva", "Ruc Cliente", " " }));
         list_filtros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                list_filtrosFocusGained(evt);
+            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 list_filtrosFocusLost(evt);
             }
@@ -152,6 +175,15 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${tipoFactura}"));
         columnBinding.setColumnName("Tipo Factura");
         columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${formaPago.forma}"));
+        columnBinding.setColumnName("Pago");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${formaPago.numeroChTarj}"));
+        columnBinding.setColumnName("Numero T/C");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${formaPago.idBanco.nombre}"));
+        columnBinding.setColumnName("Entidad");
+        columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${concepto}"));
         columnBinding.setColumnName("Concepto");
         columnBinding.setColumnClass(String.class);
@@ -169,12 +201,79 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
         columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
+        masterTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                masterTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(masterTable);
         if (masterTable.getColumnModel().getColumnCount() > 0) {
-            masterTable.getColumnModel().getColumn(0).setPreferredWidth(40);
-            masterTable.getColumnModel().getColumn(2).setPreferredWidth(100);
-            masterTable.getColumnModel().getColumn(3).setPreferredWidth(50);
+            masterTable.getColumnModel().getColumn(0).setPreferredWidth(30);
+            masterTable.getColumnModel().getColumn(3).setPreferredWidth(80);
+            masterTable.getColumnModel().getColumn(5).setPreferredWidth(100);
+            masterTable.getColumnModel().getColumn(6).setPreferredWidth(50);
+            masterTable.getColumnModel().getColumn(7).setPreferredWidth(30);
         }
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Detalle de Factura"));
+
+        masterTableDet.setEnabled(false);
+
+        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, DetalleList, masterTableDet);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoConsumo}"));
+        columnBinding.setColumnName(" Consumo");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoPS.nombre}"));
+        columnBinding.setColumnName("Descripción");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cantidad}"));
+        columnBinding.setColumnName("Cantidad");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoPS.costo}"));
+        columnBinding.setColumnName("Unitario");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${total}"));
+        columnBinding.setColumnName("Total");
+        columnBinding.setColumnClass(Integer.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        jScrollPane2.setViewportView(masterTableDet);
+        if (masterTableDet.getColumnModel().getColumnCount() > 0) {
+            masterTableDet.getColumnModel().getColumn(0).setPreferredWidth(30);
+            masterTableDet.getColumnModel().getColumn(1).setPreferredWidth(140);
+            masterTableDet.getColumnModel().getColumn(2).setPreferredWidth(15);
+            masterTableDet.getColumnModel().getColumn(3).setPreferredWidth(20);
+            masterTableDet.getColumnModel().getColumn(4).setPreferredWidth(20);
+        }
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 699, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btn_generarFact.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/table.png"))); // NOI18N
+        btn_generarFact.setText("Generar ");
+        btn_generarFact.setEnabled(false);
+        btn_generarFact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_generarFactActionPerformed(evt);
+            }
+        });
 
         btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/delete.png"))); // NOI18N
         btn_cancelar.setText("Cancelar");
@@ -184,37 +283,66 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(btn_generarFact)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addComponent(btn_cancelar)
+                .addGap(24, 24, 24))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_cancelar)
+                    .addComponent(btn_generarFact, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panel_BuscarFacturaCobro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(170, 170, 170))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(133, 133, 133))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(338, 338, 338)
-                        .addComponent(btn_cancelar))
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 953, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 731, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(panel_BuscarFacturaCobro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(44, Short.MAX_VALUE))
+                        .addGap(348, 348, 348)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel_BuscarFacturaCobro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(btn_cancelar)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26))
         );
 
         bindingGroup.bind();
@@ -232,7 +360,7 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
                 evt.consume();
             }
         }else{
-                if(list_filtros.getSelectedItem()=="Concepto" || list_filtros.getSelectedItem()=="Condición de Pago"){
+                if(list_filtros.getSelectedItem()=="Concepto" || list_filtros.getSelectedItem()=="Forma Pago" || list_filtros.getSelectedItem()=="Tipo Factura"){
                         ch=evt.getKeyChar();
                         if(Character.isDigit(ch)){
                              getToolkit().beep();
@@ -246,30 +374,50 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
 
     private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
         // TODO add your handling code here:
+        int numFact;
         if (tf_valor.getText().length()==0){
             JOptionPane.showMessageDialog(null,"Ingrese algún valor para efectuar la búsqueda", "Advertencia",JOptionPane.ERROR_MESSAGE);
             return;
         }
         else{
             if (list_filtros.getSelectedItem()=="Número Factura"){
+                numFact=Integer.parseInt(tf_valor.getText());
                 query = entityManager.createNamedQuery("FacturaCobro.findByNumFactura");
-                query.setParameter("numFactura",Integer.parseInt(tf_valor.getText()));
-                List<FacturaCobro_1> f = query.getResultList();
+                query.setParameter("numFactura",numFact);
+                List<FacturaCobro> f = query.getResultList();
                 if (f.isEmpty()){
                     JOptionPane.showMessageDialog(null, "Número de Factura inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                    tf_valor.setText(null);
+                    return;
+                }
+                DetalleList.clear();
+                list.clear();
+                list.addAll(f);
+               
+            }
+            else if (list_filtros.getSelectedItem()=="Tipo Factura"){
+                  DetalleList.clear();
+                query = entityManager.createNativeQuery("SELECT * FROM factura_cobro "
+                    + "WHERE tipoFactura LIKE "
+                    +"'%"+tf_valor.getText()+"%'", FacturaCobro.class);
+                List<FacturaCobro> f = query.getResultList();
+                if (f.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Tipo  de Factura inexistente!","Error",JOptionPane.ERROR_MESSAGE );
                     tf_valor.setText(null);
                     return;
                 }
                 list.clear();
                 list.addAll(f);
             }
-            else if (list_filtros.getSelectedItem()=="Condición de Pago"){
-                query = entityManager.createNativeQuery("SELECT * FROM factura_cobro "
-                    + "WHERE tipoFactura LIKE "
-                    +"'%"+tf_valor.getText()+"%'", FacturaCobro_1.class);
-                List<FacturaCobro_1> f = query.getResultList();
+            else if (list_filtros.getSelectedItem()=="Forma Pago"){
+                query = entityManager.createNativeQuery( "SELECT * FROM detalle_cobro d "
+                    + "INNER JOIN factura_cobro f "
+                    + "on f.forma_pago = d.idDetalle "
+                    + "WHERE d.forma LIKE "
+                    +"'%"+tf_valor.getText()+"%'", FacturaCobro.class);
+                List<FacturaCobro> f = query.getResultList();
                 if (f.isEmpty()){
-                    JOptionPane.showMessageDialog(null, "Condición de Pago Inexistente!","Error",JOptionPane.ERROR_MESSAGE );
+                    JOptionPane.showMessageDialog(null,"Forma de Pago inexistente", "Error",JOptionPane.ERROR_MESSAGE);
                     tf_valor.setText(null);
                     return;
                 }
@@ -277,10 +425,11 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
                 list.addAll(f);
             }
             else if(list_filtros.getSelectedItem()=="Concepto"){
+                  DetalleList.clear();
                 query=entityManager.createNativeQuery("SELECT * FROM factura_cobro "
                     + "WHERE concepto LIKE "
-                    +"'%"+tf_valor.getText()+"%'", FacturaCobro_1.class);
-                List<FacturaCobro_1> f=query.getResultList();
+                    +"'%"+tf_valor.getText()+"%'", FacturaCobro.class);
+                List<FacturaCobro> f=query.getResultList();
                 if(f.isEmpty()){
                     JOptionPane.showMessageDialog(null,"Concepto de Pago Inexistente!", "Error",JOptionPane.ERROR_MESSAGE);
                     tf_valor.setText(null);
@@ -291,10 +440,11 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
                 return;
             }
             else if(list_filtros.getSelectedItem()=="Reserva"){
+                  DetalleList.clear();
                 query=entityManager.createNativeQuery("SELECT * FROM factura_cobro "
                     + "WHERE codigoReserva= "
-                    +"'"+tf_valor.getText()+"'", FacturaCobro_1.class);
-                List<FacturaCobro_1> f=query.getResultList();
+                    +"'"+tf_valor.getText()+"'", FacturaCobro.class);
+                List<FacturaCobro> f=query.getResultList();
                 if(f.isEmpty()){
                     JOptionPane.showMessageDialog(null,"No existen facturas para esta reserva", "Error",JOptionPane.ERROR_MESSAGE);
                     tf_valor.setText(null);
@@ -305,10 +455,11 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
                 return;
             }
             else if(list_filtros.getSelectedItem()=="Ruc Cliente"){
+                  DetalleList.clear();
                 query = entityManager.createNativeQuery( "SELECT * FROM factura_cobro "
                     + "WHERE rucCliente LIKE "
-                    +"'%"+tf_valor.getText()+"%'", FacturaCobro_1.class);
-                List<FacturaCobro_1> f=query.getResultList();
+                    +"'%"+tf_valor.getText()+"%'", FacturaCobro.class);
+                List<FacturaCobro> f=query.getResultList();
                 if(f.size()==0){
                     JOptionPane.showMessageDialog(null,"No existen facturas para este cliente", "Error",JOptionPane.ERROR_MESSAGE);
                     tf_valor.setText(null);
@@ -319,10 +470,11 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
                 return;
             }
             else if(list_filtros.getSelectedItem()=="Fecha"){
+                  DetalleList.clear();
                 query=entityManager.createNativeQuery("SELECT * FROM factura_cobro "
                     + "WHERE fechaEmision LIKE "
-                    +"'%"+tf_valor.getText()+"%'", FacturaCobro_1.class);
-                List<FacturaCobro_1> f =query.getResultList();
+                    +"'%"+tf_valor.getText()+"%'", FacturaCobro.class);
+                List<FacturaCobro> f =query.getResultList();
                 if(f.size()==0){
                     JOptionPane.showMessageDialog(null,"No se ha emitido facturas para dicha fecha", "Error",JOptionPane.ERROR_MESSAGE);
                     tf_valor.setText(null);
@@ -336,7 +488,7 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
 
     private void btn_buscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btn_buscarFocusLost
         // TODO add your handling code here:
-        tf_valor.setText(null);
+       
     }//GEN-LAST:event_btn_buscarFocusLost
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
@@ -353,6 +505,110 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_list_filtrosFocusLost
 
+    private void list_filtrosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_list_filtrosFocusGained
+        // TODO add your handling code here:
+         tf_valor.setText(null);
+    }//GEN-LAST:event_list_filtrosFocusGained
+
+    private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
+        // TODO add your handling code here:
+        String concepto;
+        int num;
+         btn_generarFact.setEnabled(true);
+         DetalleList.clear();
+          fila = masterTable.getSelectedRow();
+          num=(Integer) masterTable.getValueAt(fila, 0);
+          concepto=(String) masterTable.getValueAt(fila, 5);
+         if(!"anticipo de reserva".equals(concepto)){
+                    cargarDetalle(num);
+          }
+    }//GEN-LAST:event_masterTableMouseClicked
+
+    private void btn_generarFactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_generarFactActionPerformed
+        // TODO add your handling code here:
+        fila=masterTable.getSelectedRow();
+        query=entityManager.createNamedQuery("FacturaCobro.findByNumFactura");
+       query.setParameter("numFactura",Integer.parseInt(masterTable.getValueAt(fila, 0).toString()));
+       fact=(FacturaCobro)query.getSingleResult();
+       generarFactura();
+    }//GEN-LAST:event_btn_generarFactActionPerformed
+    private void generarFactura(){
+        String letras;
+        String condicion;
+         if("Crédito/Cheque".equals(fact.getTipoFactura()) || "Crédito/Tarjeta".equals(fact.getTipoFactura()) ){
+                         condicion="Crédito";
+                                 
+          }else{
+                         condicion="Contado";
+           }
+        if("anticipo de reserva".equals(fact.getConcepto())){
+                 try
+                      {
+                            NumberToText nt=new NumberToText();
+                            letras=nt.convertirLetras(fact.getTotal());
+                            System.out.print(letras);
+                            Class.forName("com.mysql.jdbc.Driver");
+                            Connection con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/hotel db", "root", "user");
+                            HashMap par = new HashMap();//no definimos ningún parámetro por eso lo dejamos así
+                            Map parametros=new HashMap();
+                            par.put("Letras", letras);
+                            par.put("NumFactura",fact.getNumFactura() );
+                            System.out.println("Numero de factura:"+fact.getNumFactura());
+                            par.put("Saldo",0);
+                            par.put("Condicion", condicion);
+                            System.out.println("Condicion "+condicion);
+                            JasperPrint jp = JasperFillManager.fillReport("C:/Proyecto-II/src/reportes/facturaAnticipo.jasper", par,con);//el primer parámetro es el camino del archivo, se cambia esta dirección por la dirección del archivo .jasper
+                            JasperViewer jv = new JasperViewer(jp,false);
+                            jv.setVisible(true);
+                            jv.setTitle("Factura de Anticipio de Reserva");
+                            Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                            jv.setIconImage(icon);
+                            jv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        }
+                             catch(Exception e)
+                        {
+                                 e.printStackTrace();
+                        }
+            
+        }else{
+                 try
+                        {
+                            NumberToText nt=new NumberToText();
+                            letras=nt.convertirLetras(fact.getTotal());
+                            System.out.print(letras);
+                            Class.forName("com.mysql.jdbc.Driver");
+                            Connection con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/hotel db", "root", "user");
+                            HashMap par = new HashMap();//no definimos ningún parámetro por eso lo dejamos así
+                            Map parametros=new HashMap();
+                            par.put("NumFactura",fact.getNumFactura() );
+                            par.put("Letras", letras);
+                            par.put("Condicion", condicion);
+                            JasperPrint jp = JasperFillManager.fillReport("C:/Proyecto-II/src/reportes/facturaLiquidacion.jasper", par,con);//el primer parámetro es el camino del archivo, se cambia esta dirección por la dirección del archivo .jasper
+                            JasperViewer jv = new JasperViewer(jp,false);
+                            jv.setVisible(true);
+                            jv.setTitle("Factura de Liquidación de Reserva");
+                            Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                            jv.setIconImage(icon);
+                            jv.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                        }
+                        catch(Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+        }
+    }
+    private void cargarDetalle(int numFact){
+       String q;
+        q="SELECT * FROM consumo_pro_ser "+ "WHERE numFactura= "+numFact;
+        System.out.println(q);
+        DetalleQuery=entityManager.createNativeQuery("SELECT * FROM consumo_pro_ser "
+                    + "WHERE numFactura= "
+                    +numFact, ConsumoProSer.class);
+      List<ConsumoProSer> cps=DetalleQuery.getResultList();
+      System.out.println(cps.get(0));
+      DetalleList.clear();
+      DetalleList.addAll(cps);
+    }
     /**
      * @param args the command line arguments
      */
@@ -386,24 +642,34 @@ public class BuscarFacturaCobro extends javax.swing.JFrame {
                JFrame frame=new BuscarFacturaCobro();
                frame.setVisible(true);
                frame.setTitle("Buscar Factura de Cobro");
+               Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+               frame.setIconImage(icon);
                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                frame.setLocationRelativeTo(null);
+              
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.util.List<bean.ConsumoProSer> DetalleList;
+    private javax.persistence.Query DetalleQuery;
     private javax.swing.JButton btn_buscar;
     private javax.swing.JButton btn_cancelar;
+    private javax.swing.JButton btn_generarFact;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbl_BuscarFacturaCobro;
     private javax.swing.JLabel lbl_filtro;
     private javax.swing.JLabel lbl_valor;
-    private java.util.List<bean.FacturaCobro_1> list;
+    private java.util.List<bean.FacturaCobro> list;
     private javax.swing.JComboBox list_filtros;
     private javax.swing.JTable masterTable;
+    public static final javax.swing.JTable masterTableDet = new javax.swing.JTable();
     private javax.swing.JPanel panel_BuscarFacturaCobro;
     private javax.persistence.Query query;
     private javax.swing.JTextField tf_valor;

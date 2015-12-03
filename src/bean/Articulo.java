@@ -67,9 +67,6 @@ public class Articulo implements Serializable {
     private Integer precio;
        @Column(name = "tipo")
     private String tipo;
-  /*  @Basic(optional = false)
-    @Column(name = "cod_categoria")
-    private CategoriaArticulo codCategoria;*/
      @JoinColumn(name = "cod_categoria", referencedColumnName = "cod_categoria")
     @ManyToOne
     private CategoriaArticulo codCategoria;
@@ -152,15 +149,6 @@ public class Articulo implements Serializable {
         this.costo = costo;
         changeSupport.firePropertyChange("costo", oldCosto, costo);
     }
-
-/*
-    public int getCodCategoria() {
-    return codCategoria;
-    }
-    public void setCodCategoria(int codCategoria) {
-    this.codCategoria = codCategoria;
-    }
-     */
     public Proveedor getCodigoProveedor() {
         return codigoProveedor;
     }

@@ -26,7 +26,7 @@ import javax.persistence.Transient;
 
 /**
  *
- * @author pc
+ * @author tammy
  */
 @Entity
 @Table(name = "proveedor")
@@ -40,14 +40,8 @@ import javax.persistence.Transient;
     @NamedQuery(name = "Proveedor.findByEmail", query = "SELECT p FROM Proveedor p WHERE p.email = :email"),
     @NamedQuery(name = "Proveedor.findByDireccion", query = "SELECT p FROM Proveedor p WHERE p.direccion = :direccion"),
     @NamedQuery(name = "Proveedor.findByTelefono", query = "SELECT p FROM Proveedor p WHERE p.telefono = :telefono"),
-  //  @NamedQuery(name = "Proveedor.findByDiasPlazoPago", query = "SELECT p FROM Proveedor p WHERE p.diasPlazoPago = :diasPlazoPago"),
     @NamedQuery(name = "Proveedor.findByCodigoCategoria", query = "SELECT p FROM Proveedor p WHERE p.codigoCategoria = :codigoCategoria")})
 public class Proveedor implements Serializable {
-   // @Basic(optional = false)
-  //  @Column(name = "codigoCategoria")
- //   private int codigoCategoria;
- //   @OneToMany(mappedBy = "codProveedor")
-  //  private Collection<FacturaPago> facturaPagoCollection;
     @Transient
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
@@ -75,18 +69,9 @@ public class Proveedor implements Serializable {
     @Basic(optional = false)
     @Column(name = "telefono")
     private int telefono;
-  //  @Column(name = "diasPlazoPago")
-    //private Integer diasPlazoPago;
-    //@Basic(optional = false)
-    //@Column(name = "codigoCategoria")
-  //  private int codigoCategoria;
  @JoinColumn(name = "codigoCategoria", referencedColumnName = "cod_categoria")
     @ManyToOne
     private CategoriaArticulo codigoCategoria;
-  //  @OneToMany(mappedBy = "codigoProveedor")
-   // private Collection<Proveedor> proveedorCollection;
-
-
     public Proveedor() {
     }
 
@@ -183,27 +168,6 @@ public class Proveedor implements Serializable {
         this.telefono = telefono;
         changeSupport.firePropertyChange("telefono", oldTelefono, telefono);
     }
-/*
-    public Integer getDiasPlazoPago() {
-        return diasPlazoPago;
-    }
-
-    public void setDiasPlazoPago(Integer diasPlazoPago) {
-        Integer oldDiasPlazoPago = this.diasPlazoPago;
-        this.diasPlazoPago = diasPlazoPago;
-        changeSupport.firePropertyChange("diasPlazoPago", oldDiasPlazoPago, diasPlazoPago);
-    }*/
-/*
-    public int getCodigoCategoria() {
-        return codigoCategoria;
-    }
-
-    public void setCodigoCategoria(int codigoCategoria) {
-        int oldCodigoCategoria = this.codigoCategoria;
-        this.codigoCategoria = codigoCategoria;
-        changeSupport.firePropertyChange("codigoCategoria", oldCodigoCategoria, codigoCategoria);
-    }
-*/
         public CategoriaArticulo getCodigoCategoria() {
         return codigoCategoria;
     }
@@ -213,15 +177,6 @@ public class Proveedor implements Serializable {
         this.codigoCategoria = codigoCategoria;
         changeSupport.firePropertyChange("codigoCategoria", oldCodigoCategoria, codigoCategoria);
     }
-/*
-    public Collection<Proveedor> getProveedorCollection() {
-        return proveedorCollection;
-    }
-
-    public void setProveedorCollection(Collection<Proveedor> proveedorCollection) {
-        this.proveedorCollection = proveedorCollection;
-    }
-*/
     @Override
     public int hashCode() {
         int hash = 0;
@@ -254,21 +209,4 @@ public class Proveedor implements Serializable {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         changeSupport.removePropertyChangeListener(listener);
     }
-
-/*    public int getCodigoCategoria() {
-        return codigoCategoria;
-    }
-
-    public void setCodigoCategoria(int codigoCategoria) {
-        this.codigoCategoria = codigoCategoria;
-    }
-*/
-    /*public Collection<FacturaPago> getFacturaPagoCollection() {
-        return facturaPagoCollection;
-    }
-
-    public void setFacturaPagoCollection(Collection<FacturaPago> facturaPagoCollection) {
-        this.facturaPagoCollection = facturaPagoCollection;
-    }
- */   
 }

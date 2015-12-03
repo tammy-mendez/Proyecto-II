@@ -7,7 +7,10 @@
 package view;
 
 import bean.Cliente;
+import bean.Reserva;
+import java.awt.Image;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -32,6 +35,7 @@ public class ClienteBuscar extends javax.swing.JFrame {
      */
     public ClienteBuscar() {
         initComponents();
+        reservaList.clear();
     }
 
     /**
@@ -47,6 +51,8 @@ public class ClienteBuscar extends javax.swing.JFrame {
         entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT c FROM Cliente c");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
+        reservaQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT r FROM Reserva r");
+        reservaList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(reservaQuery.getResultList());
         jPanel1 = new javax.swing.JPanel();
         lbl_valor = new javax.swing.JLabel();
         tf_valor = new javax.swing.JTextField();
@@ -58,6 +64,9 @@ public class ClienteBuscar extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         masterTable = new javax.swing.JTable();
         btn_cancelar = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -137,10 +146,10 @@ public class ClienteBuscar extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(277, 277, 277)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(211, Short.MAX_VALUE)
                 .addComponent(lbl_buscarC)
-                .addContainerGap(247, Short.MAX_VALUE))
+                .addGap(204, 204, 204))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,7 +193,13 @@ public class ClienteBuscar extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(masterTable);
         if (masterTable.getColumnModel().getColumnCount() > 0) {
-            masterTable.getColumnModel().getColumn(0).setPreferredWidth(60);
+            masterTable.getColumnModel().getColumn(0).setPreferredWidth(30);
+            masterTable.getColumnModel().getColumn(1).setPreferredWidth(35);
+            masterTable.getColumnModel().getColumn(2).setPreferredWidth(45);
+            masterTable.getColumnModel().getColumn(3).setPreferredWidth(120);
+            masterTable.getColumnModel().getColumn(4).setPreferredWidth(120);
+            masterTable.getColumnModel().getColumn(5).setPreferredWidth(35);
+            masterTable.getColumnModel().getColumn(7).setPreferredWidth(100);
         }
 
         btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/delete.png"))); // NOI18N
@@ -195,38 +210,90 @@ public class ClienteBuscar extends javax.swing.JFrame {
             }
         });
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Reservas"));
+
+        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, reservaList, jTable1);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoReserva}"));
+        columnBinding.setColumnName("Reserva");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${checkIn}"));
+        columnBinding.setColumnName("Check In");
+        columnBinding.setColumnClass(java.util.Date.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${checkOut}"));
+        columnBinding.setColumnName("Check Out");
+        columnBinding.setColumnClass(java.util.Date.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numHabitacion.numero}"));
+        columnBinding.setColumnName("Habitacion");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cantPersonas}"));
+        columnBinding.setColumnName(" Personas");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${montoAbonado}"));
+        columnBinding.setColumnName("Monto Abonado");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${montoTotal}"));
+        columnBinding.setColumnName("Monto Total");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numPresupuesto}"));
+        columnBinding.setColumnName(" Presupuesto");
+        columnBinding.setColumnClass(bean.Presupuesto.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        jScrollPane2.setViewportView(jTable1);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(41, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(37, 37, 37))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(82, 82, 82))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(333, 333, 333)
-                .addComponent(btn_cancelar)
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(104, 104, 104)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(363, 363, 363)
+                        .addComponent(btn_cancelar)))
+                .addContainerGap(111, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(20, 20, 20)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btn_cancelar)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -250,11 +317,13 @@ public class ClienteBuscar extends javax.swing.JFrame {
                         tf_valor.setText(null);
                         return;
                      }
+                  reservaList.clear();
                   list.clear();
                   list.addAll(c);
                    
               }
               if(list_filtros.getSelectedItem()=="Cedula"){
+                  reservaList.clear();
                   query = entityManager.createNativeQuery( "SELECT * FROM cliente WHERE cedula LIKE "
                     +"'%"+tf_valor.getText()+"%'", Cliente.class);
                   List<Cliente> c=query.getResultList();
@@ -268,6 +337,7 @@ public class ClienteBuscar extends javax.swing.JFrame {
                   
               }
               if(list_filtros.getSelectedItem()=="Nombre"){
+                  reservaList.clear();
                   query = entityManager.createNativeQuery( "SELECT * FROM cliente WHERE nombre LIKE "
                     +"'%"+tf_valor.getText()+"%'", Cliente.class);
                   List<Cliente> c=query.getResultList();
@@ -281,7 +351,7 @@ public class ClienteBuscar extends javax.swing.JFrame {
                   
               }
               if(list_filtros.getSelectedItem()=="Apellido"){
-                  
+                   reservaList.clear();
                    query = entityManager.createNativeQuery( "SELECT * FROM cliente WHERE apellido LIKE "
                     +"'%"+tf_valor.getText()+"%'", Cliente.class);
                   List<Cliente> c=query.getResultList();
@@ -330,67 +400,22 @@ public class ClienteBuscar extends javax.swing.JFrame {
 
     private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
         // TODO add your handling code here:
-        switch (MenuRecepcionista.opcion){
-          case 1:
-                fila=masterTable.getSelectedRow();
-                codigo=(Integer) masterTable.getValueAt(fila, 0);
-                cedula=(String)masterTable.getValueAt(fila, 1);
-                ruc=(String)masterTable.getValueAt(fila, 2);
-                nombre=(String)masterTable.getValueAt(fila, 3);
-                apellido=(String)masterTable.getValueAt(fila, 4);
-                telef=(Integer)masterTable.getValueAt(fila, 5);
-                dire=(String)masterTable.getValueAt(fila, 6);
-                email=(String)masterTable.getValueAt(fila, 7);
-                 JFrame frame=new ClienteEdit();
-                 ClienteEdit.tf_codigo.setText(Integer.toString(codigo));
-                 ClienteEdit.tf_cedula.setText(cedula);
-                 ClienteEdit.tf_ruc.setText(ruc);
-                 ClienteEdit.tf_nombre.setText(nombre);
-                 ClienteEdit.tf_apellido.setText(apellido);
-                 ClienteEdit.tf_telef.setText(Integer.toString(telef));
-                 ClienteEdit.tf_direccion.setText(dire);
-                 ClienteEdit.tf_email.setText(email);   
-                 frame.setVisible(true);
-                 frame.setTitle("Modificar Cliente");
-                 frame.setLocationRelativeTo(null);
-                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                 this.setVisible(false);
-                 break;
-           case 2:
-                 fila=masterTable.getSelectedRow();
-                 codigo=(Integer) masterTable.getValueAt(fila, 0);
-                 cedula=(String)masterTable.getValueAt(fila, 1);
-                 ruc=(String)masterTable.getValueAt(fila, 2);
-                 nombre=(String)masterTable.getValueAt(fila, 3);
-                 apellido=(String)masterTable.getValueAt(fila, 4);
-                 telef=(Integer)masterTable.getValueAt(fila, 5);
-                 dire=(String)masterTable.getValueAt(fila, 6);
-                 email=(String)masterTable.getValueAt(fila, 7);
-                 JFrame fr=new ClienteEliminar();
-                 ClienteEliminar.tf_codigo.setText(Integer.toString(codigo));
-                 ClienteEliminar.tf_cedula.setText(cedula);
-                 ClienteEliminar.tf_ruc.setText(ruc);
-                 ClienteEliminar.tf_nombre.setText(nombre);
-                 ClienteEliminar.tf_apellido.setText(apellido);
-                 ClienteEliminar.tf_telef.setText(Integer.toString(telef));
-                 ClienteEliminar.tf_direccion.setText(dire);
-                 ClienteEliminar.tf_email.setText(email);   
-                 fr.setVisible(true);
-                 fr.setTitle("Eliminar Cliente");
-                 fr.setLocationRelativeTo(null);
-                 fr.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                 this.setVisible(false);
-                 break;
-              case 3:
-                  break;
-              }
-            
+            fila=masterTable.getSelectedRow();
+            cargarReserva((Integer)masterTable.getValueAt(fila, 0));
     }//GEN-LAST:event_masterTableMouseClicked
 
     private void tf_valorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_valorActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_valorActionPerformed
+       private void cargarReserva(int codClie){
 
+         reservaQuery=entityManager.createNativeQuery("SELECT * FROM reserva "
+                     + "WHERE codigoCliente= "
+                     +codClie, Reserva.class);
+        List<Reserva> r=reservaQuery.getResultList();
+        reservaList.clear();
+        reservaList.addAll(r);
+    }
     /**
      * @param args the command line arguments
      */
@@ -424,6 +449,8 @@ public class ClienteBuscar extends javax.swing.JFrame {
                 JFrame frame=new ClienteBuscar();
                 frame.setVisible(true);
                 frame.setTitle("Buscar Cliente");
+                 Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
@@ -435,8 +462,11 @@ public class ClienteBuscar extends javax.swing.JFrame {
     private javax.swing.JButton btn_cancelar;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbl_buscarC;
     private javax.swing.JLabel lbl_filtro;
     private javax.swing.JLabel lbl_valor;
@@ -444,6 +474,8 @@ public class ClienteBuscar extends javax.swing.JFrame {
     private javax.swing.JComboBox list_filtros;
     private javax.swing.JTable masterTable;
     private javax.persistence.Query query;
+    private java.util.List<bean.Reserva> reservaList;
+    private javax.persistence.Query reservaQuery;
     private javax.swing.JTextField tf_valor;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables

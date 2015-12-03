@@ -7,29 +7,41 @@
 package view;
 
 import bean.AuditoriaSistema;
+import bean.Empleado;
 import bean.Rol;
 import bean.Usuario;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.util.List;
 import javax.persistence.Query;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 /**
  *
  * @author Vladimir
  */
 public class EditarUsuario extends javax.swing.JFrame {
+    private int cantidad;
+    private char ch;
+   // private RolesDialogParaUsuario ventana = new RolesDialogParaUsuario(this, true);
+    private Usuario usuario;
+    private int fila = -1;
+    private List<Rol> lista;
+    private int bandUseLimpiar = 0;
+    private int filaRol = -1;
 
     /**
      * Creates new form EditarUsuario
      */
     public EditarUsuario() {
         initComponents();
+        rolList.clear();
+        rolTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        sacarEmpleadoLoggueado();
     }
 
     /**
@@ -42,43 +54,67 @@ public class EditarUsuario extends javax.swing.JFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        proyectoPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
-        rolQuery = java.beans.Beans.isDesignTime() ? null : proyectoPUEntityManager.createQuery("SELECT r FROM Rol r");
-        rolList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : rolQuery.getResultList();
-        rolListRenderizar1 = new renderizar.RolListRenderizar();
+        entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
+        rolQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT r FROM Rol r");
+        rolList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(rolQuery.getResultList());
+        usuarioQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT u FROM Usuario u");
+        usuarioList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(usuarioQuery.getResultList());
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        list_roles = new javax.swing.JComboBox();
         tf_idEmpleado = new javax.swing.JTextField();
+        tf_nombreUsuario = new javax.swing.JTextField();
+        tf_apellidoUsuario = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btn_guardar = new javax.swing.JButton();
         btn_cancelar = new javax.swing.JButton();
         panel_editarUsuario = new javax.swing.JPanel();
         lbl_editarUsuario = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        masterTableUsuario = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        list_filtros = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
+        tf_valor = new javax.swing.JTextField();
+        btn_buscar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        rolTable = new javax.swing.JTable();
+        btn_agregarRol = new javax.swing.JButton();
+        btn_limpiar = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        btn_limpiar1 = new javax.swing.JButton();
 
-        rolListRenderizar1.setText("rolListRenderizar1");
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setForeground(new java.awt.Color(204, 204, 255));
 
         jLabel1.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
-        jLabel1.setText("Id Empleado:");
+        jLabel1.setText("Código:");
 
         jLabel3.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
-        jLabel3.setText("Rol:");
-
-        list_roles.setRenderer(rolListRenderizar1);
-
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, rolList, list_roles);
-        bindingGroup.addBinding(jComboBoxBinding);
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, new javax.swing.JTextField(), org.jdesktop.beansbinding.ObjectProperty.create(), list_roles, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
-        bindingGroup.addBinding(binding);
+        jLabel3.setText("Nombre:");
 
         tf_idEmpleado.setEnabled(false);
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTableUsuario, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.codigoEmpleado}"), tf_idEmpleado, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        tf_nombreUsuario.setEnabled(false);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTableUsuario, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.empleado.nombre}"), tf_nombreUsuario, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        tf_apellidoUsuario.setEnabled(false);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTableUsuario, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.empleado.apellido}"), tf_apellidoUsuario, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel5.setText("Datos del Usuario");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -91,29 +127,38 @@ public class EditarUsuario extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(list_roles, 0, 170, Short.MAX_VALUE)
-                    .addComponent(tf_idEmpleado))
-                .addGap(38, 38, 38))
+                    .addComponent(jLabel5)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tf_nombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tf_idEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tf_apellidoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(8, 8, 8)
+                .addComponent(jLabel5)
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(tf_idEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(list_roles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45))
+                    .addComponent(tf_nombreUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tf_apellidoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/guardar.png"))); // NOI18N
-        btn_guardar.setText("Guardar");
+        btn_guardar.setText("Modificar");
         btn_guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_guardarActionPerformed(evt);
@@ -121,7 +166,7 @@ public class EditarUsuario extends javax.swing.JFrame {
         });
 
         btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/excluded.png"))); // NOI18N
-        btn_cancelar.setText("Cancelar");
+        btn_cancelar.setText("Salir");
         btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_cancelarActionPerformed(evt);
@@ -135,17 +180,20 @@ public class EditarUsuario extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addComponent(btn_guardar)
-                .addGap(34, 34, 34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
                 .addComponent(btn_cancelar)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addGap(34, 34, 34))
         );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_cancelar, btn_guardar});
+
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btn_cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btn_guardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_cancelar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -161,45 +209,224 @@ public class EditarUsuario extends javax.swing.JFrame {
         panel_editarUsuarioLayout.setHorizontalGroup(
             panel_editarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_editarUsuarioLayout.createSequentialGroup()
-                .addContainerGap(78, Short.MAX_VALUE)
+                .addContainerGap(141, Short.MAX_VALUE)
                 .addComponent(lbl_editarUsuario)
-                .addGap(83, 83, 83))
+                .addGap(138, 138, 138))
         );
         panel_editarUsuarioLayout.setVerticalGroup(
             panel_editarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_editarUsuarioLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel_editarUsuarioLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(lbl_editarUsuario)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, usuarioList, masterTableUsuario);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoEmpleado}"));
+        columnBinding.setColumnName("Codigo");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${empleado.nombre}"));
+        columnBinding.setColumnName("Nombre");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${empleado.apellido}"));
+        columnBinding.setColumnName("Apellido");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        masterTableUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                masterTableUsuarioMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(masterTableUsuario);
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel3.setForeground(new java.awt.Color(204, 204, 255));
+
+        jLabel2.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jLabel2.setText("Buscar por:");
+
+        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código", "Nombre", "Apellido" }));
+        list_filtros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                list_filtrosFocusGained(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        jLabel4.setText("Valor:");
+
+        tf_valor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tf_valorKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tf_valorKeyTyped(evt);
+            }
+        });
+
+        btn_buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/zoom.png"))); // NOI18N
+        btn_buscar.setText("Buscar");
+        btn_buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_buscarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(btn_buscar)
+                .addGap(23, 23, 23))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_buscar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, rolList, rolTable);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${idRol}"));
+        columnBinding.setColumnName("Código");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nombre}"));
+        columnBinding.setColumnName("Nombre");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        rolTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rolTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(rolTable);
+        if (rolTable.getColumnModel().getColumnCount() > 0) {
+            rolTable.getColumnModel().getColumn(0).setMinWidth(60);
+            rolTable.getColumnModel().getColumn(0).setPreferredWidth(60);
+            rolTable.getColumnModel().getColumn(0).setMaxWidth(60);
+        }
+
+        btn_agregarRol.setText("Mostrar Roles");
+        btn_agregarRol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_agregarRolActionPerformed(evt);
+            }
+        });
+
+        btn_limpiar.setText("Sacar Todos");
+        btn_limpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_limpiarActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel6.setText("Roles");
+
+        btn_limpiar1.setText("Sacar Rol");
+        btn_limpiar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_limpiar1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panel_editarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_agregarRol)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_limpiar1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_limpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(55, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(138, 138, 138)
+                                .addComponent(jLabel6)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(28, 28, 28))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(80, 80, 80)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(108, 108, 108)
+                        .addComponent(panel_editarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(163, 163, 163))
         );
+
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_agregarRol, btn_limpiar});
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel_editarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_agregarRol)
+                            .addComponent(btn_limpiar)
+                            .addComponent(btn_limpiar1))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addContainerGap())
         );
+
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_agregarRol, btn_limpiar});
 
         bindingGroup.bind();
 
@@ -211,33 +438,44 @@ public class EditarUsuario extends javax.swing.JFrame {
                 // TODO add your handling code here:
                 String antes;
                 String despues;
-            int resp = JOptionPane.showConfirmDialog(null,"Desea guardar los cambios?", "Confirmar Modificación",JOptionPane.YES_NO_OPTION );
-            if ( LoginView.idUsuario == Integer.parseInt(tf_idEmpleado.getText())){
+            int resp = JOptionPane.showConfirmDialog(null,"¿Desea guardar los cambios?", "Confirmar Modificación",JOptionPane.YES_NO_OPTION );
+            /*if ( LoginView.idUsuario == Integer.parseInt(tf_idEmpleado.getText())){
                 JOptionPane.showMessageDialog(null, "No puede cambiar su rol usted mismo");
                 
-            } 
-            else if (resp==JOptionPane.YES_OPTION){
-              
-                    EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
-                    EntityManager em=fact.createEntityManager();
-                    em.getTransaction().begin();
-                    Usuario usu = new Usuario();     
-                    Query query = em.createNamedQuery("Usuario.findByCodigoEmpleado");
+            } */
+            if (!tf_idEmpleado.getText().equals("")
+                    && fila != (-1)){
+                if(resp==JOptionPane.YES_OPTION){
+                    //usar mismo entitymanager
+                    //EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
+                    //EntityManager em=fact.createEntityManager();
+                    //em.getTransaction().begin();
                     int idEmpleadoAux = Integer.parseInt(tf_idEmpleado.getText());
-                    query.setParameter("codigoEmpleado", idEmpleadoAux);
-                    usu= (Usuario)query.getSingleResult();
-                    String pass = usu.getPassword();
-                    antes=usu.toString();
-                    Usuario u=new Usuario();
-                    //u.setCodigoEmpleado(Integer.parseInt(tf_idEmpleado.getText()));
-                    u.setCodigoEmpleado(usu.getCodigoEmpleado());
+                    //Empleado empleado = obtenerEmpleado(idEmpleadoAux);
+                    entityManager.getTransaction().begin();
+                    Usuario usuarioFind = entityManager.find(Usuario.class, idEmpleadoAux);
+                    usuarioList.remove(usuarioFind);
+                    /*usuarioQuery = entityManager.createNamedQuery("Usuario.findByCodigoEmpleado");
+                    usuarioQuery.setParameter("codigoEmpleado", idEmpleadoAux);*/
+                    //usu= (Usuario)usuarioQuery.getSingleResult();
+                    usuarioFind.setRolCollection(obtenerRolesUsuario());
+                    //String pass = usuarioFind.getPassword();
+                    antes=usuarioFind.toString();
+                    /*Usuario u=new Usuario();
+                    u.setEmpleado(empleado);
+                    u.setCodigoEmpleado(usuarioFind.getCodigoEmpleado());
                     u.setPassword(pass);
-                    Rol r = new Rol();
-                    r = (Rol)(list_roles.getSelectedItem());
-                    u.setIdRol(r);
-                    em.merge(u);
-                    em.flush();
-                    despues=u.toString();
+                    u.setRolCollection(null);
+                    u.setRolCollection(obtenerRolesUsuario());
+                    u.setEmpleado(empleado);*/
+                    //empleado.setUsuario(u);
+                    //usuarioList.clear();
+                    //usuarioList.remove(usuario);
+                    //usuarioList.add(u);
+                    //entityManager.merge(empleado);
+                    entityManager.merge(usuarioFind);
+                    entityManager.flush();
+                    despues=usuarioFind.toString();
                     //registramos los datos necesarios para la auditoria
                     AuditoriaSistema as=new AuditoriaSistema();
                     as.setAccion("Modificación");
@@ -249,23 +487,191 @@ public class EditarUsuario extends javax.swing.JFrame {
                     as.setUsuario(LoginView.nombreUsuario);
                     as.setAntes(antes);
                     as.setDespues(despues);
-                    em.persist(as);
-                    em.getTransaction().commit();
-                    em.close();
+                    entityManager.persist(as);
+                    entityManager.getTransaction().commit();
+                    //em.close();
                     JOptionPane.showMessageDialog(null, "Modificación Exitosa");
+                    
+                    //usuarioList.clear();
+                    usuarioList.add(usuarioFind);
+                    //entityManager.refresh(u);
+                    fila = -1;
+                }else{
+                   vaciarCampos(); 
+                }
+                    
+            }else{
+                //this.dispose();
+                JOptionPane.showMessageDialog(null, "Seleccione algún empleado", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
-            this.dispose();
+            //this.dispose();
+            vaciarCampos();
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_btn_cancelarActionPerformed
+
+    private void masterTableUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableUsuarioMouseClicked
+        // TODO add your handling code here:
+        fila = masterTableUsuario.getSelectedRow();
+        int codigo = Integer.parseInt(masterTableUsuario.getValueAt(fila, 0).toString());
+        rolQuery = entityManager.createNamedQuery("Usuario.findByCodigoEmpleado");
+        rolQuery.setParameter("codigoEmpleado", codigo);
+        usuario = (Usuario)rolQuery.getSingleResult();
+        List<Rol> rolesDelUsuario = (List)usuario.getRolCollection();
+        rolList.clear();
+        rolList.addAll(rolesDelUsuario);
+    }//GEN-LAST:event_masterTableUsuarioMouseClicked
+
+    private void tf_valorKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_valorKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_valorKeyPressed
+
+    private void tf_valorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_valorKeyTyped
+        // TODO add your handling code here:
+        if (list_filtros.getSelectedItem()=="Código"){
+            ch=evt.getKeyChar();
+            if(!Character.isDigit(ch)){
+                getToolkit().beep();
+                evt.consume();
+            }
+        }
+        else{
+            ch=evt.getKeyChar();
+            if(Character.isDigit(ch)){
+                getToolkit().beep();
+                evt.consume();
+            }
+        }
+    }//GEN-LAST:event_tf_valorKeyTyped
+
+    private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        if (tf_valor.getText().length()==0){
+            JOptionPane.showMessageDialog(null,"Ingrese algún valor para efectuar la búsqueda", "Advertencia",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        else{
+            if (list_filtros.getSelectedItem()=="Código"){
+                int id=Integer.parseInt(tf_valor.getText());
+                usuarioQuery = entityManager.createNamedQuery( "Usuario.findByCodigoEmpleado");
+                usuarioQuery.setParameter("codigoEmpleado",id);
+                List<Usuario> r = usuarioQuery.getResultList();
+                if (r.size()==0){
+                    JOptionPane.showMessageDialog(null,"Identificación inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                usuarioList.clear();
+                usuarioList.addAll(r);
+            }
+            else if (list_filtros.getSelectedItem()=="Nombre"){
+                //            id=Integer.parseInt(tf_valor.getText());
+                usuarioQuery = entityManager.createNativeQuery( "SELECT * FROM usuario u "
+                    + "INNER JOIN empleado e "
+                    + "on u.codigoEmpleado = e.codigoEmpleado "
+                    + "WHERE e.nombre like '%"
+                    +tf_valor.getText()+ "%'", Usuario.class);
+                List<Usuario> r = usuarioQuery.getResultList();
+
+                if (r.size()==0){
+                    JOptionPane.showMessageDialog(null,"No se encontró al usuario", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                usuarioList.clear();
+                usuarioList.addAll(r);
+            }
+            else if (list_filtros.getSelectedItem()=="Apellido"){
+                usuarioQuery = entityManager.createNativeQuery( "SELECT * FROM usuario u "
+                    + "INNER JOIN empleado e "
+                    + "on u.codigoEmpleado = e.codigoEmpleado "
+                    + "WHERE e.apellido like '%"
+                    +tf_valor.getText()+ "%'", Usuario.class);
+                List<Usuario> r = usuarioQuery.getResultList();
+                if (r.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Usuario inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                    tf_valor.setText(null);
+                    return;
+                }
+                usuarioList.clear();
+                usuarioList.addAll(r);
+            }
+
+        }
+
+    }//GEN-LAST:event_btn_buscarActionPerformed
+
+    private void btn_agregarRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_agregarRolActionPerformed
+        rolQuery = entityManager.createNamedQuery("Rol.findAll");
+        lista = (List<Rol>) rolQuery.getResultList();
+        rolList.clear();
+        rolList.addAll(lista);
+        for(Rol rolUsuario : usuario.getRolCollection()){
+            for(Rol rolLista : (List<Rol>) rolQuery.getResultList()){
+                if(rolLista.equals(rolUsuario)){
+                   rolList.remove(rolLista);
+                }
+            }
+        }
+        //rolList.clear();
+        //rolList.addAll(lista);
+        /*        // TODO add your handling code here:
+        
+        this.setEnabled(false);
+        if ((ventana instanceof RolesDialogParaUsuario)){
+            ventana.setVisible(true);
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "El menú ya fue abierto");
+            //ventana = new RolesDialogParaUsuario(this, true);
+            
+        }
+        this.setEnabled(true);*/
+    }//GEN-LAST:event_btn_agregarRolActionPerformed
+
+    private void btn_limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_limpiarActionPerformed
+        // TODO add your handling code here:
+        bandUseLimpiar  = 1;
+        rolList.clear();
+    }//GEN-LAST:event_btn_limpiarActionPerformed
+
+    private void list_filtrosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_list_filtrosFocusGained
+        // TODO add your handling code here:
+        tf_valor.setText(null);
+    }//GEN-LAST:event_list_filtrosFocusGained
+
+    private void btn_limpiar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_limpiar1ActionPerformed
+        // TODO add your handling code here:
+        try{
+            if (filaRol != -1 ){
+                int idRol = Integer.parseInt(rolTable.getValueAt(filaRol, 0).toString());
+                //Rol rolLocal = (Rol)rolTable.getValueAt(filaRol, 0);//
+                Rol rolLocal = obtenerRol(idRol);
+                usuario.getRolCollection().remove(rolLocal);
+                rolList.remove(rolLocal);
+            }    
+        }catch(IndexOutOfBoundsException e){
+            bandUseLimpiar = 1;
+        }
+        
+        filaRol = -1;
+        
+    }//GEN-LAST:event_btn_limpiar1ActionPerformed
+
+    private void rolTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rolTableMouseClicked
+        // TODO add your handling code here:
+        filaRol = rolTable.getSelectedRow();
+    }//GEN-LAST:event_rolTableMouseClicked
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(final String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -292,8 +698,9 @@ public class EditarUsuario extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JFrame frame= new UsuarioBuscar();
+                JFrame frame= new EditarUsuario();
                 frame.pack();
+                frame.setTitle(args[0]);
                 frame.setVisible(true);
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -302,20 +709,71 @@ public class EditarUsuario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_agregarRol;
+    private javax.swing.JButton btn_buscar;
     private javax.swing.JButton btn_cancelar;
     private javax.swing.JButton btn_guardar;
+    private javax.swing.JButton btn_limpiar;
+    private javax.swing.JButton btn_limpiar1;
+    private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbl_editarUsuario;
-    public static javax.swing.JComboBox list_roles;
+    private javax.swing.JComboBox list_filtros;
+    private javax.swing.JTable masterTableUsuario;
     private javax.swing.JPanel panel_editarUsuario;
-    private javax.persistence.EntityManager proyectoPUEntityManager;
     private java.util.List<bean.Rol> rolList;
-    private renderizar.RolListRenderizar rolListRenderizar1;
     private javax.persistence.Query rolQuery;
+    public static javax.swing.JTable rolTable;
+    private javax.swing.JTextField tf_apellidoUsuario;
     public static javax.swing.JTextField tf_idEmpleado;
+    private javax.swing.JTextField tf_nombreUsuario;
+    private javax.swing.JTextField tf_valor;
+    private java.util.List<bean.Usuario> usuarioList;
+    private javax.persistence.Query usuarioQuery;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
+    private Rol obtenerRol(int idRol){
+        rolQuery = entityManager.createNamedQuery("Rol.findByIdRol");
+        rolQuery.setParameter("idRol", idRol);
+        Rol rol = (Rol)rolQuery.getSingleResult();
+        return rol; 
+    }
+    private List<Rol> obtenerRolesUsuario(){
+        List<Rol> listaRol = new ArrayList<Rol>();
+        if(bandUseLimpiar != 1){
+            listaRol.addAll(usuario.getRolCollection());   
+        }
+        bandUseLimpiar = 0;
+        Rol rol;
+        for(int filaLocal : rolTable.getSelectedRows()){
+            rol = obtenerRol(Integer.parseInt(rolTable.getValueAt(filaLocal, 0).toString()));
+            listaRol.add(rol);
+        }
+        return listaRol;
+    }
+    private void vaciarCampos(){
+        tf_apellidoUsuario.setText(null);
+        tf_nombreUsuario.setText(null);
+        tf_idEmpleado.setText(null);
+        rolList.clear();
+    }
+    private void sacarEmpleadoLoggueado(){
+        Usuario e;
+        for (int i = 0; i < usuarioList.size(); i++ ){
+            e = usuarioList.get(i);
+            if(e.getCodigoEmpleado() == LoginView.idUsuario){
+                usuarioList.remove(e);
+            }
+        }
+    }
 }

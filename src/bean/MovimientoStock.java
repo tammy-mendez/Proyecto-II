@@ -47,16 +47,12 @@ public class MovimientoStock implements Serializable {
     @Basic(optional = false)
     @Column(name = "cantidad")
     private int cantidad;
- @Basic(optional = false)
+    @Basic(optional = false)
     @Column(name = "fechaHora")
     private String fechaHora;
- 
-@JoinColumn(name = "codigoArticulo", referencedColumnName = "codigoArticulo")
- @ManyToOne
-private Articulo codigoArticulo;
-
-
- 
+    @JoinColumn(name = "codigoArticulo", referencedColumnName = "codigoArticulo")
+     @ManyToOne
+     private Articulo codigoArticulo;
     public MovimientoStock() {
     }
 
@@ -93,20 +89,6 @@ private Articulo codigoArticulo;
         this.cantidad = cantidad;
         changeSupport.firePropertyChange("cantidad", oldCantidad, cantidad);
     }
-
-/*
-    public int getCodigoArticulo() {
-    return codigoArticulo;
-    }
-    public void setCodigoArticulo(int codigoArticulo) {
-    this.codigoArticulo = codigoArticulo;
-    }
-    public int getCodigoEmpleado() {
-    return codigoEmpleado;
-    }
-    public void setCodigoEmpleado(int codigoEmpleado) {
-    this.codigoEmpleado = codigoEmpleado;
-    }*/
     public Articulo getCodigoArticulo() {
         return codigoArticulo;
     }

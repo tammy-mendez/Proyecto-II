@@ -6,20 +6,20 @@
 
 package bean;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  *
@@ -32,8 +32,6 @@ import javax.persistence.Transient;
     @NamedQuery(name = "Usuario.findByCodigoEmpleado", query = "SELECT u FROM Usuario u WHERE u.codigoEmpleado = :codigoEmpleado"),
     @NamedQuery(name = "Usuario.findByPassword", query = "SELECT u FROM Usuario u WHERE u.password = :password")})
 public class Usuario implements Serializable {
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -42,15 +40,23 @@ public class Usuario implements Serializable {
     @Basic(optional = false)
     @Column(name = "password")
     private String password;
-    //@OneToMany
-    //@Basic(optional = false)
-    //@Column(name = "idRol")
-    //private Integer idRol;
     
-    @JoinColumn(name = "idRol", referencedColumnName="idRol")
-    @ManyToOne
-    //Column(name = "idRol")
-    private Rol idRol;
+    @JoinTable(name = "usuario_has_rol", joinColumns = {
+        @JoinColumn(name = "codigoEmpleado", referencedColumnName = "codigoEmpleado")}, inverseJoinColumns = {
+        @JoinColumn(name = "idRol", referencedColumnName = "idRol")})
+    @ManyToMany
+    //@ManyToMany(mappedBy = "usuarioCollection")
+    private Collection<Rol> rolCollection;
+    
+    
+    /*@JoinColumn(name = "codigoEmpleado", referencedColumnName = "codigoEmpleado", insertable = false, updatable = false)
+    @OneToOne(optional = false)
+    private Empleado empleado;
+    */
+    @OneToOne(cascade = {CascadeType.PERSIST, 
+        CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "usuario")
+    private Empleado empleado;
+    
 
     public Usuario() {
     }
@@ -69,9 +75,7 @@ public class Usuario implements Serializable {
     }
 
     public void setCodigoEmpleado(Integer codigoEmpleado) {
-        Integer oldCodigoEmpleado = this.codigoEmpleado;
         this.codigoEmpleado = codigoEmpleado;
-        changeSupport.firePropertyChange("codigoEmpleado", oldCodigoEmpleado, codigoEmpleado);
     }
 
     public String getPassword() {
@@ -79,21 +83,24 @@ public class Usuario implements Serializable {
     }
 
     public void setPassword(String password) {
-        String oldPassword = this.password;
         this.password = password;
-        changeSupport.firePropertyChange("password", oldPassword, password);
     }
 
-    public Rol getIdRol() {
-        return idRol;
+    public Collection<Rol> getRolCollection() {
+        return rolCollection;
     }
 
-    public void setIdRol(Rol idRol) {
-        Rol oldIdRol = this.idRol;
-        this.idRol = idRol;
-        changeSupport.firePropertyChange("idRol", oldIdRol, idRol);
+    public void setRolCollection(Collection<Rol> rolCollection) {
+        this.rolCollection = rolCollection;
     }
-    
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
 
     @Override
     public int hashCode() {
@@ -115,22 +122,9 @@ public class Usuario implements Serializable {
         return true;
     }
 
-    /*   @Override
-    public String toString() {
-    return "bean.Usuario[ codigoEmpleado=" + codigoEmpleado + " ]";
-    }*/
     @Override
     public String toString() {
-        return  "codigoEmpleado=" + codigoEmpleado  +  ", idRol=" + idRol;
-    }
-    
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
+        return "bean.Usuario[ codigoEmpleado=" + codigoEmpleado + " ]";
     }
     
 }

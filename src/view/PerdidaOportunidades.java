@@ -9,6 +9,7 @@ package view;
 import java.awt.Image;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,16 +60,16 @@ public class PerdidaOportunidades extends javax.swing.JFrame {
 
         lbl_BuscarRol.setFont(new java.awt.Font("Corbel", 1, 24)); // NOI18N
         lbl_BuscarRol.setForeground(new java.awt.Color(255, 255, 255));
-        lbl_BuscarRol.setText("Generar Informa de Pérdidas de  Oportunidades");
+        lbl_BuscarRol.setText("Generar Informe de Pérdida de  Oportunidades");
 
         javax.swing.GroupLayout panel_BuscarRolLayout = new javax.swing.GroupLayout(panel_BuscarRol);
         panel_BuscarRol.setLayout(panel_BuscarRolLayout);
         panel_BuscarRolLayout.setHorizontalGroup(
             panel_BuscarRolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_BuscarRolLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_BuscarRolLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_BuscarRol)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addGap(33, 33, 33))
         );
         panel_BuscarRolLayout.setVerticalGroup(
             panel_BuscarRolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,6 +116,7 @@ public class PerdidaOportunidades extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        btn_generar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pdf.png"))); // NOI18N
         btn_generar.setText("Generar");
         btn_generar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -155,26 +157,23 @@ public class PerdidaOportunidades extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(panel_BuscarRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(20, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(176, 176, 176))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panel_BuscarRol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(22, 22, 22)
                 .addComponent(panel_BuscarRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(28, 28, 28)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -197,8 +196,7 @@ public class PerdidaOportunidades extends javax.swing.JFrame {
           SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
           String desde=format.format(ch_desde.getDate());
           String hasta=format.format(ch_hasta.getDate());
-          final long MILLSECS_PER_DAY = 24 * 60 * 60 * 1000;
-          long cantidadDias = (ch_hasta.getDate().getTime() - ch_desde.getDate().getTime())/MILLSECS_PER_DAY;
+         
            try
               {
                    Class.forName("com.mysql.jdbc.Driver");
@@ -206,7 +204,7 @@ public class PerdidaOportunidades extends javax.swing.JFrame {
                     HashMap par = new HashMap();//no definimos ningún parámetro por eso lo dejamos así
                     par.put("FechaDesde",desde );
                      par.put("FechaHasta",hasta );
-                     par.put("CantDias", cantidadDias);
+                     par.put("CantDias", cantidadDias());
                     JasperPrint jp = JasperFillManager.fillReport("C:/Proyecto-II/src/reportes/perdidasOportunidades.jasper", par,con);//el primer parámetro es el camino del archivo, se cambia esta dirección por la dirección del archivo .jasper
                     JasperViewer jv = new JasperViewer(jp,false);
                     jv.setVisible(true);
@@ -225,7 +223,12 @@ public class PerdidaOportunidades extends javax.swing.JFrame {
         // TODO add your handling code here:3
         this.dispose();
     }//GEN-LAST:event_btn_cancelarActionPerformed
-
+    private long cantidadDias(){
+         final long MILLSECS_PER_DAY = 24 * 60 * 60 * 1000;
+         long cantidadDias = (ch_hasta.getDate().getTime() - ch_desde.getDate().getTime())/MILLSECS_PER_DAY;
+           System.out.println("Fecha calculada"+" "+cantidadDias);
+          return  cantidadDias;
+    }
     /**
      * @param args the command line arguments
      */
@@ -259,6 +262,8 @@ public class PerdidaOportunidades extends javax.swing.JFrame {
                 JFrame frame=new PerdidaOportunidades();
                 frame.setVisible(true);
                 frame.setTitle("Generar Informe de  Pérdidas de Oportunidades");
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
             }

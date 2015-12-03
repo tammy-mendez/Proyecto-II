@@ -30,7 +30,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import static view.RolEliminar.tf_identi;
+
 
 /**
  *
@@ -87,7 +87,6 @@ public class MenuEncargadoDeposito extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenu8 = new javax.swing.JMenu();
         jMenuItem12 = new javax.swing.JMenuItem();
@@ -234,7 +233,7 @@ public class MenuEncargadoDeposito extends javax.swing.JFrame {
         jMenu2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jMenu2.setText("Proveedor");
 
-        jMenuItem1.setText("Registrar Proveedor");
+        jMenuItem1.setText("Registrar ");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -242,7 +241,7 @@ public class MenuEncargadoDeposito extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem1);
 
-        jMenuItem2.setText("Modificar Proveedor");
+        jMenuItem2.setText("Modificar/Eliminar");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -250,15 +249,7 @@ public class MenuEncargadoDeposito extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem2);
 
-        jMenuItem3.setText("Eliminar Proveedor");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem3);
-
-        jMenuItem4.setText("Buscar Proveedor");
+        jMenuItem4.setText("Buscar ");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -385,7 +376,7 @@ public class MenuEncargadoDeposito extends javax.swing.JFrame {
         // TODO add your handling code here:
         String args[]=new String[1];
         args[0]="Modificar Orden de Compra";
-       OrdenDeCompra1.main(args);
+       OrdenDeCompra.main(args);
     }//GEN-LAST:event_menu_modifOCActionPerformed
 
     private void menu_visualizarOCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_visualizarOCActionPerformed
@@ -397,28 +388,19 @@ public class MenuEncargadoDeposito extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-          String args[]=new String[1];
+        String args[]=new String[1];
         args[0]="Crear Proveedor";
         ProveedorCreate.main(args);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-          opcion = 1;
+         
         String args[]=new String[1];
         args[0]="Modificar proveedor";
-        ProveedorBuscar.main(args);
+        ProveedorModificarEliminar.main(args);
 
     }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
-        opcion = 2;
-        String args[]=new String[1];
-        args[0]="Eliminar Proveedor";
-        ProveedorBuscar.main(args);
-
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
@@ -648,7 +630,6 @@ for(i=0;i<proveedorList.size();i++){
     private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
@@ -707,7 +688,7 @@ for(i=0;i<proveedorList.size();i++){
         entityManager.persist(oc);
         entityManager.flush();
         codigo= oc.getCodOrden();
-        actualizarDetalleOrdenCompra(codigo, proveedor);
+        actualizarDetalleOrdenCompra(oc, proveedor);
         entityManager.getTransaction().commit();
        }}
         entityManager.close();
@@ -717,7 +698,7 @@ for(i=0;i<proveedorList.size();i++){
     
     }
 
-    private void actualizarDetalleOrdenCompra(int codigoOrden, int prov) {
+    private void actualizarDetalleOrdenCompra(OrdenCompra codigoOrden, int prov) {
         //DetalleOrdenCompra doc = new DetalleOrdenCompra();
         
         detalleOrdenCompraQuery=entityManager.createNativeQuery("select * from detalle_orden_compra "
@@ -736,7 +717,7 @@ for(i=0;i<proveedorList.size();i++){
               doc.setCodArticulo(cps.get(i).getCodArticulo());
               doc.setCodDetalle(cps.get(i).getCodDetalle());
               doc.setCodOrden(codigoOrden);
-              doc.setCodProveedor(cps.get(i).getCodProveedor());
+           //   doc.setCodProveedor(cps.get(i).getCodProveedor());
               doc.setEstado("solicitado");
                         entityManager.merge(doc);
                      entityManager.flush();
@@ -747,21 +728,4 @@ for(i=0;i<proveedorList.size();i++){
     
     
     }
-
-/*private Proveedor obtenerProveedor(String nombre){
-        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
-        EntityManager ema = fact.createEntityManager();
-        Query query = ema.createNamedQuery("Proveedor.findByRazonSocial");
-        query.setParameter("razonSocial", tf_proveedor.getText());
-        List<Proveedor> p = query.getResultList();
-        Proveedor nom = null;
-        try{
-            nom = p.get(0);
-        }catch(ArrayIndexOutOfBoundsException e){
-            System.out.println(e);
-        }catch(NullPointerException e){
-            System.out.println(e);
-        }catch(Exception e){
-            System.out.println("Algo pasó");
-        }*/
 }

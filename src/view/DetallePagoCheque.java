@@ -56,10 +56,10 @@ public class DetallePagoCheque extends javax.swing.JDialog {
     private void initComponents() {
 
         entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
-        facturaCobroQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT f FROM FacturaCobro f");
-        facturaCobroList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : facturaCobroQuery.getResultList();
         detalleCobroQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT d FROM DetalleCobro d");
         detalleCobroList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : detalleCobroQuery.getResultList();
+        facturaCobroQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT f FROM FacturaCobro f");
+        facturaCobroList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : facturaCobroQuery.getResultList();
         btn_cancelar3 = new javax.swing.JButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -234,7 +234,7 @@ public class DetallePagoCheque extends javax.swing.JDialog {
     private java.util.List<bean.DetalleCobro> detalleCobroList;
     private javax.persistence.Query detalleCobroQuery;
     private javax.persistence.EntityManager entityManager;
-    private java.util.List<bean.FacturaCobro_1> facturaCobroList;
+    private java.util.List<bean.FacturaCobro> facturaCobroList;
     private javax.persistence.Query facturaCobroQuery;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;

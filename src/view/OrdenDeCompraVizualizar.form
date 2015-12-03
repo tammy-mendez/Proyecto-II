@@ -434,7 +434,6 @@
               <Subbinding sourcePath="${cantidadPedida}">
                 <BindingParameter name="NAME" value="Cantidad Pedida"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="Integer.class"/>
-                <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
               </Subbinding>
               <Subbinding sourcePath="${cantidadRecibida}">
                 <BindingParameter name="NAME" value="Cantidad Recibida"/>

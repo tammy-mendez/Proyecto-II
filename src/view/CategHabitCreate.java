@@ -8,10 +8,13 @@ package view;
 
 import bean.AuditoriaSistema;
 import bean.CategHabitacion;
+import java.awt.Image;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -20,9 +23,9 @@ import javax.swing.JOptionPane;
  * @author Jorge
  */
 public class CategHabitCreate extends javax.swing.JFrame {
-    
-private char ch;
-private int resp;
+       DecimalFormat formatea = new DecimalFormat("###,###,###,###,###.##");
+       private char ch;
+       private int resp;
     /**
      * Creates new form CategHabitCreate
      */
@@ -67,33 +70,41 @@ private int resp;
         panel_crearCHLayout.setHorizontalGroup(
             panel_crearCHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_crearCHLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(21, 21, 21)
                 .addComponent(lbl_crearCH)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         panel_crearCHLayout.setVerticalGroup(
             panel_crearCHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_crearCHLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_crearCHLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_crearCH)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lbl_nombre.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
+        lbl_nombre.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         lbl_nombre.setText("Nombre de categoría:");
 
-        lbl_costo.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
-        lbl_costo.setText("Costo por noche:");
+        lbl_costo.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        lbl_costo.setText("Costo por noche (Gs.):");
 
         tf_costo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tf_costoKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_costoKeyTyped(evt);
             }
         });
 
+        tf_nombre.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tf_nombreFocusLost(evt);
+            }
+        });
         tf_nombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_nombreKeyTyped(evt);
@@ -110,10 +121,10 @@ private int resp;
                     .addComponent(lbl_nombre)
                     .addComponent(lbl_costo))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_costo, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(44, Short.MAX_VALUE))
+                    .addComponent(tf_costo, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,26 +186,26 @@ private int resp;
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(49, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(46, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_crearCH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(42, 42, 42))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(114, 114, 114)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(114, 114, 114))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panel_crearCH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(21, 21, 21)
                 .addComponent(panel_crearCH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(37, 37, 37)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19))
         );
@@ -239,23 +250,22 @@ private int resp;
 
     private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
         // TODO add your handling code here:
-        if (tf_nombre.getText().length()==0){
-                JOptionPane.showMessageDialog(null,"Ingrese algun valor para el campo nombre", "Error",JOptionPane.ERROR_MESSAGE);
-                return;
-         }else{
-             query=entityManager.createNamedQuery("CategHabitacion.findByNombre");
+         query=entityManager.createNamedQuery("CategHabitacion.findByNombre");
              query.setParameter("nombre", tf_nombre.getText().toLowerCase());
              List<CategHabitacion> ch= query.getResultList();
              if(ch.size()>=1){//comprueba si ya existe una categoria con el mismo nombre
-                     JOptionPane.showMessageDialog(null,"Ya existe una categoría con el mismo nombre", "Error",JOptionPane.ERROR_MESSAGE);
                      tf_nombre.setText(null);
+                     tf_nombre.requestFocus();
                      return;
               }
+        if (tf_nombre.getText().length()==0 || tf_costo.getText().length()==0){
+                JOptionPane.showMessageDialog(null,"No se admiten campos con valores nulos", "Error",JOptionPane.ERROR_MESSAGE);
+         }else{
               resp=  JOptionPane.showConfirmDialog(null,"Desea Registrar una nueva Categoría de Habitación?", "Confirmar Creación",JOptionPane.YES_NO_OPTION );
               if (resp==JOptionPane.YES_OPTION){
                         CategHabitacion ca=new CategHabitacion();
                         ca.setNombre(tf_nombre.getText().toLowerCase());
-                        ca.setCostoxnoche(Integer.parseInt(tf_costo.getText()));
+                        ca.setCostoxnoche(desformatear(tf_costo.getText()));
                         entityManager.getTransaction().begin();//necesario
                         entityManager.persist(ca);
                         entityManager.flush();
@@ -272,13 +282,46 @@ private int resp;
                         as.setUsuario(LoginView.nombreUsuario);  
                         entityManager.persist(as);
                         entityManager.getTransaction().commit();
-                        entityManager.close();
-                        JOptionPane.showMessageDialog(null,"Creación exitosa", "Confirmación",JOptionPane.INFORMATION_MESSAGE);             
-             }
+                       // entityManager.close();
+                        JOptionPane.showMessageDialog(null,"Creación exitosa", "Confirmación",JOptionPane.INFORMATION_MESSAGE);  
+                        resetear();
+             }else{
+                     this.dispose();
+              }
         }
-        this.dispose();
+       
     }//GEN-LAST:event_btn_guardarActionPerformed
 
+    private void tf_costoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_costoKeyReleased
+        // TODO add your handling code here:
+       String valor;
+        int numero;
+        if(tf_costo.getText().length()!=0){
+            valor=tf_costo.getText();
+            numero=(desformatear(valor));
+            tf_costo.setText(formateador(numero));
+        }
+    }//GEN-LAST:event_tf_costoKeyReleased
+
+    private void tf_nombreFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_nombreFocusLost
+        // TODO add your handling code here:
+        if(tf_nombre.getText().length()==0){
+            tf_nombre.requestFocus();
+            return;
+        }
+         query=entityManager.createNamedQuery("CategHabitacion.findByNombre");
+             query.setParameter("nombre", tf_nombre.getText().toLowerCase());
+             List<CategHabitacion> ch= query.getResultList();
+             if(ch.size()>=1){//comprueba si ya existe una categoria con el mismo nombre
+                     JOptionPane.showMessageDialog(null,"Ya existe una categoría con el mismo nombre", "Error",JOptionPane.ERROR_MESSAGE);
+                     tf_nombre.setText(null);
+                     tf_nombre.requestFocus();
+              }
+    }//GEN-LAST:event_tf_nombreFocusLost
+    private void resetear(){
+        tf_nombre.setText(null);
+        tf_costo.setText(null);
+    }
     /**
      * @param args the command line arguments
      */
@@ -312,10 +355,23 @@ private int resp;
                 JFrame frame= new CategHabitCreate();
                 frame.setVisible(true);
                 frame.setTitle("Crear Categoría de Habitación");
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
         });
+    }
+     private String formateador(int num){
+        String formateado;
+        formateado=formatea.format(num);
+        return formateado;
+    }
+    private int desformatear(String num){
+        int numero;
+        num=num.replace(".", "");
+        numero=Integer.parseInt(num);
+        return numero;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

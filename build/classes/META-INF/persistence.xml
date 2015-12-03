@@ -5,7 +5,6 @@
     <class>bean.Rol</class>
     <class>bean.AuditoriaSistema</class>
     <class>bean.Empleado</class>
-    <class>bean.Usuario</class>
     <class>bean.Cargo</class>
     <class>bean.Cliente</class>
     <class>view.Reserva</class>
@@ -34,6 +33,17 @@
     <class>bean.FacturaCobro</class>
     <class>bean.Reserva</class>
     <class>bean.DetallePago</class>
+    <class>bean.FacturaCobro_1</class>
+    <class>bean.Usuario</class>
+    <class>bean.Cargo_1</class>
+    <class>bean.Empleado_1</class>
+    <class>bean.Actividad</class>
+    <class>bean.Asistencia</class>
+    <class>bean.Eventos</class>
+    <class>bean.Lugar</class>
+    <class>bean.PlanillaPagoSueldo</class>
+    <class>bean.Presupuesto</class>
+    <class>bean.SeguimientoActividad</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hotel db"/>
       <property name="javax.persistence.jdbc.password" value="1234"/>

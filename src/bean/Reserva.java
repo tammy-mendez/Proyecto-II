@@ -23,7 +23,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import view.Presupuesto;
 
 /**
  *
@@ -64,9 +63,9 @@ public class Reserva implements Serializable {
     private Integer montoAbonado;
     @OneToMany(mappedBy = "codigoReserva")
     private Collection<FacturaCobro> facturaCobroCollection;
- //   @JoinColumn(name = "numPresupuesto", referencedColumnName = "numPresupuesto")
-  //  @ManyToOne
-  //  private Presupuesto numPresupuesto;
+    @JoinColumn(name = "numPresupuesto", referencedColumnName = "numPresupuesto")
+    @ManyToOne
+    private Presupuesto numPresupuesto;
     @JoinColumn(name = "numHabitacion", referencedColumnName = "numero")
     @ManyToOne(optional = false)
     private Habitacion numHabitacion;
@@ -147,13 +146,13 @@ public class Reserva implements Serializable {
         this.facturaCobroCollection = facturaCobroCollection;
     }
 
-  /*  public Presupuesto getNumPresupuesto() {
+    public Presupuesto getNumPresupuesto() {
         return numPresupuesto;
     }
 
     public void setNumPresupuesto(Presupuesto numPresupuesto) {
         this.numPresupuesto = numPresupuesto;
-    }*/
+    }
 
     public Habitacion getNumHabitacion() {
         return numHabitacion;
@@ -199,10 +198,10 @@ public class Reserva implements Serializable {
         return true;
     }
 
-   // @Override
-   /* public String toString() {
+    @Override
+    public String toString() {
         return "Reserva=" + codigoReserva + ", checkIn=" + checkIn + ", checkOut=" + checkOut + ", cantPersonas=" + cantPersonas + ", montoTotal=" + montoTotal + ", montoAbonado=" + montoAbonado + ", numPresupuesto=" + numPresupuesto + ", numHabitacion=" + numHabitacion + ", codigoCliente=" + codigoCliente;
-    }*/
+    }
 
   
     

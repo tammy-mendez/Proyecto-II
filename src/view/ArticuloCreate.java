@@ -450,7 +450,7 @@ public class ArticuloCreate extends javax.swing.JFrame {
                    DetalleOrdenCompra detalleOC= new DetalleOrdenCompra();
                    detalleOC.setCantidadPedida(Integer.parseInt(tf_cantidadMaxima.getText()));
                    detalleOC.setCodArticulo(a);
-                   detalleOC.setCodProveedor(p1);
+                  // detalleOC.setCodProveedor(p1);
                    detalleOC.setEstado("pendiente");
                    entityManager.persist(detalleOC);
                    entityManager.flush();
@@ -551,7 +551,7 @@ public class ArticuloCreate extends javax.swing.JFrame {
           CategoriaArticulo c1=(CategoriaArticulo) combocat.getSelectedItem();
          cate= c1.getDescripcion();
           // System.out.print(cate);
-        new ProveedorCategoriaArticulo(this, true).setVisible(true);
+        new ArticuloCrearDialogo(this, true).setVisible(true);
     }//GEN-LAST:event_btn_aceptarActionPerformed
 
     private void tf_nombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_nombreKeyTyped

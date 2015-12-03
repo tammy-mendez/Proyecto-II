@@ -32,9 +32,7 @@ import javax.persistence.Transient;
     @NamedQuery(name = "CategoriaArticulo.findAll", query = "SELECT c FROM CategoriaArticulo c"),
     @NamedQuery(name = "CategoriaArticulo.findByCodCategoria", query = "SELECT c FROM CategoriaArticulo c WHERE c.codCategoria = :codCategoria"),
     @NamedQuery(name = "CategoriaArticulo.findByDescripcion", query = "SELECT c FROM CategoriaArticulo c WHERE c.descripcion = :descripcion")
-  //  @NamedQuery(name = "CategoriaArticulo.findByCodArticulo", query = "SELECT c FROM CategoriaArticulo c WHERE c.codArticulo = :codArticulo"),
-    //@NamedQuery(name = "CategoriaArticulo.findByCodProveedor", query = "SELECT c FROM CategoriaArticulo c WHERE c.codProveedor = :codProveedor")
-})
+  })
 public class CategoriaArticulo implements Serializable {
     @Transient
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
@@ -47,15 +45,6 @@ public class CategoriaArticulo implements Serializable {
     @Basic(optional = false)
     @Column(name = "descripcion")
     private String descripcion;
-   /* @Basic(optional = false)
-    @Column(name = "cod_articulo")
-    private int codArticulo;
-    @Basic(optional = false)
-    @Column(name = "cod_proveedor")
-    private int codProveedor;*/
- //@OneToMany(mappedBy = "cod_categoria")
-   //private Collection<Articulo> articuloCollection;
-
     public CategoriaArticulo() {
     }
 
@@ -63,12 +52,11 @@ public class CategoriaArticulo implements Serializable {
         this.codCategoria = codCategoria;
     }
 
-    public CategoriaArticulo(Integer codCategoria, String descripcion//, int codArticulo, int codProveedor
+    public CategoriaArticulo(Integer codCategoria, String descripcion
     ) {
         this.codCategoria = codCategoria;
         this.descripcion = descripcion;
-       // this.codArticulo = codArticulo;
-        //this.codProveedor = codProveedor;
+    
     }
 
     public Integer getCodCategoria() {
@@ -90,27 +78,6 @@ public class CategoriaArticulo implements Serializable {
         this.descripcion = descripcion;
         changeSupport.firePropertyChange("descripcion", oldDescripcion, descripcion);
     }
-/*
-    public int getCodArticulo() {
-        return codArticulo;
-    }
-
-    public void setCodArticulo(int codArticulo) {
-        int oldCodArticulo = this.codArticulo;
-        this.codArticulo = codArticulo;
-        changeSupport.firePropertyChange("codArticulo", oldCodArticulo, codArticulo);
-    }
-
-    public int getCodProveedor() {
-        return codProveedor;
-    }
-
-    public void setCodProveedor(int codProveedor) {
-        int oldCodProveedor = this.codProveedor;
-        this.codProveedor = codProveedor;
-        changeSupport.firePropertyChange("codProveedor", oldCodProveedor, codProveedor);
-    }
-*/
     @Override
     public int hashCode() {
         int hash = 0;

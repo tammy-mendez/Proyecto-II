@@ -94,7 +94,9 @@ public class Habitacion implements Serializable {
 
     @Override
     public String toString() {
-        return "bean.Habitacion[ numero=" + numero + " ]";
+        return "numero=" + numero + ", codigoCategoria=" + codigoCategoria;
     }
+
+  
     
 }

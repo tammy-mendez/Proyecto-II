@@ -12,30 +12,30 @@ import bean.Empleado;
 import bean.Rol;
 import bean.Usuario;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 /**
  *
  * @author Jorge
  */
 public class UsuarioCreate extends javax.swing.JFrame {
-   private char[] letras={'a','e','i','o','u','b','c','d','f','g'};
+   private final char[] letras={'a','e','i','o','u','b','c','d','f','g'};
    private int numero;
-   private String cadena="";
+//   private String cadena="";
    private String receptor;
-   private String password;// contrasenha del usuario para su acceso al sistema
-   private String datos[]=new String[5];
+   //private String password;// contrasenha del usuario para su acceso al sistema
+   private final String datos[]=new String[5];
    private int resp;
+    private int fila;
+    private int codEmpleado;
    
 
     /**
@@ -43,6 +43,8 @@ public class UsuarioCreate extends javax.swing.JFrame {
      */
     public UsuarioCreate() {
         initComponents();
+        empleadoSinRol();
+        //masterTable.setRowSelectionInterval(0, 0);
     }
 
     /**
@@ -57,60 +59,34 @@ public class UsuarioCreate extends javax.swing.JFrame {
 
         EntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         Query = java.beans.Beans.isDesignTime() ? null : EntityManager.createQuery("SELECT r FROM Rol r");
-        List = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : Query.getResultList();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        List = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(Query.getResultList());
         rolListRenderizar1 = new renderizar.RolListRenderizar();
         empleadoQuery = java.beans.Beans.isDesignTime() ? null : EntityManager.createQuery("SELECT e FROM Empleado e");
         empleadoList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(empleadoQuery.getResultList());
-        empleadoListRenderizar1 = new renderizar.EmpleadoListRenderizar();
-        entityManager1 = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         jPanel1 = new javax.swing.JPanel();
         list_rol = new javax.swing.JComboBox();
-        lbl_passw = new javax.swing.JLabel();
         lbl_codempl = new javax.swing.JLabel();
         lbl_rol = new javax.swing.JLabel();
-        tf_passw = new javax.swing.JPasswordField();
-        list_empleado = new javax.swing.JComboBox();
+        tf_codigoEmpleado = new javax.swing.JTextField();
+        tf_nombreEmpleado = new javax.swing.JTextField();
+        tf_apellidoEmpleado = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         btn_cancelar = new javax.swing.JButton();
         btn_guardar = new javax.swing.JButton();
         panel_crearUsuario = new javax.swing.JPanel();
         lbl_registrarUsuario = new javax.swing.JLabel();
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(jTable2);
+        jPanel3 = new javax.swing.JPanel();
+        tf_valor = new javax.swing.JTextField();
+        lbl_valor = new javax.swing.JLabel();
+        lbl_filtro = new javax.swing.JLabel();
+        list_filtros = new javax.swing.JComboBox();
+        btn_buscar = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        masterTable = new javax.swing.JTable();
 
         rolListRenderizar1.setText("rolListRenderizar1");
 
-        empleadoListRenderizar1.setText("empleadoListRenderizar1");
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -127,47 +103,61 @@ public class UsuarioCreate extends javax.swing.JFrame {
             }
         });
 
-        lbl_passw.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
-        lbl_passw.setText("Password:");
-
         lbl_codempl.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
-        lbl_codempl.setText("Codigo Empleado:");
+        lbl_codempl.setText("Empleado:");
 
         lbl_rol.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
         lbl_rol.setText("Rol:");
 
-        tf_passw.setEditable(false);
-        tf_passw.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tf_passwFocusLost(evt);
+        tf_codigoEmpleado.setEnabled(false);
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.codigoEmpleado}"), tf_codigoEmpleado, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        tf_codigoEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_codigoEmpleadoActionPerformed(evt);
             }
         });
 
-        list_empleado.setRenderer(empleadoListRenderizar1);
+        tf_nombreEmpleado.setEnabled(false);
 
-        jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, empleadoList, list_empleado);
-        bindingGroup.addBinding(jComboBoxBinding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.nombre}"), tf_nombreEmpleado, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+
+        tf_nombreEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tf_nombreEmpleadoActionPerformed(evt);
+            }
+        });
+
+        tf_apellidoEmpleado.setEnabled(false);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, masterTable, org.jdesktop.beansbinding.ELProperty.create("${selectedElement.apellido}"), tf_apellidoEmpleado, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(130, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lbl_codempl)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_passw, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(42, 42, 42)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_passw, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(list_empleado, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(77, Short.MAX_VALUE))
+                            .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(tf_apellidoEmpleado, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(tf_codigoEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(tf_nombreEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(lbl_rol, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(94, 94, 94))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,23 +165,22 @@ public class UsuarioCreate extends javax.swing.JFrame {
                 .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_codempl)
-                    .addComponent(list_empleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_passw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_passw))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tf_codigoEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tf_nombreEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tf_apellidoEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lbl_rol)
                     .addComponent(list_rol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/delete.png"))); // NOI18N
-        btn_cancelar.setText("Cancelar");
+        btn_cancelar.setText("Salir");
         btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_cancelarActionPerformed(evt);
@@ -217,15 +206,20 @@ public class UsuarioCreate extends javax.swing.JFrame {
                 .addComponent(btn_cancelar)
                 .addGap(22, 22, 22))
         );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btn_cancelar, btn_guardar});
+
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_cancelar)
-                    .addComponent(btn_guardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btn_guardar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btn_cancelar, btn_guardar});
 
         panel_crearUsuario.setBackground(new java.awt.Color(0, 153, 255));
         panel_crearUsuario.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
@@ -238,10 +232,10 @@ public class UsuarioCreate extends javax.swing.JFrame {
         panel_crearUsuario.setLayout(panel_crearUsuarioLayout);
         panel_crearUsuarioLayout.setHorizontalGroup(
             panel_crearUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_crearUsuarioLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel_crearUsuarioLayout.createSequentialGroup()
+                .addGap(201, 201, 201)
                 .addComponent(lbl_registrarUsuario)
-                .addGap(116, 116, 116))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
         panel_crearUsuarioLayout.setVerticalGroup(
             panel_crearUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,28 +245,166 @@ public class UsuarioCreate extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel3.setForeground(new java.awt.Color(204, 204, 255));
+
+        tf_valor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tf_valorKeyTyped(evt);
+            }
+        });
+
+        lbl_valor.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_valor.setText("Valor:");
+
+        lbl_filtro.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_filtro.setText("Buscar por:");
+
+        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Empleado", "Cedula", "Nombre", "Apellido", "Cargo", "Jefe" }));
+        list_filtros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                list_filtrosActionPerformed(evt);
+            }
+        });
+        list_filtros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                list_filtrosFocusGained(evt);
+            }
+        });
+
+        btn_buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/zoom.png"))); // NOI18N
+        btn_buscar.setText("Buscar");
+        btn_buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_buscarActionPerformed(evt);
+            }
+        });
+        btn_buscar.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                btn_buscarFocusLost(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(lbl_filtro)
+                .addGap(18, 18, 18)
+                .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(78, 78, 78)
+                .addComponent(lbl_valor)
+                .addGap(18, 18, 18)
+                .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_buscar)
+                .addGap(53, 53, 53))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_filtro)
+                    .addComponent(lbl_valor)
+                    .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_buscar))
+                .addContainerGap())
+        );
+
+        masterTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, empleadoList, masterTable);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoEmpleado}"));
+        columnBinding.setColumnName("Código Empleado");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cedula}"));
+        columnBinding.setColumnName("Cédula");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nombre}"));
+        columnBinding.setColumnName("Nombre");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${apellido}"));
+        columnBinding.setColumnName("Apellido");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fechaNacimiento}"));
+        columnBinding.setColumnName("Fecha Nacimiento");
+        columnBinding.setColumnClass(java.util.Date.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefono}"));
+        columnBinding.setColumnName("Teléfono");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${direccion}"));
+        columnBinding.setColumnName("Dirección");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${email}"));
+        columnBinding.setColumnName("Email");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoCargo.nombre}"));
+        columnBinding.setColumnName("Cargo");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoJefe.nombre} + ${codigoJefe.apellido}  "));
+        columnBinding.setColumnName("Jefe");
+        columnBinding.setEditable(false);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        masterTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                masterTableMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(masterTable);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(panel_crearUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE))))
+                .addGap(24, 24, 24))
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(72, 72, 72))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel_crearUsuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(34, Short.MAX_VALUE))
+                        .addGap(224, 224, 224)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(70, 70, 70)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(24, 24, 24)
                 .addComponent(panel_crearUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -284,60 +416,72 @@ public class UsuarioCreate extends javax.swing.JFrame {
 
     private void btn_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_guardarActionPerformed
         // TODO add your handling code here:
-        
-        resp=  JOptionPane.showConfirmDialog(null,"Desea Registrar un nuevo usuario?", "Confirmar Creación",JOptionPane.YES_NO_OPTION );
+       
+       if(!tf_codigoEmpleado.getText().equals("") && 
+                     !tf_nombreEmpleado.getText().equals("")
+               && (fila != -1)){ 
+        resp=  JOptionPane.showConfirmDialog(null,"¿Desea Registrar un nuevo usuario?", "Confirmar Creación",JOptionPane.YES_NO_OPTION );
         if (resp==JOptionPane.YES_OPTION){
-             EntityManagerFactory fact=Persistence.createEntityManagerFactory("proyectoPU");
-             EntityManager em=fact.createEntityManager();
-             em.getTransaction().begin();
-             Empleado e=new Empleado();
-             //obtenemos el codigo del empleado seleccionado  en la lista
-             e=(Empleado) list_empleado.getSelectedItem();
-             //verificamos si el empleado ya no tiene una cuenta creada
-             Query=EntityManager.createNamedQuery("Usuario.findByCodigoEmpleado");
-             Query.setParameter("codigoEmpleado", e.getCodigoEmpleado());
-             List<Usuario> usu=Query.getResultList();
-             if(usu.size()!=0){
-                  JOptionPane.showMessageDialog(null,"El empleado ya tiene una cuenta creada","Error",JOptionPane.ERROR_MESSAGE);
-                  return;
-             }else{
-                 Usuario u=new Usuario();
-                 u.setCodigoEmpleado(e.getCodigoEmpleado());
-                 u.setPassword(tf_passw.getText());
-                 Rol r= new Rol();
-                 r=(Rol) list_rol.getSelectedItem();
-                 u.setIdRol(r);
-                 em.persist(u);
-                 em.flush();
+
+                 //fila = masterTable.getSelectedRow();
+                 //codEmpleado = Integer.parseInt(masterTable.getValueAt(fila, 0).toString());
+                 //Empleado e = obtenerEmpleado(codEmpleado);
+                 
+                 //Empleado e=obtenerEmpleado(Integer.parseInt(tf_codigoEmpleado.getText()));
+                 EntityManager.getTransaction().begin();
+                 //Usuario u=new Usuario();
+                 //u.setCodigoEmpleado(codEmpleado);
+                 //u.setPassword(generarPassword());   
+                 //u.setEmpleado(e);
+                 Empleado empleadoFind = EntityManager.find(Empleado.class, codEmpleado);
+                 Rol rol = (Rol)list_rol.getSelectedItem();
+                 Collection<Rol> roles = new ArrayList<>();
+                 roles.add(rol);
+                 //u.setRolCollection(roles);
+                 empleadoFind.setUsuario(new Usuario());
+                 empleadoFind.getUsuario().setEmpleado(empleadoFind);
+                 empleadoFind.getUsuario().setCodigoEmpleado(codEmpleado);
+                 empleadoFind.getUsuario().setPassword(generarPassword());
+                 empleadoFind.getUsuario().setRolCollection(roles);
+                 //EntityManager.persist(u);
+                 /**
+                  * Se debe actualizar empleado porque el es el dueño de usuario
+                  * Mirar en el bean que el join OneToOne esta en Empleado
+                  */
+                 EntityManager.merge(empleadoFind);
+                 EntityManager.flush();
+                 
                  //registramos los datos de la auditoria
                  AuditoriaSistema as=new AuditoriaSistema();
                  as.setAccion("Creación");
                  as.setTabla("Usuario");
-                 as.setAntes(u.toString());
+                 as.setAntes(empleadoFind.getUsuario().toString());
                  as.setDespues("No hay cambios");
                  //trabajmos con la fecha
                  Date fecha=new Date();
                  DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                  as.setFechaHora((formato.format(fecha)));
                  as.setUsuario(LoginView.nombreUsuario);
-                 em.persist(as);
-                 em.getTransaction().commit();
-                 em.close();
-                 datos[0]=e.getEmail();
+                 EntityManager.persist(as);
+                 EntityManager.flush();
+                 EntityManager.getTransaction().commit();
+                 //em.close();
+                 datos[0]=empleadoFind.getEmail();
                  datos[1]="Creación de cuenta";
-                 datos[2]="Su código de usuario es:"+" "+"'"+e.getCodigoEmpleado()+"'" +" "+
-                         "y su contraseña de acceso es:"+" "+"'"+u.getPassword()+"'";
-                 Correo c=new Correo();
-                 if(c.enviarCorreo(datos)){
-                     JOptionPane.showMessageDialog(null,"Creación Exitosa, sus datos fueron enviados a su email", "Aviso",JOptionPane.INFORMATION_MESSAGE);
-                     this.setVisible(false);
-                 }else{
-                     JOptionPane.showMessageDialog(null,"Creación exitosa,sus datos no puedieron ser enviados; verifique su dirrecion de email", "Error",JOptionPane.ERROR_MESSAGE);
-                     this.setVisible(false);
-                    }
-               }    
+                 datos[2]="Su código de usuario es:"+" "+"'"+empleadoFind.getCodigoEmpleado()+"'" +" "+
+                         "y su contraseña de acceso es:"+" "+"'"+empleadoFind.getUsuario().getPassword()+"'";
+                 //empleadoList.clear();
+                 //empleadoList.add(e);
+                 enviarPassCorreo();
+                 //JOptionPane.showMessageDialog(null, "Usuario Creado Exitosamente");
+                 empleadoSinRol();
+                 fila = -1;
+                 vaciarCampos();
+               }else{
+                    this.dispose();
+             }    
              }else{
-                    this.setVisible(false);
+                JOptionPane.showMessageDialog(null, "Seleccione un empleado", "Error", JOptionPane.ERROR_MESSAGE);
              }      
 
     }//GEN-LAST:event_btn_guardarActionPerformed
@@ -346,22 +490,163 @@ public class UsuarioCreate extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_list_rolActionPerformed
 
-    private void tf_passwFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_passwFocusLost
-        // TODO add your handling code here:
-        for(int i=0;i<3;i++){
-            numero=(int)(Math.random()*9+1);
-            cadena=cadena+""+numero+""+letras[numero];
-        }
-        
-        tf_passw.setText(cadena);
-        System.out.print(cadena);
-        
-    }//GEN-LAST:event_tf_passwFocusLost
-
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
+        //EntityManager.close();
+        vaciarCampos();
+        this.dispose();
     }//GEN-LAST:event_btn_cancelarActionPerformed
+
+    private void tf_valorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_valorKeyTyped
+        // TODO add your handling code here:
+        char letra;
+        int num;
+        if (list_filtros.getSelectedItem()=="Jefe"
+            || list_filtros.getSelectedItem()=="Empleado"){
+            letra=evt.getKeyChar();
+            if(!Character.isDigit(letra)){
+                getToolkit().beep();
+                evt.consume();
+            }
+        }
+        if(list_filtros.getSelectedItem() == "Nombre" ||
+                list_filtros.getSelectedItem() == "Apellido" ||
+                list_filtros.getSelectedItem() == "Cargo"){
+            num=evt.getKeyChar();
+            if(Character.isDigit(num)){
+                getToolkit().beep();
+                evt.consume();
+            }
+        }
+    }//GEN-LAST:event_tf_valorKeyTyped
+
+    private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
+        // TODO add your handling code here:
+        if (tf_valor.getText().length()==0){
+            JOptionPane.showMessageDialog(null,"Ingrese algún valor para efectuar la búsqueda", "Advertencia",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        else{
+            if (list_filtros.getSelectedItem()=="Nombre"){
+                empleadoQuery = EntityManager.createNativeQuery("SELECT * FROM empleado "
+                    + "WHERE nombre LIKE '%"+tf_valor.getText()+"%'", Empleado.class);
+                List<Empleado> r = empleadoQuery.getResultList();
+                if (r.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Nombre inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                    tf_valor.setText(null);
+                    return;
+                }
+                empleadoList.clear();
+                empleadoList.addAll(r);
+            }
+            else if (list_filtros.getSelectedItem()=="Apellido"){
+                empleadoQuery = EntityManager.createNativeQuery("SELECT * FROM empleado "
+                    + "WHERE apellido LIKE '%"+tf_valor.getText()+"%'", Empleado.class);
+                List<Empleado> r = empleadoQuery.getResultList();
+                if (r.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Apellido inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                    tf_valor.setText(null);
+                    return;
+                }
+                empleadoList.clear();
+                empleadoList.addAll(r);
+            }
+            else if(list_filtros.getSelectedItem()=="Cedula"){
+                empleadoQuery = EntityManager.createNativeQuery("SELECT * FROM empleado "
+                    + "WHERE cedula LIKE '%"+tf_valor.getText()+"%'", Empleado.class);
+                List<Empleado> a=empleadoQuery.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Cedula Inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                empleadoList.clear();
+                empleadoList.addAll(a);
+                return;
+            }
+            else if(list_filtros.getSelectedItem()=="Empleado"){
+                empleadoQuery=EntityManager.createNamedQuery("Empleado.findByCodigoEmpleado");
+                empleadoQuery.setParameter("codigoEmpleado", Integer.parseInt(tf_valor.getText()));
+                List<Empleado> a=empleadoQuery.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Empleado Inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                empleadoList.clear();
+                empleadoList.addAll(a);
+                return;
+            }
+            else if(list_filtros.getSelectedItem()=="Cargo"){
+                empleadoQuery = EntityManager.createNativeQuery( "SELECT * FROM empleado e "
+                    + "INNER JOIN cargo c "
+                    + "on e.codigoCargo = c.codigoCargo "
+                    + "WHERE c.nombre like '%"
+                    +tf_valor.getText() + "%'", Empleado.class);
+                List<Empleado> a=empleadoQuery.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"No se han encontrado registros para la fecha", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                empleadoList.clear();
+                empleadoList.addAll(a);
+                return;
+            }
+            else if(list_filtros.getSelectedItem()=="Jefe"){
+                //query=entityManager.createNamedQuery("Empleado.findByCedula");
+                //query.setParameter("cedula", tf_valor.getText());
+                empleadoQuery = EntityManager.createNativeQuery( "SELECT * FROM empleado e "
+                    + "INNER JOIN empleado j "
+                    + "on e.codigoJefe = j.codigoEmpleado "
+                    + "WHERE j.cedula like '%"
+                    +tf_valor.getText() + "%'", Empleado.class);
+                List<Empleado> a=empleadoQuery.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Cedula Inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                empleadoList.clear();
+                empleadoList.addAll(a);
+                return;
+            }
+        }
+    }//GEN-LAST:event_btn_buscarActionPerformed
+
+    private void btn_buscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btn_buscarFocusLost
+        // TODO add your handling code here:
+        tf_valor.setText(null);
+    }//GEN-LAST:event_btn_buscarFocusLost
+
+    private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
+        fila = masterTable.getSelectedRow();
+        codEmpleado = Integer.parseInt(masterTable.getValueAt(fila, 0).toString());
+        /*Empleado e=obtenerEmpleado(codEmpleado);
+        if(e.getUsuario() != null){
+            JOptionPane.showMessageDialog(null,"El empleado ya tiene una cuenta creada","Error",JOptionPane.ERROR_MESSAGE);
+            tf_apellidoEmpleado.setText("");
+            tf_codigoEmpleado.setText("");
+            tf_nombreEmpleado.setText("");
+        }*/
+    }//GEN-LAST:event_masterTableMouseClicked
+
+    private void tf_codigoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_codigoEmpleadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_codigoEmpleadoActionPerformed
+
+    private void tf_nombreEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_nombreEmpleadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tf_nombreEmpleadoActionPerformed
+
+    private void list_filtrosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_list_filtrosFocusGained
+        // TODO add your handling code here:
+        tf_valor.setText("");
+    }//GEN-LAST:event_list_filtrosFocusGained
+
+    private void list_filtrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list_filtrosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_list_filtrosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -392,6 +677,7 @@ public class UsuarioCreate extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 JFrame frame=new UsuarioCreate();
                 frame.setVisible(true);
@@ -406,27 +692,64 @@ public class UsuarioCreate extends javax.swing.JFrame {
     private javax.persistence.EntityManager EntityManager;
     private java.util.List<bean.Rol> List;
     private javax.persistence.Query Query;
+    private javax.swing.JButton btn_buscar;
     private javax.swing.JButton btn_cancelar;
     private javax.swing.JButton btn_guardar;
     private java.util.List<bean.Empleado> empleadoList;
-    private renderizar.EmpleadoListRenderizar empleadoListRenderizar1;
     private javax.persistence.Query empleadoQuery;
-    private javax.persistence.EntityManager entityManager1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lbl_codempl;
-    private javax.swing.JLabel lbl_passw;
+    private javax.swing.JLabel lbl_filtro;
     private javax.swing.JLabel lbl_registrarUsuario;
     private javax.swing.JLabel lbl_rol;
-    private javax.swing.JComboBox list_empleado;
+    private javax.swing.JLabel lbl_valor;
+    private javax.swing.JComboBox list_filtros;
     private javax.swing.JComboBox list_rol;
+    private javax.swing.JTable masterTable;
     private javax.swing.JPanel panel_crearUsuario;
     private renderizar.RolListRenderizar rolListRenderizar1;
-    private javax.swing.JPasswordField tf_passw;
+    private javax.swing.JTextField tf_apellidoEmpleado;
+    private javax.swing.JTextField tf_codigoEmpleado;
+    private javax.swing.JTextField tf_nombreEmpleado;
+    private javax.swing.JTextField tf_valor;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
+    private String generarPassword(){
+        String cadenaLocal = "";
+        for(int i=0;i<3;i++){
+            numero=(int)(Math.random()*9+1);
+            cadenaLocal=cadenaLocal+""+numero+""+letras[numero];
+        }
+        
+        //tf_passw.setText(cadena);
+        System.out.print(cadenaLocal);
+        return cadenaLocal;
+    }
+    private void vaciarCampos(){
+        tf_nombreEmpleado.setText(null);
+        tf_codigoEmpleado.setText(null);
+        tf_apellidoEmpleado.setText(null);
+    }
+    private void empleadoSinRol(){
+        Empleado e;
+        for (int i = 0; i < empleadoList.size(); i++ ){
+            e = empleadoList.get(i);
+            if(e.getUsuario() != null){
+                empleadoList.remove(e);
+            }
+        }
+    }
+    private void enviarPassCorreo(){
+        Correo c=new Correo();
+        if(c.enviarCorreo(datos)){
+            JOptionPane.showMessageDialog(null,"Creación Exitosa, "
+                    + "sus datos fueron enviados a su email", "Aviso",JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null,"Creación exitosa,sus datos no puedieron ser enviados; "
+                    + "verifique su dirrecion de email", "Error",JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

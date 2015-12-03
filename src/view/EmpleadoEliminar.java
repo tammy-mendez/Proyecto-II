@@ -7,21 +7,16 @@
 package view;
 
 import bean.AuditoriaSistema;
-import bean.Cargo;
 import bean.Empleado;
-import bean.ProductoServicio;
+import bean.Usuario;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import com.mxrck.autocompleter.TextAutoCompleter;
-import java.util.Iterator;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -29,18 +24,16 @@ import java.util.Iterator;
  */
 public class EmpleadoEliminar extends javax.swing.JFrame {
     private char ch;
-    public static Empleado empleado;
-    private final  TextAutoCompleter textAutoCompleter;
+    private Empleado empleado;
+     Date fecha=new Date();
+     private int fila;
+     DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     /**
      * Creates new form EmpleadoRegistrar
      */
     public EmpleadoEliminar() {
         initComponents();
-        inicializarEmpleado();
-        this.textAutoCompleter = new TextAutoCompleter(tf_jefe);
-        //infijo
-        this.textAutoCompleter.setMode(0);
-        inicializarLista();
+       
        
     }
 
@@ -54,9 +47,11 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        proyectoPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
-        cargoQuery = java.beans.Beans.isDesignTime() ? null : proyectoPUEntityManager.createQuery("SELECT c FROM Cargo c");
+        entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
+        cargoQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT c FROM Cargo c");
         cargoList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : cargoQuery.getResultList();
+        query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT e FROM Empleado e");
+        list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
         cargoListRenderizar1 = new renderizar.CargoListRenderizar();
         panel_registrarEmpleado = new javax.swing.JPanel();
         lbl_registrarEmpleado = new javax.swing.JLabel();
@@ -79,13 +74,23 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
         jc_fechaNacimiento = new com.toedter.calendar.JDateChooser();
         jLabel7 = new javax.swing.JLabel();
         tf_jefe = new javax.swing.JTextField();
-        lbl_nombreJefe = new javax.swing.JLabel();
-        lbl_apellidoJefe = new javax.swing.JLabel();
+        lbl_codigo = new javax.swing.JLabel();
+        tf_codigo = new javax.swing.JTextField();
         lbl_jefeNom = new javax.swing.JLabel();
-        lbl_apeJefe = new javax.swing.JLabel();
+        tf_jefeNom = new javax.swing.JTextField();
+        lbl_ingreso = new javax.swing.JLabel();
+        tf_ingreso = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         btn_eliminar = new javax.swing.JButton();
         btn_cancelar = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        tf_valor = new javax.swing.JTextField();
+        lbl_valor = new javax.swing.JLabel();
+        lbl_filtro = new javax.swing.JLabel();
+        list_filtros = new javax.swing.JComboBox();
+        btn_buscar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        masterTable = new javax.swing.JTable();
 
         cargoListRenderizar1.setText("cargoListRenderizar1");
 
@@ -94,7 +99,7 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
         panel_registrarEmpleado.setBackground(new java.awt.Color(0, 153, 255));
         panel_registrarEmpleado.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
-        lbl_registrarEmpleado.setFont(new java.awt.Font("Corbel", 1, 25)); // NOI18N
+        lbl_registrarEmpleado.setFont(new java.awt.Font("Corbel", 1, 28)); // NOI18N
         lbl_registrarEmpleado.setForeground(new java.awt.Color(255, 255, 255));
         lbl_registrarEmpleado.setText("Eliminar Empleado");
 
@@ -102,30 +107,37 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
         panel_registrarEmpleado.setLayout(panel_registrarEmpleadoLayout);
         panel_registrarEmpleadoLayout.setHorizontalGroup(
             panel_registrarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_registrarEmpleadoLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel_registrarEmpleadoLayout.createSequentialGroup()
+                .addGap(167, 167, 167)
                 .addComponent(lbl_registrarEmpleado)
-                .addGap(139, 139, 139))
+                .addContainerGap(204, Short.MAX_VALUE))
         );
         panel_registrarEmpleadoLayout.setVerticalGroup(
             panel_registrarEmpleadoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_registrarEmpleadoLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_registrarEmpleadoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_registrarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setForeground(new java.awt.Color(153, 153, 255));
 
-        tf_nombre.setEnabled(false);
+        tf_nombre.setEditable(false);
+        tf_nombre.setBackground(new java.awt.Color(0, 153, 255));
+        tf_nombre.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_nombre.setForeground(new java.awt.Color(255, 255, 255));
         tf_nombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_nombreKeyTyped(evt);
             }
         });
 
-        tf_apellido.setEnabled(false);
+        tf_apellido.setEditable(false);
+        tf_apellido.setBackground(new java.awt.Color(0, 153, 255));
+        tf_apellido.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_apellido.setForeground(new java.awt.Color(255, 255, 255));
         tf_apellido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tf_apellidoActionPerformed(evt);
@@ -137,11 +149,16 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Cédula");
+        jLabel3.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        jLabel3.setText("Cédula:");
 
+        jLabel1.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jLabel1.setText("Nombre:");
 
-        tf_cedula.setEnabled(false);
+        tf_cedula.setEditable(false);
+        tf_cedula.setBackground(new java.awt.Color(0, 153, 255));
+        tf_cedula.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_cedula.setForeground(new java.awt.Color(255, 255, 255));
         tf_cedula.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tf_cedulaActionPerformed(evt);
@@ -158,59 +175,100 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jLabel4.setText("Email:");
 
-        tf_email.setEnabled(false);
+        tf_email.setEditable(false);
+        tf_email.setBackground(new java.awt.Color(0, 153, 255));
+        tf_email.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_email.setForeground(new java.awt.Color(255, 255, 255));
         tf_email.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_emailKeyTyped(evt);
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jLabel5.setText("Dirección:");
 
-        tf_direccion.setEnabled(false);
+        tf_direccion.setEditable(false);
+        tf_direccion.setBackground(new java.awt.Color(0, 153, 255));
+        tf_direccion.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_direccion.setForeground(new java.awt.Color(255, 255, 255));
         tf_direccion.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_direccionKeyTyped(evt);
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jLabel6.setText("Teléfono:");
 
+        jLabel2.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jLabel2.setText("Apellido:");
 
-        tf_telefono.setEnabled(false);
+        tf_telefono.setEditable(false);
+        tf_telefono.setBackground(new java.awt.Color(0, 153, 255));
+        tf_telefono.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_telefono.setForeground(new java.awt.Color(255, 255, 255));
         tf_telefono.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 tf_telefonoKeyTyped(evt);
             }
         });
 
+        jLabel9.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jLabel9.setText("Cédula Jefe:");
 
+        jLabel8.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jLabel8.setText("Cargo:");
 
+        cb_cargo.setBackground(new java.awt.Color(0, 153, 255));
         cb_cargo.setEnabled(false);
         cb_cargo.setRenderer(cargoListRenderizar1);
 
         org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, cargoList, cb_cargo);
         bindingGroup.addBinding(jComboBoxBinding);
 
+        jc_fechaNacimiento.setBackground(new java.awt.Color(0, 153, 255));
         jc_fechaNacimiento.setEnabled(false);
 
+        jLabel7.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
         jLabel7.setText("Nacimiento:");
 
-        tf_jefe.setEnabled(false);
+        tf_jefe.setEditable(false);
+        tf_jefe.setBackground(new java.awt.Color(0, 153, 255));
+        tf_jefe.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_jefe.setForeground(new java.awt.Color(255, 255, 255));
         tf_jefe.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tf_jefeFocusGained(evt);
             }
         });
 
-        lbl_jefeNom.setText("Nombre:");
+        lbl_codigo.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        lbl_codigo.setText("Código:");
 
-        lbl_apeJefe.setText("Apellido:");
+        tf_codigo.setEditable(false);
+        tf_codigo.setBackground(new java.awt.Color(0, 153, 255));
+        tf_codigo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_codigo.setForeground(new java.awt.Color(255, 255, 255));
+
+        lbl_jefeNom.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        lbl_jefeNom.setText("Nombre/Apellido:");
+
+        tf_jefeNom.setEditable(false);
+        tf_jefeNom.setBackground(new java.awt.Color(0, 153, 255));
+        tf_jefeNom.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_jefeNom.setForeground(new java.awt.Color(255, 255, 255));
+
+        lbl_ingreso.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        lbl_ingreso.setText("Fecha Ingreso:");
+
+        tf_ingreso.setEditable(false);
+        tf_ingreso.setBackground(new java.awt.Color(0, 153, 255));
+        tf_ingreso.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf_ingreso.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -219,93 +277,115 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
-                .addGap(29, 29, 29)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tf_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_telefono, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_email, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                    .addComponent(tf_direccion)
-                    .addComponent(tf_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                    .addComponent(tf_apellido))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tf_direccion, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(51, 51, 51)
+                                        .addComponent(jLabel9)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(tf_jefe, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addGap(65, 65, 65)
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jc_fechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_apeJefe)
-                            .addComponent(lbl_jefeNom))
-                        .addGap(18, 18, 18)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cb_cargo, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jc_fechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_jefe, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_nombreJefe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_apellidoJefe, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))
-                .addGap(20, 20, 20))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lbl_jefeNom)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tf_jefeNom, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(lbl_ingreso)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tf_ingreso, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel8))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tf_email, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(43, 43, 43)
+                                        .addComponent(jLabel6)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tf_telefono, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cb_cargo, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_codigo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(tf_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(tf_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(tf_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
-                        .addGap(8, 8, 8)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(tf_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tf_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(tf_direccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tf_telefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jc_fechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cb_cargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(tf_jefe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_jefeNom)
-                            .addComponent(lbl_nombreJefe, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_apellidoJefe, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_apeJefe, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addGap(22, 22, 22)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tf_cedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(lbl_codigo)
+                    .addComponent(tf_codigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(tf_apellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(tf_direccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(tf_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(tf_telefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jc_fechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(cb_cargo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbl_ingreso)
+                        .addComponent(tf_ingreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(31, 31, 31)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(tf_jefe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_jefeNom)
+                    .addComponent(tf_jefeNom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btn_eliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/trash.png"))); // NOI18N
         btn_eliminar.setText("Eliminar");
         btn_eliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -313,6 +393,7 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
             }
         });
 
+        btn_cancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/delete.png"))); // NOI18N
         btn_cancelar.setText("Cancelar");
         btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -325,11 +406,11 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(30, 30, 30)
                 .addComponent(btn_eliminar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(btn_cancelar)
-                .addContainerGap())
+                .addGap(20, 20, 20))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -338,25 +419,139 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_eliminar)
                     .addComponent(btn_cancelar))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel3.setForeground(new java.awt.Color(204, 204, 255));
+
+        tf_valor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tf_valorKeyTyped(evt);
+            }
+        });
+
+        lbl_valor.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_valor.setText("Valor:");
+
+        lbl_filtro.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        lbl_filtro.setText("Buscar por:");
+
+        list_filtros.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Empleado", "Cedula", "Nombre", "Apellido", "Cargo", "Jefe" }));
+        list_filtros.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                list_filtrosFocusGained(evt);
+            }
+        });
+
+        btn_buscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/zoom.png"))); // NOI18N
+        btn_buscar.setText("Buscar");
+        btn_buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_buscarActionPerformed(evt);
+            }
+        });
+        btn_buscar.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                btn_buscarFocusLost(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(lbl_filtro)
+                .addGap(18, 18, 18)
+                .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(lbl_valor)
+                .addGap(18, 18, 18)
+                .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(btn_buscar)
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_filtro)
+                    .addComponent(lbl_valor)
+                    .addComponent(list_filtros, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tf_valor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_buscar))
+                .addContainerGap())
+        );
+
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, list, masterTable);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoEmpleado}"));
+        columnBinding.setColumnName(" Empleado");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${cedula}"));
+        columnBinding.setColumnName("Cedula");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nombre}"));
+        columnBinding.setColumnName("Nombre");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${apellido}"));
+        columnBinding.setColumnName("Apellido");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fechaIngreso}"));
+        columnBinding.setColumnName("Ingreso");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoCargo.nombre}"));
+        columnBinding.setColumnName("Cargo");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${telefono}"));
+        columnBinding.setColumnName("Telefono");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${email}"));
+        columnBinding.setColumnName("Email");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoJefe.codigoEmpleado}"));
+        columnBinding.setColumnName("Codigo Jefe");
+        columnBinding.setColumnClass(Integer.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        masterTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                masterTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(masterTable);
+        if (masterTable.getColumnModel().getColumnCount() > 0) {
+            masterTable.getColumnModel().getColumn(0).setPreferredWidth(40);
+            masterTable.getColumnModel().getColumn(1).setPreferredWidth(40);
+            masterTable.getColumnModel().getColumn(6).setPreferredWidth(40);
+            masterTable.getColumnModel().getColumn(8).setPreferredWidth(40);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 35, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
+                .addGap(31, 31, 31))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(panel_registrarEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(141, 141, 141))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(334, 334, 334)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(194, 194, 194)
+                            .addComponent(panel_registrarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,10 +559,14 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(panel_registrarEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -377,33 +576,74 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
 
     private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
         // TODO add your handling code here:
-            int respuesta = JOptionPane.showConfirmDialog(null, "¿Confirma el registro?");
+            String valor;
+            String antes;
+            String despues;
+            int i;
+            if(tf_codigo.getText().length()==0){
+              JOptionPane.showMessageDialog(null, "Seleccione un empleado","Error",JOptionPane.ERROR_MESSAGE );
+              return;
+            }
+            int respuesta = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea eliminar?");
             if(respuesta == JOptionPane.YES_OPTION){
-                String valor = empleado.toString();
-                EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
-                EntityManager ema = fact.createEntityManager();
-                ema.getTransaction().begin();
-                Empleado empleadoFind = ema.find(Empleado.class, empleado.getCodigoEmpleado());
-                ema.remove(empleadoFind);
-                ema.flush();
-
-                //auditoria
-                AuditoriaSistema as=new AuditoriaSistema();
-                as.setAccion("Eliminación");
-                as.setTabla("Empleado");
-                as.setAntes(valor);
-                as.setDespues("Sin Modificaciones");
-                //trabajamos con la fecha
-                Date fecha=new Date();
-                DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                as.setFechaHora(formato.format(fecha));
-                as.setUsuario(LoginView.nombreUsuario);  
-                //as.setUsuario("Vladimir");
-                ema.getTransaction().commit();
-                ema.close();
+                entityManager.getTransaction().begin();
+                //eliminamos el perfil de usuario del empleado
+                /*query=entityManager.createNativeQuery("SELECT * FROM usuario  WHERE "
+                        + "codigoEmpleado= "
+                        + "'"+tf_codigo.getText()+"'",Usuario.class);
+                List<Usuario> u=query.getResultList();
+                if(u.size()>=1){
+                    for(i=0;i<u.size();i++){
+                        valor=u.get(i).toString();
+                        entityManager.remove(u.get(i));
+                        registrarAuditoria("Usuario","Eliminación",valor,"No hay cambios");
+                    }
+                    entityManager.flush();
+                }*/
+                //actualizamos los subordinados en caso de que sea un jefe
+                 query=entityManager.createNativeQuery("SELECT * FROM empleado  WHERE "
+                        + "codigoJefe= "
+                        + "'"+tf_codigo.getText()+"'",Empleado.class);
+                List<Empleado> listemp=query.getResultList();
+                if(listemp.size()>=1){
+                    for(i=0;i<listemp.size();i++){
+                        Empleado e=new Empleado();
+                        e.setCodigoEmpleado(listemp.get(i).getCodigoEmpleado());
+                        e.setCedula(listemp.get(i).getCedula());
+                        e.setNombre(listemp.get(i).getNombre());
+                        e.setApellido(listemp.get(i).getApellido());
+                        e.setFechaNacimiento(listemp.get(i).getFechaNacimiento());
+                        e.setTelefono(listemp.get(i).getTelefono());
+                        e.setDireccion(listemp.get(i).getDireccion());
+                        e.setEmail(listemp.get(i).getEmail());
+                        e.setFechaIngreso(listemp.get(i).getFechaIngreso());
+                        e.setCodigoCargo(listemp.get(i).getCodigoCargo());
+                        e.setCodigoJefe(null);
+                        antes=listemp.get(i).toString();
+                        entityManager.merge(e);
+                        despues=e.toString();
+                        entityManager.flush();
+                        registrarAuditoria("Empleado","Modificación",antes,despues);
+                        list.remove(listemp.get(i));
+                        list.add(e);
+                        
+                    } 
+                }
+                //
+                valor=empleado.toString();
+                Empleado empleadoFind = entityManager.find(Empleado.class, empleado.getCodigoEmpleado());
+                Usuario usuarioFind = entityManager.find(Usuario.class, empleadoFind.getUsuario().getCodigoEmpleado());
+                entityManager.remove(usuarioFind);
+                entityManager.flush();
+                registrarAuditoria("Usuario","Eliminación",valor,"No hay cambios");
+                entityManager.remove(empleadoFind);
+                entityManager.flush();
+                registrarAuditoria("Empleado","Eliminación",valor,"No hay cambios");
+                entityManager.getTransaction().commit();
                 JOptionPane.showMessageDialog(null, "Eliminación Exitosa");
-                this.dispose();
-            }else if(respuesta == JOptionPane.YES_NO_OPTION){
+                 list.remove(empleadoFind);
+                  resetear();
+            }else{
                 this.dispose();
             }
         
@@ -506,32 +746,199 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
 
     private void tf_cedulaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_cedulaFocusLost
         // TODO add your handling code here:
-        Empleado emple = obtenerEmpleado(tf_cedula.getText());
-        if ( emple != null
-                && !emple.getCedula().equals(empleado.getCedula())){
-            JOptionPane.showMessageDialog(null, "¡El empleado ya existe!");
-            tf_cedula.setText(empleado.getCedula());
-            tf_cedula.requestFocus();
-        }
+      
     }//GEN-LAST:event_tf_cedulaFocusLost
 
     private void tf_jefeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_jefeFocusGained
         // TODO add your handling code here:
-        try{
-            Empleado emple = obtenerEmpleado(tf_jefe.getText());
-            lbl_nombreJefe.setText(emple.getNombre());
-            lbl_apellidoJefe.setText(emple.getApellido());
-            lbl_jefeNom.setVisible(true);
-            lbl_apeJefe.setVisible(true);
-        }catch(NullPointerException e){
-            System.out.println("sigue");
-            lbl_nombreJefe.setText("");
-            lbl_apellidoJefe.setText("");
-            lbl_jefeNom.setVisible(false);
-            lbl_apeJefe.setVisible(false);
-        }
+       
     }//GEN-LAST:event_tf_jefeFocusGained
 
+    private void tf_valorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_valorKeyTyped
+        // TODO add your handling code here:
+        char ch;
+        if (list_filtros.getSelectedItem()=="Jefe"
+            || list_filtros.getSelectedItem()=="Empleado"){
+            ch=evt.getKeyChar();
+            if(!Character.isDigit(ch)){
+                getToolkit().beep();
+                evt.consume();
+            }
+        }
+        if (list_filtros.getSelectedItem()=="Nombre"
+            || list_filtros.getSelectedItem()=="Apellido" || list_filtros.getSelectedItem()=="Cargo" ){
+                ch=evt.getKeyChar();
+                if(Character.isDigit(ch)){
+                    getToolkit().beep();
+                    evt.consume();
+                }
+        }
+    }//GEN-LAST:event_tf_valorKeyTyped
+
+    private void list_filtrosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_list_filtrosFocusGained
+        // TODO add your handling code here:
+        tf_valor.setText(null);
+    }//GEN-LAST:event_list_filtrosFocusGained
+
+    private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
+        // TODO add your handling code here:
+        if (tf_valor.getText().length()==0){
+            JOptionPane.showMessageDialog(null,"Ingrese algún valor para efectuar la búsqueda", "Advertencia",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        else{
+            if (list_filtros.getSelectedItem()=="Nombre"){
+                query = entityManager.createNativeQuery("SELECT * FROM empleado "
+                    + "WHERE nombre LIKE '%"+tf_valor.getText()+"%'", Empleado.class);
+                List<Empleado> r = query.getResultList();
+                if (r.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Nombre inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(r);
+            }
+            else if (list_filtros.getSelectedItem()=="Apellido"){
+                query = entityManager.createNativeQuery("SELECT * FROM empleado "
+                    + "WHERE apellido LIKE '%"+tf_valor.getText()+"%'", Empleado.class);
+                List<Empleado> r = query.getResultList();
+                if (r.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Apellido inexistente","Error",JOptionPane.ERROR_MESSAGE );
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(r);
+            }
+            else if(list_filtros.getSelectedItem()=="Cedula"){
+                query = entityManager.createNativeQuery("SELECT * FROM empleado "
+                    + "WHERE cedula LIKE '%"+tf_valor.getText()+"%'", Empleado.class);
+                List<Empleado> a=query.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Cedula Inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(a);
+                return;
+            }
+            else if(list_filtros.getSelectedItem()=="Empleado"){
+                query=entityManager.createNamedQuery("Empleado.findByCodigoEmpleado");
+                query.setParameter("codigoEmpleado", Integer.parseInt(tf_valor.getText()));
+                List<Empleado> a=query.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Empleado Inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(a);
+                return;
+            }
+            else if(list_filtros.getSelectedItem()=="Cargo"){
+                query = entityManager.createNativeQuery( "SELECT * FROM empleado e "
+                    + "INNER JOIN cargo c "
+                    + "on e.codigoCargo = c.codigoCargo "
+                    + "WHERE c.nombre like '%"
+                    +tf_valor.getText() + "%'", Empleado.class);
+                List<Empleado> a=query.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"No se han encontrado registros para la fecha", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(a);
+                return;
+            }
+            else if(list_filtros.getSelectedItem()=="Jefe"){
+                //query=entityManager.createNamedQuery("Empleado.findByCedula");
+                //query.setParameter("cedula", tf_valor.getText());
+                query = entityManager.createNativeQuery( "SELECT * FROM empleado e "
+                    + "INNER JOIN empleado j "
+                    + "on e.codigoJefe = j.codigoEmpleado "
+                    + "WHERE j.cedula like '%"
+                    +tf_valor.getText() + "%'", Empleado.class);
+                List<Empleado> a=query.getResultList();
+                if(a.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Cedula Inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                list.clear();
+                list.addAll(a);
+                return;
+            }
+        }
+    }//GEN-LAST:event_btn_buscarActionPerformed
+
+    private void btn_buscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btn_buscarFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_buscarFocusLost
+
+    private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
+        // TODO add your handling code here:
+        fila=masterTable.getSelectedRow();
+        obtenerEmpleado(fila);
+        inicializarEmpleado();
+    }//GEN-LAST:event_masterTableMouseClicked
+    private void obtenerEmpleado(int fila){
+        query = entityManager.createNamedQuery("Empleado.findByCodigoEmpleado");
+        query.setParameter("codigoEmpleado", masterTable.getValueAt(fila, 0));
+        try{
+               empleado = (Empleado)query.getSingleResult();
+               System.out.println(empleado);
+            }catch(javax.persistence.NoResultException e){
+                System.out.println(empleado);
+            }
+    }
+    private void inicializarEmpleado() {
+        tf_codigo.setText(Integer.toString(empleado.getCodigoEmpleado()));
+        tf_apellido.setText(empleado.getApellido());
+        tf_cedula.setText(empleado.getCedula());
+        tf_direccion.setText(empleado.getDireccion());
+        tf_email.setText(empleado.getEmail());
+        try{
+            tf_jefe.setText(empleado.getCodigoJefe().getCedula()); 
+            tf_jefeNom.setText(empleado.getCodigoJefe().getNombre()+" "+empleado.getCodigoJefe().getApellido());
+        }catch(NullPointerException e){
+            tf_jefe.setText("");
+            tf_jefeNom.setText(null);
+        }
+        tf_nombre.setText(empleado.getNombre());
+        tf_telefono.setText(empleado.getTelefono());
+        jc_fechaNacimiento.setDate(empleado.getFechaNacimiento());
+        tf_ingreso.setText(empleado.getFechaIngreso());
+        cb_cargo.setSelectedItem(empleado.getCodigoCargo());
+    }
+    private void resetear(){
+        tf_codigo.setText(null);
+        tf_apellido.setText(null);
+        tf_cedula.setText(null);
+        tf_direccion.setText(null);
+        tf_email.setText(null);
+        tf_jefe.setText(null); 
+        tf_jefeNom.setText(null);
+        tf_nombre.setText(null);
+        tf_telefono.setText(null);
+        jc_fechaNacimiento.setDate(null);
+        tf_ingreso.setText(null);
+        cb_cargo.setSelectedItem(null);
+        
+    }
+    private void registrarAuditoria(String entidad,String accion,String antes, String despues){
+         AuditoriaSistema as=new AuditoriaSistema();
+            as.setAccion(accion);
+            as.setTabla(entidad);
+            as.setFechaHora(formato.format(fecha));
+            as.setUsuario(LoginView.nombreUsuario);
+            as.setAntes(antes);
+            as.setDespues(despues);
+            entityManager.persist(as);
+            entityManager.flush();
+    }
     /**
      * @param args the command line arguments
      */
@@ -563,21 +970,25 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 JFrame frame=new EmpleadoEliminar();
-                frame.setTitle("Registrar Empleado");
+                frame.setTitle("Eliminar Empleado");
+                Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
+                frame.setIconImage(icon);
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
-                frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_buscar;
     private javax.swing.JButton btn_cancelar;
     private javax.swing.JButton btn_eliminar;
     private java.util.List<bean.Cargo> cargoList;
     private renderizar.CargoListRenderizar cargoListRenderizar1;
     private javax.persistence.Query cargoQuery;
     private javax.swing.JComboBox cb_cargo;
+    private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -589,67 +1000,32 @@ public class EmpleadoEliminar extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    public static com.toedter.calendar.JDateChooser jc_fechaNacimiento;
-    private javax.swing.JLabel lbl_apeJefe;
-    private javax.swing.JLabel lbl_apellidoJefe;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private com.toedter.calendar.JDateChooser jc_fechaNacimiento;
+    private javax.swing.JLabel lbl_codigo;
+    private javax.swing.JLabel lbl_filtro;
+    private javax.swing.JLabel lbl_ingreso;
     private javax.swing.JLabel lbl_jefeNom;
-    private javax.swing.JLabel lbl_nombreJefe;
     private javax.swing.JLabel lbl_registrarEmpleado;
+    private javax.swing.JLabel lbl_valor;
+    private java.util.List<bean.Empleado> list;
+    private javax.swing.JComboBox list_filtros;
+    private javax.swing.JTable masterTable;
     private javax.swing.JPanel panel_registrarEmpleado;
-    private javax.persistence.EntityManager proyectoPUEntityManager;
+    private javax.persistence.Query query;
     private javax.swing.JTextField tf_apellido;
     private javax.swing.JTextField tf_cedula;
+    private javax.swing.JTextField tf_codigo;
     private javax.swing.JTextField tf_direccion;
     private javax.swing.JTextField tf_email;
+    private javax.swing.JTextField tf_ingreso;
     private javax.swing.JTextField tf_jefe;
+    private javax.swing.JTextField tf_jefeNom;
     private javax.swing.JTextField tf_nombre;
     private javax.swing.JTextField tf_telefono;
+    private javax.swing.JTextField tf_valor;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-    private Empleado obtenerEmpleado(String cedula){
-        Empleado empleado ;
-        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
-        EntityManager ema = fact.createEntityManager();
-        ema.getTransaction().begin();
-        Query query = ema.createNamedQuery("Empleado.findByCedula");
-        query.setParameter("cedula", cedula);
-        List<Empleado> emple = query.getResultList();
-        try{
-            empleado = emple.get(0);  
-        }catch(ArrayIndexOutOfBoundsException e){
-            empleado = null;
-        }
-        
-        ema.close();
-        return empleado;
-    }
-    private void inicializarLista(){
-        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
-        EntityManager ema = fact.createEntityManager();
-        Query query = ema.createNamedQuery("Empleado.findAll");
-        List<Empleado> pro = query.getResultList();
-        Iterator <Empleado> it = pro.iterator();
-        while (it.hasNext()){
-            textAutoCompleter.addItem(it.next().getCedula());
-            //textAutoCompleter.addItem(it.next().getNombre()+" "+it.next().getApellido() );
-        }
-        lbl_jefeNom.setVisible(false);
-        lbl_apeJefe.setVisible(false);
-        ema.close();
-    }
 
-    private void inicializarEmpleado() {
-        tf_apellido.setText(empleado.getApellido());
-        tf_cedula.setText(empleado.getCedula());
-        tf_direccion.setText(empleado.getDireccion());
-        tf_email.setText(empleado.getEmail());
-        try{
-            tf_jefe.setText(empleado.getCodigoJefe().getCedula());    
-        }catch(NullPointerException e){
-            tf_jefe.setText("");
-        }
-        tf_nombre.setText(empleado.getNombre());
-        tf_telefono.setText(Integer.toString(empleado.getTelefono()));
-        jc_fechaNacimiento.setDate(empleado.getFechaNacimiento());
-    }
 }
