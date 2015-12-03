@@ -177,14 +177,14 @@ public class MenuSupervisorCaja extends javax.swing.JFrame {
         // TODO add your handling code here:
         String args[]=new String[1];
         args[0]="Extracto Pagos a Proveedor";
-        ExtractoPago.main(args);
+        PagoExtracto.main(args);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         // TODO add your handling code here:
          String args[]=new String[1];
         args[0]="Cheque";
-       PagoTotalizarCheque.main(args);
+       PagoCheque.main(args);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     /**

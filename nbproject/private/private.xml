@@ -4,10 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/view/MenuEncargadoDeposito.java</file>
-            <file>file:/C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/bean/DetalleOrdenCompra.java</file>
-            <file>file:/C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/view/OrdenDeCompraVizualizar.java</file>
-            <file>file:/C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/view/MovimientoArticuloRegistrar.java</file>
-            <file>file:/C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/META-INF/persistence.xml</file>
+            <file>file:/C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/view/PagoRegistrar.java</file>
+            <file>file:/C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/view/PagoDialogoCuenta.java</file>
+            <file>file:/C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/view/MenuSupervisorCaja.java</file>
+            <file>file:/C:/Users/pc/Documents/NetBeansProjects/Proyecto-II/src/ViewAdmHotel/PlanillaSueldo.java</file>
         </group>
     </open-files>
 </project-private>

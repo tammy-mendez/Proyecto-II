@@ -384,6 +384,7 @@ public class PagoRegistrar extends javax.swing.JFrame {
                          if (validar(p.get(i).getCodOC().getCodProveedor().getRazonSocial()) == false){
                         // if (validar(p.get(j).gegetCodProveedor().getRazonSocial()) == false){
                      query=entityManager.createNativeQuery("select sum(fp.monto_total) "
+                     +"from informerecepcion i "
                      +"join factura_pago fp "
                     +"on fp.num_factura=i.nroFactura "
                     +"join orden_compra oc "
@@ -465,16 +466,16 @@ public class PagoRegistrar extends javax.swing.JFrame {
             buscarCuentaBancaria();
       
         //Crear Extraccion
-       for (int l=0;l<CuentaBancBuscar11.tablaBanco.getRowCount();l++){
+       for (int l=0;l<PagoDialogoCuenta.tablaBanco.getRowCount();l++){
            
            
                   ExtraccionDeposito extraccion= new ExtraccionDeposito();
                   extraccion.setFecha((formato1.format(fechap)));
-                  extraccion.setMonto(Integer.parseInt(CuentaBancBuscar11.tablaBanco.getValueAt(l, 3).toString()));
+                  extraccion.setMonto(Integer.parseInt(PagoDialogoCuenta.tablaBanco.getValueAt(l, 3).toString()));
                   extraccion.setTipo("E");
-                  CuentaBancaria cb =  obtenerCuenta (Integer.valueOf(CuentaBancBuscar11.tablaBanco.getValueAt(l,0).toString()));
+                  CuentaBancaria cb =  obtenerCuenta (Integer.valueOf(PagoDialogoCuenta.tablaBanco.getValueAt(l,0).toString()));
                   extraccion.setIdCuentaBancaria(cb); 
-                 // extraccion.setIdPagoCobro(Integer.valueOf(CuentaBancBuscar11.tablaBanco.getValueAt(l,0).toString()));
+                 // extraccion.setIdPagoCobro(Integer.valueOf(PagoDialogoCuenta.tablaBanco.getValueAt(l,0).toString()));
                    entityManager.persist(extraccion);
                    entityManager.flush();
                    entityManager.persist(registrarAuditoria("Crecion","Extraccion",extraccion.toString()));
@@ -729,7 +730,7 @@ public class PagoRegistrar extends javax.swing.JFrame {
     }
 
     private void buscarCuentaBancaria() {
-           new CuentaBancBuscar11(this, true).setVisible(true);
+           new PagoDialogoCuenta(this, true).setVisible(true);
          System.out.print("cuenta"+cuentaBancaria);
     }
       

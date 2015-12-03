@@ -204,6 +204,7 @@ public class OrdenDeCompra extends javax.swing.JFrame {
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codOrden}"));
         columnBinding.setColumnName("Cod Orden");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codProveedor.razonSocial}"));
         columnBinding.setColumnName("Proveedor");
         columnBinding.setColumnClass(String.class);
@@ -516,21 +517,36 @@ public class OrdenDeCompra extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_buscarFocusLost
 
     private void masterTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_masterTableMouseClicked
-       masterTableDetalle.setVisible(false);
-        tf_proveedor.setEnabled(false);
-        btn_guardar.setEnabled(false);
-        btn_modificar.setEnabled(true);
-        
+         masterTableDetalle.setVisible(false);
+       btn_modificar.setEnabled(true);
         fila=masterTable.getSelectedRow();
         codigo=(Integer) masterTable.getValueAt(fila, 0);
         proveedor= (String) masterTable.getValueAt(fila, 1);
         fecha = (String) masterTable.getValueAt(fila, 2);
-        detalle_oc(codigo);
+        OrdenCompra oc = obtenerOrden(codigo);
+        detalle_oc(oc);
+       
+
         
         tf_orden.setText(Integer.toString(codigo));
         tf_proveedor.setText(proveedor);
         tf_fecha.setText(fecha);
     }//GEN-LAST:event_masterTableMouseClicked
+public  void detalle_oc(OrdenCompra cod){
+                //id=Integer.parseInt(tf_valor.getText());
+                detalleOrdenCompraQuery=entityManager.createNamedQuery( "DetalleOrdenCompra.findByCodOrden");
+                detalleOrdenCompraQuery.setParameter("codOrden", cod);
+                List<DetalleOrdenCompra> oc=detalleOrdenCompraQuery.getResultList();
+                if (oc.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Código de orden de compra inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                detalleOrdenCompraList.clear();
+                detalleOrdenCompraList.addAll(oc);
+                masterTableDetalle.setVisible(true);
+        
+    } 
 
     private void list_filtrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_list_filtrosActionPerformed
         // TODO add your handling code here:
@@ -543,7 +559,7 @@ public class OrdenDeCompra extends javax.swing.JFrame {
 
     private void btn_aceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aceptarActionPerformed
         // TODO add your handling code here:
-        new ProveedorCategoria(this, true).setVisible(true);
+        new OrdenCompraDialogo(this, true).setVisible(true);
        
     }//GEN-LAST:event_btn_aceptarActionPerformed
 
@@ -592,17 +608,14 @@ public class OrdenDeCompra extends javax.swing.JFrame {
             as.setDespues(despues);
             entityManager.persist(as);
             entityManager.getTransaction().commit();
-            entityManager.close();
+          
             JOptionPane.showMessageDialog(null, "Modificación Exitosa");
-          /*  resp=  JOptionPane.showConfirmDialog(null,"Desea imprimir la orden de compra?", "Confirmar Modificación",JOptionPane.YES_NO_OPTION );
+        /*    resp=  JOptionPane.showConfirmDialog(null,"Desea imprimir la orden de compra?", "Confirmar Modificación",JOptionPane.YES_NO_OPTION );
         if (resp==JOptionPane.YES_OPTION){
             imprimir(Integer.parseInt(tf_orden.getText()));
         }*/
-            this.setVisible(false);
-        }else{
-            this.setVisible(false);
-        }
-          
+          refrescar();
+        } 
     }//GEN-LAST:event_btn_guardarActionPerformed
 
     private void btn_modificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_modificarActionPerformed
@@ -827,4 +840,41 @@ private OrdenCompra obtenerOrdenCompra(int cod){
         
         
     }}
+    private OrdenCompra obtenerOrden(int codigo){
+        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
+        EntityManager ema = fact.createEntityManager();
+        Query query = ema.createNamedQuery("OrdenCompra.findByCodOrden");
+        query.setParameter("codOrden", codigo);
+        List<OrdenCompra> a = query.getResultList();
+        OrdenCompra nom = null;
+        try{
+            nom = a.get(0);
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.out.println(e);
+        }catch(NullPointerException e){
+            System.out.println(e);
+        }catch(Exception e){
+            System.out.println("Algo pasó");
+        }
+        
+        ema.close();
+        return nom;
+    }
+
+    private void refrescar() {
+        tf_fecha.setText(null);
+        tf_orden.setText(null);
+        tf_proveedor.setText(null);
+        tf_valor.setText(null);
+        btn_aceptar.setEnabled(false);
+        btn_guardar.setEnabled(false);
+        btn_modificar.setEnabled(false);
+        masterTableDetalle.setVisible(false);
+        query=entityManager.createNamedQuery( "OrdenCompra.findAll");
+        List<OrdenCompra> oc=query.getResultList();
+        list.clear();
+        list.addAll(oc);
+
+    }
+
 }

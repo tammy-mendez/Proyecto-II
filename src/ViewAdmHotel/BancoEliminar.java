@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package view;
+package ViewAdmHotel;
 
 import bean.AuditoriaSistema;
 import bean.Banco;
@@ -23,12 +23,12 @@ import javax.swing.JOptionPane;
  *
  * @author Vladimir
  */
-public class BancoEditar extends javax.swing.JFrame {
+public class BancoEliminar extends javax.swing.JFrame {
     public static Banco entidad;
     /**
      * Creates new form BancoEditar
      */
-    public BancoEditar() {
+    public BancoEliminar() {
         initComponents();
         inicializarBanco();
     }
@@ -60,6 +60,7 @@ public class BancoEditar extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        tf_nombre.setEnabled(false);
         tf_nombre.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tf_nombreFocusLost(evt);
@@ -84,24 +85,27 @@ public class BancoEditar extends javax.swing.JFrame {
         lbl_nombre1.setText("Tipo de Entidad:");
 
         cb_tipoEntidad.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Banco", "Financiera", "Cooperativa" }));
+        cb_tipoEntidad.setEnabled(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_nombre)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_nombre1)
-                            .addComponent(lbl_identi))
+                            .addComponent(lbl_identi)
+                            .addComponent(lbl_nombre))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tf_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                            .addComponent(tf_identi)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_nombre1)
                         .addGap(21, 21, 21)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_identi, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cb_tipoEntidad, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(cb_tipoEntidad, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -112,10 +116,10 @@ public class BancoEditar extends javax.swing.JFrame {
                     .addComponent(lbl_identi)
                     .addComponent(tf_identi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_nombre))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_nombre)
+                    .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_nombre1)
                     .addComponent(cb_tipoEntidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -134,7 +138,7 @@ public class BancoEditar extends javax.swing.JFrame {
         });
 
         btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/guardar.png"))); // NOI18N
-        btn_guardar.setText("Guardar");
+        btn_guardar.setText("Eliminar");
         btn_guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_guardarActionPerformed(evt);
@@ -172,16 +176,16 @@ public class BancoEditar extends javax.swing.JFrame {
 
         lbl_EditarRol.setFont(new java.awt.Font("Corbel", 1, 30)); // NOI18N
         lbl_EditarRol.setForeground(new java.awt.Color(255, 255, 255));
-        lbl_EditarRol.setText("Modificar Entidad");
+        lbl_EditarRol.setText("Eliminar Entidad");
 
         javax.swing.GroupLayout panel_EditarRolLayout = new javax.swing.GroupLayout(panel_EditarRol);
         panel_EditarRol.setLayout(panel_EditarRolLayout);
         panel_EditarRolLayout.setHorizontalGroup(
             panel_EditarRolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_EditarRolLayout.createSequentialGroup()
-                .addGap(63, 63, 63)
+                .addGap(76, 76, 76)
                 .addComponent(lbl_EditarRol)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         panel_EditarRolLayout.setVerticalGroup(
             panel_EditarRolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,7 +209,7 @@ public class BancoEditar extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(66, 66, 66)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -267,56 +271,32 @@ public class BancoEditar extends javax.swing.JFrame {
                 tf_nombre.setText(null);
                 return;
             }*/
-            int resp=  JOptionPane.showConfirmDialog(null,"Desea guardar los cambios?", 
+            int resp=  JOptionPane.showConfirmDialog(null,"Desea eliminar los datos?", 
                     "Confirmar Modificación",JOptionPane.YES_NO_OPTION );
             if (resp==JOptionPane.YES_OPTION){
                 entityManager.getTransaction().begin();
+                String valor = entidad.toString();
                 //registramos el nombre el rol antes de que se cambie
-                Query query=entityManager.createNamedQuery("Banco.findByIdBanco");
-                query.setParameter("idBanco",Integer.parseInt(tf_identi.getText()));
-                List<Banco> rl=query.getResultList();
-                antes=rl.get(0).toString();
-                //hacemos el merge, el cambio
-                Banco r=new Banco();
-                r.setIdBanco(Integer.parseInt(tf_identi.getText()));
-                r.setNombre(tf_nombre.getText().toLowerCase());//convertir a minuscula
-                r.setTipoEntidad(cb_tipoEntidad.getSelectedItem().toString().toLowerCase());
-
-                //guardamos los cambios
-                despues=r.toString();
+                Banco bancoFind = entityManager.find(Banco.class, entidad.getIdBanco());
+                entityManager.remove(bancoFind);
+                entityManager.flush();
                 //registramos los datos necesarios para la auditoria
                 AuditoriaSistema as=new AuditoriaSistema();
-                as.setAccion("Modificación");
+                as.setAccion("Eliminación");
                 as.setTabla("Banco");
-                as.setAntes(antes);
-                as.setDespues(despues);
+                as.setAntes(valor);
+                as.setDespues("Sin Modificaciones");
                 //trabajamos con la fecha
                 Date fecha=new Date();
                 DateFormat formato=new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                 as.setFechaHora(formato.format(fecha));
-                as.setUsuario("vladimir");
                 //as.setUsuario(LoginView.nombreUsuario);
-                try{
-                    entityManager.merge(r);
-                    entityManager.flush();
-                    entityManager.persist(as);
-                    entityManager.getTransaction().commit();   
-                    JOptionPane.showMessageDialog(null, "Modificación Exitosa");
-                    this.dispose();
-                }catch(javax.persistence.PersistenceException e){
-                    if(!tf_nombre.getText().toLowerCase().equals(entidad.getNombre().toLowerCase())){
-                        JOptionPane.showMessageDialog(null, "Banco registrado "
-                                + "anteriormente");
-                        tf_nombre.setText(entidad.getNombre());
-                     }
-                    else{
-                        JOptionPane.showMessageDialog(null, "Modificación Exitosa");
-                        this.dispose();
-                    }
-                    
-                }
+                as.setUsuario("vladimir");
+                entityManager.persist(as);
+                entityManager.getTransaction().commit();   
+                JOptionPane.showMessageDialog(null, "Eliminación Exitosa");
                 entityManager.close();
-                
+                this.dispose();
             }
         }
     }//GEN-LAST:event_btn_guardarActionPerformed
@@ -330,7 +310,7 @@ public class BancoEditar extends javax.swing.JFrame {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JFrame frame=new BancoEditar();
+                JFrame frame=new BancoEliminar();
                 frame.pack();
                 frame.setVisible(true);
                 frame.setLocationRelativeTo(null);

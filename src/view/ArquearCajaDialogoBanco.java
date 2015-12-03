@@ -15,13 +15,13 @@ import javax.swing.JOptionPane;
  *
  * @author tammy
  */
-public class CuentaBancBuscar extends javax.swing.JDialog {
+public class ArquearCajaDialogoBanco extends javax.swing.JDialog {
 
     /**
-     * Creates new form CuentaBancBuscar
+     * Creates new form ArquearCajaDialogoBanco
      */
     int cuenta;
-    public CuentaBancBuscar(java.awt.Frame parent, boolean modal) {
+    public ArquearCajaDialogoBanco(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -162,20 +162,20 @@ public class CuentaBancBuscar extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CuentaBancBuscar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ArquearCajaDialogoBanco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CuentaBancBuscar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ArquearCajaDialogoBanco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CuentaBancBuscar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ArquearCajaDialogoBanco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CuentaBancBuscar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ArquearCajaDialogoBanco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CuentaBancBuscar dialog = new CuentaBancBuscar(new javax.swing.JFrame(), true);
+                ArquearCajaDialogoBanco dialog = new ArquearCajaDialogoBanco(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -596,18 +596,23 @@ private static int totalCompra = 0, totaliva=0;
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codInformeRecepcion}"));
         columnBinding.setColumnName("Cod Informe Recepcion");
         columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codOC}"));
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codOC.codOrden}"));
         columnBinding.setColumnName("Cod OC");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fecha}"));
         columnBinding.setColumnName("Fecha");
         columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fechaVto}"));
         columnBinding.setColumnName("Fecha Vto");
         columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nroFactura}"));
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nroFactura.numFactura}"));
         columnBinding.setColumnName("Nro Factura");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         tabla.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1209,9 +1214,10 @@ private static int totalCompra = 0, totaliva=0;
         tf_fechaVto.setText(fechavto);
 
         OrdenCompra tc=(OrdenCompra) obtenerDetalle(codigo) ;
+        detalle_oc(tc);
         Proveedor p= obtenerProveedor1(tc.getCodProveedor().getCodigoProveedor());
         tf_proveedor.setText(p.getRazonSocial());
-        registarFacturaDetalle1();
+        registarFacturaDetalle(tc);
         
     }//GEN-LAST:event_tablaMouseClicked
 
@@ -1400,41 +1406,6 @@ modelo.removeRow(valorFila);
         calcular();
         btn_aceptarModif.setEnabled(true);
     }//GEN-LAST:event_btn_aceptarModifActionPerformed
-
-    private void btn_quitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_quitarActionPerformed
-        // TODO add your handling code here:
-        String articuloQuitar;
-        //int cantidadRecibida;
-         DefaultTableModel modelo = (DefaultTableModel)tablaCompra.getModel(); 
-         articuloQuitar= (String) modelo.getValueAt(valorFila, 0);
-        actualizarDetalleOrdenCompra(articuloQuitar);
-         System.out.print(articuloQuitar);
-modelo.removeRow(valorFila); 
-/*String arti= (String) modelo.getValueAt(valorFila, 0);
- Articulo artic= obtenerArticulo(arti);
-                            detalleOrdenCompraQuery=entityManager.createNativeQuery("select * from detalle_orden_compra "
-                                                      +" where cod_orden= "+Integer.valueOf(tf_oc.getText())+
-                                                    " and cod_articulo= "+artic.getCodigoArticulo(), DetalleOrdenCompra.class);
-      List<DetalleOrdenCompra> cps=detalleOrdenCompraQuery.getResultList();
-      if (!cps.isEmpty()){
-          for (int j=0;j<cps.size();j++){
-              
-          entityManager.getTransaction().begin();
-                            DetalleOrdenCompra doc = new DetalleOrdenCompra();
-              doc.setCantidadPedida(cps.get(j).getCantidadPedida());
-              doc.setCodArticulo(cps.get(j).getCodArticulo());
-              doc.setCodDetalle(cps.get(j).getCodDetalle());
-              
-              
-              doc.setCodOrden(0);
-              doc.setCodProveedor(cps.get(j).getCodProveedor());
-              doc.setEstado("pendiente");
-                        entityManager.merge(doc);
-                     entityManager.flush();}*/
-  //entityManager.getTransaction().commit();
-       //         entityManager.close();
-         calcular();
-    }//GEN-LAST:event_btn_quitarActionPerformed
     
    
    // }
@@ -1465,6 +1436,40 @@ modelo.removeRow(valorFila);
 
        
     }//GEN-LAST:event_jf_fechaFFocusLost
+
+    private void btn_quitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_quitarActionPerformed
+        // TODO add your handling code here:
+        String articuloQuitar;
+        //int cantidadRecibida;
+        DefaultTableModel modelo = (DefaultTableModel)tablaCompra.getModel();
+        articuloQuitar= (String) modelo.getValueAt(valorFila, 0);
+        actualizarDetalleOrdenCompra(articuloQuitar);
+        System.out.print(articuloQuitar);
+        modelo.removeRow(valorFila);
+        /*String arti= (String) modelo.getValueAt(valorFila, 0);
+        Articulo artic= obtenerArticulo(arti);
+        detalleOrdenCompraQuery=entityManager.createNativeQuery("select * from detalle_orden_compra "
+            +" where cod_orden= "+Integer.valueOf(tf_oc.getText())+
+            " and cod_articulo= "+artic.getCodigoArticulo(), DetalleOrdenCompra.class);
+        List<DetalleOrdenCompra> cps=detalleOrdenCompraQuery.getResultList();
+        if (!cps.isEmpty()){
+            for (int j=0;j<cps.size();j++){
+
+                entityManager.getTransaction().begin();
+                DetalleOrdenCompra doc = new DetalleOrdenCompra();
+                doc.setCantidadPedida(cps.get(j).getCantidadPedida());
+                doc.setCodArticulo(cps.get(j).getCodArticulo());
+                doc.setCodDetalle(cps.get(j).getCodDetalle());
+
+                doc.setCodOrden(0);
+                doc.setCodProveedor(cps.get(j).getCodProveedor());
+                doc.setEstado("pendiente");
+                entityManager.merge(doc);
+                entityManager.flush();}*/
+            //entityManager.getTransaction().commit();
+            //         entityManager.close();
+            calcular();
+    }//GEN-LAST:event_btn_quitarActionPerformed
 
 private OrdenCompra obtenerDetalle(int cod){
         EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
@@ -1913,9 +1918,9 @@ public static void vaciar() {
 }
 
  
-        private void registarFacturaDetalle1() {
+        private void registarFacturaDetalle(OrdenCompra o) {
    detalleOrdenCompraQuery=entityManager.createNamedQuery( "DetalleOrdenCompra.findByCodOrden");
-                detalleOrdenCompraQuery.setParameter("codOrden", Integer.valueOf(tf_oc.getText()));
+                detalleOrdenCompraQuery.setParameter("codOrden", o);
                 List<DetalleOrdenCompra> oc=detalleOrdenCompraQuery.getResultList();
                 if (oc.isEmpty()){
                     JOptionPane.showMessageDialog(null,"no se encuentran detalles", "Error",JOptionPane.ERROR_MESSAGE);
@@ -1998,4 +2003,20 @@ private OrdenCompra obtenerOrdenCompra(int codigo){
         ema.close();
         return nom;
     }
+public  void detalle_oc(OrdenCompra cod){
+                //id=Integer.parseInt(tf_valor.getText());
+                detalleOrdenCompraQuery=entityManager.createNamedQuery( "DetalleOrdenCompra.findByCodOrden");
+                detalleOrdenCompraQuery.setParameter("codOrden", cod);
+                List<DetalleOrdenCompra> oc=detalleOrdenCompraQuery.getResultList();
+                if (oc.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Código de orden de compra inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                detalleOrdenCompraList.clear();
+                detalleOrdenCompraList.addAll(oc);
+                tablaCompra.setVisible(true);
+        
+    } 
+
 }

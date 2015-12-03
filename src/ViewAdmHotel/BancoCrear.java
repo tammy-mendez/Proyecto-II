@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package view;
+package ViewAdmHotel;
 
 import bean.AuditoriaSistema;
 import bean.Banco;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package view;
+package ViewAdmHotel;
 
 import bean.Banco;
 import java.util.List;
@@ -14,6 +14,7 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import view.MenuAdminSist;
 
 /**
  *

@@ -20,7 +20,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author pc
  */
-public class ProveedorCategoria extends javax.swing.JDialog {
+public class OrdenCompraDialogo extends javax.swing.JDialog {
 
     /**
      * Creates new form Proveedor
@@ -29,7 +29,7 @@ public class ProveedorCategoria extends javax.swing.JDialog {
     boolean select;
     String proveedor;
    int valor, cont=0;
-    public ProveedorCategoria(java.awt.Frame parent, boolean modal) {
+    public OrdenCompraDialogo(java.awt.Frame parent, boolean modal) {
         
         super(parent, modal);
         
@@ -218,20 +218,20 @@ public class ProveedorCategoria extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ProveedorCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrdenCompraDialogo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ProveedorCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrdenCompraDialogo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ProveedorCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrdenCompraDialogo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ProveedorCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrdenCompraDialogo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ProveedorCategoria dialog = new ProveedorCategoria(new javax.swing.JFrame(), true);
+                OrdenCompraDialogo dialog = new OrdenCompraDialogo(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -264,7 +264,7 @@ public class ProveedorCategoria extends javax.swing.JDialog {
                 +"join articulo a " 
                 +"on a.cod_Categoria= p.codigoCategoria " 
                 +"where a.nombre= "
-                + OrdenCompraModificar.tf_articulo.getText(), ProveedorCategoria.class);
+                + OrdenCompraModificar.tf_articulo.getText(), OrdenCompraDialogo.class);
         List<Proveedor> art = query.getResultList();
         Iterator <Proveedor> it = art.iterator();
         while (it.hasNext()){
@@ -282,10 +282,10 @@ public class ProveedorCategoria extends javax.swing.JDialog {
 "                +" join articulo a " 
 "                + " on a.cod_Categoria= p.codigoCategoria " 
 "                +" where a.nombre LIKE "
-                  +"'%"+OrdenCompraModificar.tf_articulo.getText()+"%'", ProveedorCategoria.class);*/
+                  +"'%"+OrdenCompraModificar.tf_articulo.getText()+"%'", OrdenCompraDialogo.class);*/
                 List<Proveedor> p=query.getResultList();
                /* if (p.size()==0){
-                    JOptionPane.showMessageDialog(null,"Tipo de ProveedorCategoria inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Tipo de OrdenCompraDialogo inexistente", "Error",JOptionPane.ERROR_MESSAGE);
                     tf_valor.setText(null);
                     return;
                 }*/

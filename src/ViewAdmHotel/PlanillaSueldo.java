@@ -64,6 +64,9 @@ public class PlanillaSueldo extends javax.swing.JFrame {
         entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT a  FROM Asistencia a");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : org.jdesktop.observablecollections.ObservableCollections.observableList(query.getResultList());
+        proyectoPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
+        cuentaBancariaQuery = java.beans.Beans.isDesignTime() ? null : proyectoPUEntityManager.createQuery("SELECT c FROM CuentaBancaria c");
+        cuentaBancariaList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : cuentaBancariaQuery.getResultList();
         jPanel3 = new javax.swing.JPanel();
         lbl_registrarC = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -245,11 +248,20 @@ public class PlanillaSueldo extends javax.swing.JFrame {
              EntityManager ema = fact.createEntityManager();
              q=ema.createNativeQuery("Select * from planilla_pago_sueldo where "
                      + "periodo= "+"'"+periodo+"'");
+             
              List<bean.PlanillaPagoSueldo>pps=q.getResultList();
              if(pps.isEmpty()){
                     valor="Pago de sueldo periodo: "+periodo;
                     registrarAuditoria(valor);
                    seguro= Connection(mes,anho);//genero la planilla y despues consulto
+             
+                   
+             /*calcular y registrar pago*/
+             cuentaBancariaQuery=entityManager.createNativeQuery(" select sum(monto_actual) " +
+                                                "from cuenta_bancaria ");
+                Object resultado=cuentaBancariaQuery.getSingleResult();
+               // totalCuenta=Integer.parseInt(resultado.toString());      
+                   
                      try
                     {
                         Class.forName("com.mysql.jdbc.Driver");
@@ -509,11 +521,14 @@ public class PlanillaSueldo extends javax.swing.JFrame {
                frame.setLocationRelativeTo(null);
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_cancelar;
     private javax.swing.JButton btn_generar;
+    private java.util.List<bean.CuentaBancaria> cuentaBancariaList;
+    private javax.persistence.Query cuentaBancariaQuery;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -524,7 +539,23 @@ public class PlanillaSueldo extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_mes;
     private javax.swing.JLabel lbl_registrarC;
     private java.util.List<bean.Asistencia> list;
+    private javax.persistence.EntityManager proyectoPUEntityManager;
     private javax.persistence.Query query;
     private javax.swing.JButton tf_aguinaldo;
     // End of variables declaration//GEN-END:variables
-}
+public void registrarPago(){
+    int resp=  JOptionPane.showConfirmDialog(null,"Desea registrar los pagos?", "Confirmar pago",JOptionPane.YES_NO_OPTION );
+            if (resp==JOptionPane.YES_OPTION){
+                //verifica que se cuenta con fondos
+               cuentaBancariaQuery=entityManager.createNativeQuery(" select sum(monto_actual) " +
+                                                "from cuenta_bancaria ");
+                Object resultado=cuentaBancariaQuery.getSingleResult();
+              /*  totalCuenta=Integer.parseInt(resultado.toString());
+
+                if (totalCuenta<Integer.parseInt(tf_monto.getText())){
+                    JOptionPane.showMessageDialog(null,"No posee cuentas con el monto solicitado", "Error",JOptionPane.ERROR_MESSAGE);
+                   salir();
+                }*/
+            }
+            }
+} 

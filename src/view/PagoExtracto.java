@@ -7,10 +7,13 @@
 package view;
 
 import bean.ConsumoProSer;
+import bean.DetallePago;
 import bean.FacturaCobro;
 import bean.NumberToText;
 import bean.Pago;
+import bean.Proveedor;
 import bean.Reserva;
+import com.mxrck.autocompleter.TextAutoCompleter;
 import java.awt.Image;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,8 +22,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -32,16 +40,22 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author tammy
  */
-public class PagoTotalizarCheque extends javax.swing.JFrame {
-int i, cod, montoTotal=0;
+public class PagoExtracto extends javax.swing.JFrame {
+int i, cod, montoTotal=0, ch;
 String letras;
+ private final  TextAutoCompleter textAutoCompleter1;
     /**
      * Creates new form Consumo
      */
-    public PagoTotalizarCheque() {
-        //tabla.setVisible(false);
-    initComponents();
+    public PagoExtracto() {
+        
+        initComponents();
+        this.textAutoCompleter1 = new TextAutoCompleter(tf_proveedor);
+        this.textAutoCompleter1.setMode(0);
+       
+        inicializarLista1();
         tabla.setVisible(false);
+        
         
     }
 
@@ -58,17 +72,21 @@ String letras;
         entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("proyectoPU").createEntityManager();
         query = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT p FROM Pago p");
         list = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : query.getResultList();
+        detallePagoQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT d FROM DetallePago d");
+        detallePagoList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : detallePagoQuery.getResultList();
+        proveedorQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT p FROM Proveedor p");
+        proveedorList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : proveedorQuery.getResultList();
         jPanel1 = new javax.swing.JPanel();
         btn_aceptar = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        btn_imp1 = new javax.swing.JButton();
+        btn_imp = new javax.swing.JButton();
         panel_verConsumo = new javax.swing.JPanel();
         lbl_verConsumo = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         tf_fechaApertura = new com.toedter.calendar.JDateChooser();
-        tf_fechaCierre = new com.toedter.calendar.JDateChooser();
+        jLabel3 = new javax.swing.JLabel();
+        tf_proveedor = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
         codigoProveedorLabel = new javax.swing.JLabel();
@@ -96,13 +114,13 @@ String letras;
             }
         });
 
-        btn_imp1.setBackground(new java.awt.Color(204, 204, 204));
-        btn_imp1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/impresora.png"))); // NOI18N
-        btn_imp1.setText("Imprimir");
-        btn_imp1.setEnabled(false);
-        btn_imp1.addActionListener(new java.awt.event.ActionListener() {
+        btn_imp.setBackground(new java.awt.Color(204, 204, 204));
+        btn_imp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/impresora.png"))); // NOI18N
+        btn_imp.setText("Imprimir");
+        btn_imp.setEnabled(false);
+        btn_imp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_imp1ActionPerformed(evt);
+                btn_impActionPerformed(evt);
             }
         });
 
@@ -114,7 +132,7 @@ String letras;
                 .addContainerGap(32, Short.MAX_VALUE)
                 .addComponent(btn_aceptar)
                 .addGap(38, 38, 38)
-                .addComponent(btn_imp1)
+                .addComponent(btn_imp)
                 .addGap(50, 50, 50)
                 .addComponent(jButton1)
                 .addGap(40, 40, 40))
@@ -126,7 +144,7 @@ String letras;
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_aceptar)
                     .addComponent(jButton1)
-                    .addComponent(btn_imp1))
+                    .addComponent(btn_imp))
                 .addContainerGap())
         );
 
@@ -135,83 +153,93 @@ String letras;
 
         lbl_verConsumo.setFont(new java.awt.Font("Corbel", 1, 25)); // NOI18N
         lbl_verConsumo.setForeground(new java.awt.Color(255, 255, 255));
-        lbl_verConsumo.setText("Visualizar Pagos a Proveedor-Cheque");
+        lbl_verConsumo.setText("Extracto Pagos");
 
         javax.swing.GroupLayout panel_verConsumoLayout = new javax.swing.GroupLayout(panel_verConsumo);
         panel_verConsumo.setLayout(panel_verConsumoLayout);
         panel_verConsumoLayout.setHorizontalGroup(
             panel_verConsumoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_verConsumoLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel_verConsumoLayout.createSequentialGroup()
+                .addGap(207, 207, 207)
                 .addComponent(lbl_verConsumo)
-                .addGap(84, 84, 84))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_verConsumoLayout.setVerticalGroup(
             panel_verConsumoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_verConsumoLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_verConsumoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_verConsumo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
-        jLabel1.setText("Hasta Fecha:");
-
         jLabel2.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
-        jLabel2.setText("Desde Fecha:");
+        jLabel2.setText("Fecha Vto Factura:");
+
+        jLabel3.setFont(new java.awt.Font("Candara", 0, 16)); // NOI18N
+        jLabel3.setText("Proveedor:");
+
+        tf_proveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tf_proveedorKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(117, 117, 117)
-                .addComponent(tf_fechaApertura, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(tf_fechaCierre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(20, 20, 20)
+                .addGap(19, 19, 19)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addContainerGap(439, Short.MAX_VALUE)))
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tf_proveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                    .addComponent(tf_fechaApertura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(272, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tf_fechaCierre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(tf_proveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2))
                     .addComponent(tf_fechaApertura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabel2)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, list, tabla);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codProveedor.razonSocial}"));
-        columnBinding.setColumnName("Proveedor");
-        columnBinding.setColumnClass(String.class);
-        columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoPago}"));
-        columnBinding.setColumnName("Codigo Pago");
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, detallePagoList, tabla);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numFactura.numFactura}"));
+        columnBinding.setColumnName("Num Factura");
         columnBinding.setColumnClass(Integer.class);
         columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fecha}"));
-        columnBinding.setColumnName("Fecha");
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numFactura.fecha}"));
+        columnBinding.setColumnName("Fecha Factura");
         columnBinding.setColumnClass(String.class);
         columnBinding.setEditable(false);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${montoTotal}"));
-        columnBinding.setColumnName("Monto Total");
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numFactura.fechaVence}"));
+        columnBinding.setColumnName("Fecha Vto.");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${idPago.codigoPago}"));
+        columnBinding.setColumnName("Nro Pago");
+        columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${idPago.fecha}"));
+        columnBinding.setColumnName("Fecha Pago");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${numFactura.montoTotal}"));
+        columnBinding.setColumnName("Monto");
         columnBinding.setColumnClass(Integer.class);
         columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
@@ -244,14 +272,15 @@ String letras;
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 40, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(codigoProveedorLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tf_monto, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 364, Short.MAX_VALUE)
+                .addComponent(codigoProveedorLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tf_monto, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -260,13 +289,13 @@ String letras;
                 .addComponent(panel_verConsumo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tf_monto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(codigoProveedorLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -277,50 +306,51 @@ String letras;
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_aceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aceptarActionPerformed
-
-        btn_imp1.setEnabled(true);
-       if (tf_fechaApertura.getAccessibleContext()==null || tf_fechaCierre.getAccessibleContext()==null
-                ||(  tf_fechaCierre.getDate().before(tf_fechaApertura.getDate())))
-           
+       Proveedor p1= (Proveedor) obtenerProveedor(tf_proveedor.getText());
+       if (tf_fechaApertura.getAccessibleContext()==null || tf_proveedor.getText()==null || p1==null)
             {
-            JOptionPane.showMessageDialog(null,"No se permiten campos con valores nulos o incorrectos", "Error",JOptionPane.ERROR_MESSAGE);
-            tf_fechaApertura.requestFocus();
+            JOptionPane.showMessageDialog(null,"No se permiten campos con valores nulos o erroneos", "Error",JOptionPane.ERROR_MESSAGE);
+           vaciar();
+          
             }
-     
-        else{
+       
+       
+       else{
              SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                     String d1 = format.format(tf_fechaApertura.getDate());
-                      String d2 = format.format(tf_fechaCierre.getDate());
+                     String d1 = format.format(tf_fechaApertura.getDate());                  
                      Date fechaDesde = null;
-                     Date fechaHasta = null;
                      try {
-                         fechaDesde = format.parse(d1);
-                         fechaHasta = format.parse(d2);
-                    
-                       
+                         fechaDesde = format.parse(d1);  
                      } catch (ParseException ex) {
                          System.out.println("Formateo de fechas fallido");
                      }
-                     System.out.print(d1 +"  "+d2); 
-        query=entityManager.createNativeQuery("select * from pago "
-             + " WHERE STR_TO_DATE( fecha, '%d/%m/%Y')"
-             +  " BETWEEN STR_TO_DATE('"+d1+"', '%d/%m/%Y') "+
-            " AND STR_TO_DATE('"+d2+"', '%d/%m/%Y') ", Pago.class);
+                Proveedor p= (Proveedor) obtenerProveedor(tf_proveedor.getText());
+                detallePagoQuery=entityManager.createNativeQuery("select * from detalle_pago dp "+
+                "join pago p "+
+                "on p.codigo_pago=dp.id_pago "+
+                "join factura_pago fp "+
+                "on dp.num_factura=fp.num_factura "+
+                "where STR_TO_DATE( fp.fecha_vence, '%d/%m/%Y') "+
+                "<= STR_TO_DATE('"+d1+"', '%d/%m/%Y') "+
+                "and fp.cod_proveedor= "+p.getCodigoProveedor()+
+                " group by fp.num_factura",DetallePago.class);
 
-           List<Pago>pag=query.getResultList();
+           List<DetallePago>pag=detallePagoQuery.getResultList();
         if(pag.isEmpty()){
          JOptionPane.showMessageDialog(null,"Sin cuentas pagadas en la fecha", "Error",JOptionPane.ERROR_MESSAGE);
-         tabla.setVisible(false);
-         tf_fechaApertura.requestFocus();
+          tabla.setVisible(false);
+          tf_proveedor.requestFocus();
         }
-        else if(!pag.isEmpty()){
-            list.clear();
-            list.addAll(pag);
+        else{
+            detallePagoList.clear();
+            detallePagoList.addAll(pag);
+            tabla.setVisible(true);
             calcularMonto();
+            btn_imp.setEnabled(true);
+            btn_aceptar.setEnabled(false);
         }
-        tabla.setVisible(true);
+        
         }
-       btn_imp1.setVisible(true);
     }//GEN-LAST:event_btn_aceptarActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -328,20 +358,26 @@ String letras;
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
-       
-    }//GEN-LAST:event_tablaMouseClicked
+    private void btn_impActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_impActionPerformed
 
-    private void btn_imp1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_imp1ActionPerformed
+        imprimir();
+       
+        btn_imp.setEnabled(false);
+        vaciar();
+    }//GEN-LAST:event_btn_impActionPerformed
+
+    private void tf_proveedorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_proveedorKeyTyped
         // TODO add your handling code here:
-        for (i=0;i<tabla.getRowCount();i++){
-            //int fila = tabla.getSelectedRow();
-        cod = Integer.parseInt(tabla.getValueAt(i, 1).toString());
-        montoTotal=Integer.parseInt(tabla.getValueAt(i, 3).toString());
-            imprimir(cod, montoTotal);
+        ch=evt.getKeyChar();
+        if(Character.isDigit(ch)){
+            getToolkit().beep();
+            evt.consume();
         }
-        
-    }//GEN-LAST:event_btn_imp1ActionPerformed
+    }//GEN-LAST:event_tf_proveedorKeyTyped
+
+    private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
+
+    }//GEN-LAST:event_tablaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -360,22 +396,22 @@ String letras;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PagoTotalizarCheque.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PagoExtracto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PagoTotalizarCheque.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PagoExtracto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PagoTotalizarCheque.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PagoExtracto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PagoTotalizarCheque.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PagoExtracto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JFrame frame=new PagoTotalizarCheque();
+                JFrame frame=new PagoExtracto();
                 frame.setVisible(true);
-                frame.setTitle("Cheque");
+                frame.setTitle("Extracto de Pago a Proveedor");
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
             }
@@ -384,44 +420,51 @@ String letras;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_aceptar;
-    private javax.swing.JButton btn_imp1;
+    private javax.swing.JButton btn_imp;
     private javax.swing.JLabel codigoProveedorLabel;
+    private java.util.List<bean.DetallePago> detallePagoList;
+    private javax.persistence.Query detallePagoQuery;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_verConsumo;
     private java.util.List<bean.Pago> list;
     private javax.swing.JPanel panel_verConsumo;
+    private java.util.List<bean.Proveedor> proveedorList;
+    private javax.persistence.Query proveedorQuery;
     private javax.persistence.Query query;
     private javax.swing.JTable tabla;
     private com.toedter.calendar.JDateChooser tf_fechaApertura;
-    private com.toedter.calendar.JDateChooser tf_fechaCierre;
     public static javax.swing.JTextField tf_monto;
+    public static javax.swing.JTextField tf_proveedor;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-public void imprimir(int codg, int monto){
+public void imprimir(){
+    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+                     String d1 = format.format(tf_fechaApertura.getDate());                  
+                     Date fechaDesde = null;
+                     try {
+                         fechaDesde = format.parse(d1);  
+                     } catch (ParseException ex) {
+                         System.out.println("Formateo de fechas fallido");
+                     }
+                     Proveedor p= (Proveedor) obtenerProveedor(tf_proveedor.getText());
+                     
         try
         {
-             NumberToText nt=new NumberToText();
-                            letras=nt.convertirLetras(monto);
-                            System.out.print(letras);
-
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/hotel db", "root", "1234");
-            HashMap par = new HashMap();//no definimos ningún parámetro por eso lo dejamos así
-           // Map parametros=new HashMap();
-           // par.put("FechaInicio",d1 );
             Map parametros=new HashMap();
-            parametros.put("codigo",codg );
-            parametros.put("Letras", letras);
-            JasperPrint jp = JasperFillManager.fillReport("C:/proyecto/src/reportes/cheque.jasper", parametros,con);//el primer parámetro es el camino del archivo, se cambia esta dirección por la dirección del archivo .jasper
+            parametros.put("fecha",d1 );
+            parametros.put("proveedor",p.getCodigoProveedor() );
+            JasperPrint jp = JasperFillManager.fillReport("C:/proyecto/src/reportes/ExtractoProveedor.jasper", parametros,con);//el primer parámetro es el camino del archivo, se cambia esta dirección por la dirección del archivo .jasper
             JasperViewer jv = new JasperViewer(jp,false);
             jv.setVisible(true);
-            jv.setTitle("Cheque");
+            jv.setTitle("Extracto de Pago a Proveedor");
          //    Image icon = new ImageIcon(getClass().getResource("/imagenes/hotel2.png")).getImage();
            //  jv.setIconImage(icon);
             jv.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -432,14 +475,50 @@ public void imprimir(int codg, int monto){
         }
     
 }
+ private void inicializarLista1(){
+        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
+        EntityManager ema = fact.createEntityManager();
+        Query query = ema.createNamedQuery("Proveedor.findAll");
+        List<Proveedor> prov = query.getResultList();
+        Iterator <Proveedor> it = prov.iterator();
+        while (it.hasNext()){
+            textAutoCompleter1.addItem(it.next().getRazonSocial());
+          }
+        ema.close();
+    }
+ 
+ public void vaciar(){
+     tf_proveedor.setText(null);
+     tf_fechaApertura.setDate(null);
+     btn_aceptar.setEnabled(true);
+ }
+  private Proveedor obtenerProveedor(String nombre){
+        EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
+        EntityManager ema = fact.createEntityManager();
+        Query query = ema.createNamedQuery("Proveedor.findByRazonSocial");
+        query.setParameter("razonSocial", nombre);
+        List<Proveedor> p = query.getResultList();
+        Proveedor nom = null;
+        try{
+            nom = p.get(0);
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.out.println(e);
+        }catch(NullPointerException e){
+            System.out.println(e);
+        }catch(Exception e){
+            System.out.println("Algo pasó");
+        }
+        
+        ema.close();
+        return nom;
+    }
  private void calcularMonto() {
                   int rowCount=tabla.getRowCount();
                         for (int i = 0; i < rowCount; i++) {
-                           montoTotal=(Integer.parseInt(tabla.getValueAt(i, 3).toString())+montoTotal);
+                           montoTotal=(Integer.parseInt(tabla.getValueAt(i, 5).toString())+montoTotal);
                          //  cant=tablaCompra.getValueAt(i, 3).toString();
                            
                         }
           tf_monto.setText(String.valueOf(montoTotal));
     }
-
 }

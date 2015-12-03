@@ -925,7 +925,7 @@ public static int cuentaBancaria;
 
     private void buscarCuentaBancaria() {
    
-         new CuentaBancBuscar(this, true).setVisible(true);
+         new ArquearCajaDialogoBanco(this, true).setVisible(true);
          System.out.print("cuenta"+cuentaBancaria);
     }
      private CuentaBancaria obtenerCuenta(int nro) {

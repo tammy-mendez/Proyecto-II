@@ -494,18 +494,23 @@ private static int totalCompra = 0, totaliva=0;
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codInformeRecepcion}"));
         columnBinding.setColumnName("Cod Informe Recepcion");
         columnBinding.setColumnClass(Integer.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codOC}"));
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codOC.codOrden}"));
         columnBinding.setColumnName("Cod OC");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fecha}"));
         columnBinding.setColumnName("Fecha");
         columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fechaVto}"));
         columnBinding.setColumnName("Fecha Vto");
         columnBinding.setColumnClass(String.class);
-        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nroFactura}"));
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${nroFactura.numFactura}"));
         columnBinding.setColumnName("Nro Factura");
         columnBinding.setColumnClass(Integer.class);
+        columnBinding.setEditable(false);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
         tabla.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -761,8 +766,6 @@ private static int totalCompra = 0, totaliva=0;
         btn_imprimir.setEnabled(true);
         vaciar_tabla_factura_compra();
         tf_oc.setEnabled(false);
-        // txt_num1.setEnabled(false);
-        //  txt_num2.setEnabled(false);
         txt_num3.setEnabled(false);
         tf_proveedor.setEnabled(false);
         jf_fechaI.setVisible(false);
@@ -771,8 +774,6 @@ private static int totalCompra = 0, totaliva=0;
         txt_num2.setVisible(false);
         tf_fechaFact.setVisible(true);
         tf_fechaVto.setVisible(true);
-//        btn_eliminar.setEnabled(true);
-
         fila=tabla.getSelectedRow();
         codigo=(Integer) tabla.getValueAt(fila, 1);
         codInf= (Integer) tabla.getValueAt(fila, 0);
@@ -785,10 +786,11 @@ private static int totalCompra = 0, totaliva=0;
         tf_fechaFact.setText(fecha);
         tf_fechaVto.setText(fechavto);
 
-        OrdenCompra tc=(OrdenCompra) obtenerDetalle(codigo) ;
-        Proveedor p= obtenerProveedor1(tc.getCodProveedor().getCodigoProveedor());
+        OrdenCompra oc=(OrdenCompra) obtenerDetalle(codigo) ;
+        detalle_oc(oc);
+        Proveedor p= obtenerProveedor1(oc.getCodProveedor().getCodigoProveedor());
         tf_proveedor.setText(p.getRazonSocial());
-        registarFacturaDetalle();
+        registarFacturaDetalle(oc);
     }//GEN-LAST:event_tablaMouseClicked
 
     private void tf_ocFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tf_ocFocusLost
@@ -843,6 +845,21 @@ private static int totalCompra = 0, totaliva=0;
         // TODO add your handling code here:
         imprimir(Integer.valueOf(txt_num3.getText()));
     }//GEN-LAST:event_btn_imprimirActionPerformed
+public  void detalle_oc(OrdenCompra cod){
+                //id=Integer.parseInt(tf_valor.getText());
+                detalleOrdenCompraQuery=entityManager.createNamedQuery( "DetalleOrdenCompra.findByCodOrden");
+                detalleOrdenCompraQuery.setParameter("codOrden", cod);
+                List<DetalleOrdenCompra> oc=detalleOrdenCompraQuery.getResultList();
+                if (oc.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Código de orden de compra inexistente", "Error",JOptionPane.ERROR_MESSAGE);
+                    tf_valor.setText(null);
+                    return;
+                }
+                detalleOrdenCompraList.clear();
+                detalleOrdenCompraList.addAll(oc);
+                tablaCompra.setVisible(true);
+        
+    } 
 
 private OrdenCompra obtenerDetalle(int cod){
         EntityManagerFactory fact = Persistence.createEntityManagerFactory("proyectoPU");
@@ -1019,9 +1036,10 @@ private DetalleFacturacompra obtenerDetalleFactura(int fac){
         return nom;
     }
 
-    private void registarFacturaDetalle() {
+    private void registarFacturaDetalle(OrdenCompra o) {
+        
    detalleOrdenCompraQuery=entityManager.createNamedQuery( "DetalleOrdenCompra.findByCodOrden");
-                detalleOrdenCompraQuery.setParameter("codOrden", Integer.valueOf(tf_oc.getText()));
+                detalleOrdenCompraQuery.setParameter("codOrden", o);
                 List<DetalleOrdenCompra> oc=detalleOrdenCompraQuery.getResultList();
                 if (oc.isEmpty()){
                     JOptionPane.showMessageDialog(null,"no se encuentran detalles", "Error",JOptionPane.ERROR_MESSAGE);

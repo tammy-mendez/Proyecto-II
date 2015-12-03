@@ -311,6 +311,7 @@
               <Subbinding sourcePath="${codOrden}">
                 <BindingParameter name="NAME" value="Cod Orden"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="Integer.class"/>
+                <BindingParameter name="javax.swing.binding.ParameterKeys.EDITABLE" value="false"/>
               </Subbinding>
               <Subbinding sourcePath="${codProveedor.razonSocial}">
                 <BindingParameter name="NAME" value="Proveedor"/>
